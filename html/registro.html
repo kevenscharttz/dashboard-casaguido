@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ficha de Identificação - GUIDO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/registro.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo-section">
+        <div class="logo">
+          <div class="logo-colored">
+            <span>G</span><span>U</span><span>I</span><span>D</span>O
+          </div>
+          <div class="logo-text">
+            Grupo pela Unidade Infanto-juvenil de Onco-hematologia
+          </div>
+        </div>
+      </div>
+
+      <h1>FICHA DE IDENTIFICAÇÃO</h1>
+
+      <!-- Progress bar -->
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress" id="form-progress" style="width: 20%"></div>
+        </div>
+        <div class="progress-labels">
+          <span>Início</span>
+          <span>Completado: <span id="completion-percentage">20%</span></span>
+        </div>
+      </div>
+
+      <!-- Step indicators -->
+      <div class="step-indicator">
+        <div class="step">
+          <div class="step-circle active" id="step-1">1</div>
+          <div class="step-text active">Dados do Paciente</div>
+        </div>
+        <div class="step">
+          <div class="step-circle" id="step-2">2</div>
+          <div class="step-text">Contato e Endereço</div>
+        </div>
+        <div class="step">
+          <div class="step-circle" id="step-3">3</div>
+          <div class="step-text">Situação Socioeconômica</div>
+        </div>
+        <div class="step">
+          <div class="step-circle" id="step-4">4</div>
+          <div class="step-text">Diagnóstico e Tratamento</div>
+        </div>
+        <div class="step">
+          <div class="step-circle" id="step-5">5</div>
+          <div class="step-text">Finalizar</div>
+        </div>
+      </div>
+
+      <!-- Success message -->
+      <div class="success-message" id="success-message">
+        <h3>Cadastro salvo com sucesso!</h3>
+        <p>Os dados foram registrados no sistema.</p>
+      </div>
+
+      <form id="cadastro-form">
+        <!-- Seção 1: Dados do Paciente -->
+        <div class="form-section active" id="section-1">
+          <div class="section-title">Dados do Paciente</div>
+          
+          <div class="form-card">
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="paciente" class="required">Nome do Paciente</label>
+                <input type="text" id="paciente" name="paciente" required />
+                <div class="error-message" id="paciente-error">Por favor, informe o nome completo do paciente</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="data_nascimento" class="required">Data de Nascimento</label>
+                <input
+                  type="date"
+                  id="data_nascimento"
+                  name="data_nascimento"
+                  required
+                />
+                <div class="error-message" id="data_nascimento-error">Data de nascimento é obrigatória</div>
+              </div>
+              <div class="form-group">
+                <label for="idade">Idade</label>
+                <input type="text" id="idade" name="idade" readonly />
+                <div class="help-text">Calculada automaticamente</div>
+              </div>
+              <div class="form-group">
+                <label for="cpf">CPF</label>
+                <input type="text" id="cpf" name="cpf" maxlength="14" placeholder="000.000.000-00" />
+                <div class="error-message" id="cpf-error">CPF inválido</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="mae" class="required">Nome da Mãe</label>
+                <input type="text" id="mae" name="mae" required />
+                <div class="error-message" id="mae-error">Por favor, informe o nome da mãe</div>
+              </div>
+              <div class="form-group">
+                <label for="pai">Nome do Pai</label>
+                <input type="text" id="pai" name="pai" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cartao_sus">Cartão SUS</label>
+                <input type="text" id="cartao_sus" name="cartao_sus" maxlength="15" placeholder="000 0000 0000 0000" />
+                <div class="error-message" id="cartao_sus-error">Número de cartão SUS inválido</div>
+              </div>
+              <div class="form-group">
+                <label for="rg">RG</label>
+                <input type="text" id="rg" name="rg" />
+              </div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <div></div>
+            <button type="button" class="btn-primary" id="btn-next-1">Próximo</button>
+          </div>
+        </div>
+
+        <!-- Seção 2: Contato e Endereço -->
+        <div class="form-section" id="section-2">
+          <div class="section-title">Contato e Endereço</div>
+          
+          <div class="form-card">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="telefone1" class="required">Telefone Principal</label>
+                <input type="tel" id="telefone1" name="telefone1" placeholder="(00) 00000-0000" required />
+                <div class="error-message" id="telefone1-error">Informe um telefone válido</div>
+              </div>
+              <div class="form-group">
+                <label for="telefone2">Telefone Alternativo</label>
+                <input type="tel" id="telefone2" name="telefone2" placeholder="(00) 00000-0000" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" placeholder="exemplo@email.com" />
+                <div class="error-message" id="email-error">E-mail inválido</div>
+              </div>
+              <div class="form-group">
+                <label for="contato_emergencia">Contato de Emergência</label>
+                <input type="text" id="contato_emergencia" name="contato_emergencia" placeholder="Nome e telefone" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cep" class="required">CEP</label>
+                <input type="text" id="cep" name="cep" maxlength="9" placeholder="00000-000" required />
+                <div class="error-message" id="cep-error">CEP inválido</div>
+              </div>
+              <div class="form-group full-width">
+                <label for="endereco" class="required">Endereço</label>
+                <input type="text" id="endereco" name="endereco" required />
+                <div class="error-message" id="endereco-error">Endereço é obrigatório</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="numero" class="required">Número</label>
+                <input type="text" id="numero" name="numero" required />
+                <div class="error-message" id="numero-error">Número é obrigatório</div>
+              </div>
+              <div class="form-group">
+                <label for="complemento">Complemento</label>
+                <input type="text" id="complemento" name="complemento" placeholder="Apto, Bloco, etc." />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="bairro" class="required">Bairro</label>
+                <input type="text" id="bairro" name="bairro" required />
+                <div class="error-message" id="bairro-error">Bairro é obrigatório</div>
+              </div>
+              <div class="form-group">
+                <label for="cidade" class="required">Cidade</label>
+                <input type="text" id="cidade" name="cidade" required />
+                <div class="error-message" id="cidade-error">Cidade é obrigatória</div>
+              </div>
+              <div class="form-group">
+                <label for="estado" class="required">Estado</label>
+                <select id="estado" name="estado" required>
+                  <option value="">Selecione</option>
+                  <option value="AC">Acre</option>
+                  <option value="AL">Alagoas</option>
+                  <option value="AP">Amapá</option>
+                  <option value="AM">Amazonas</option>
+                  <option value="BA">Bahia</option>
+                  <option value="CE">Ceará</option>
+                  <option value="DF">Distrito Federal</option>
+                  <option value="ES">Espírito Santo</option>
+                  <option value="GO">Goiás</option>
+                  <option value="MA">Maranhão</option>
+                  <option value="MT">Mato Grosso</option>
+                  <option value="MS">Mato Grosso do Sul</option>
+                  <option value="MG">Minas Gerais</option>
+                  <option value="PA">Pará</option>
+                  <option value="PB">Paraíba</option>
+                  <option value="PR">Paraná</option>
+                  <option value="PE">Pernambuco</option>
+                  <option value="PI">Piauí</option>
+                  <option value="RJ">Rio de Janeiro</option>
+                  <option value="RN">Rio Grande do Norte</option>
+                  <option value="RS">Rio Grande do Sul</option>
+                  <option value="RO">Rondônia</option>
+                  <option value="RR">Roraima</option>
+                  <option value="SC">Santa Catarina</option>
+                  <option value="SP">São Paulo</option>
+                  <option value="SE">Sergipe</option>
+                  <option value="TO">Tocantins</option>
+                </select>
+                <div class="error-message" id="estado-error">Estado é obrigatório</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="ponto_referencia">Ponto de Referência</label>
+                <input type="text" id="ponto_referencia" name="ponto_referencia" placeholder="Ex: Próximo à escola..." />
+              </div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="btn-prev-2">Anterior</button>
+            <button type="button" class="btn-primary" id="btn-next-2">Próximo</button>
+          </div>
+        </div>
+
+        <!-- Seção 3: Situação Socioeconômica -->
+        <div class="form-section" id="section-3">
+          <div class="section-title">Situação Socioeconômica</div>
+          
+          <div class="form-card">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Estado Civil</label>
+                <select id="estado_civil" name="estado_civil">
+                  <option value="">Selecione</option>
+                  <option value="solteiro">Solteiro(a)</option>
+                  <option value="casado">Casado(a)</option>
+                  <option value="uniao_estavel">União Estável</option>
+                  <option value="divorciado">Divorciado(a)</option>
+                  <option value="viuvo">Viúvo(a)</option>
+                  <option value="separado">Separado(a)</option>
+                  <option value="outro">Outro</option>
+                </select>
+              </div>
+              <div class="form-group" id="outro_estado_civil_container" style="display: none;">
+                <label for="outro_estado_civil">Especifique</label>
+                <input type="text" id="outro_estado_civil" name="outro_estado_civil" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Situação Profissional</label>
+                <select id="situacao_profissional" name="situacao_profissional">
+                  <option value="">Selecione</option>
+                  <option value="empregado">Empregado(a)</option>
+                  <option value="desempregado">Desempregado(a)</option>
+                  <option value="autonomo">Autônomo(a)</option>
+                  <option value="aposentado">Aposentado(a)</option>
+                  <option value="estudante">Estudante</option>
+                  <option value="pensionista">Pensionista</option>
+                  <option value="outro">Outro</option>
+                </select>
+              </div>
+              <div class="form-group" id="outro_situacao_profissional_container" style="display: none;">
+                <label for="outro_situacao_profissional">Especifique</label>
+                <input type="text" id="outro_situacao_profissional" name="outro_situacao_profissional" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="salario">Salário Mensal</label>
+                <input type="text" id="salario" name="salario" placeholder="R$ 0,00" />
+              </div>
+              <div class="form-group">
+                <label for="outras_rendas">Outras Rendas</label>
+                <input type="text" id="outras_rendas" name="outras_rendas" placeholder="R$ 0,00" />
+              </div>
+              <div class="form-group">
+                <label for="renda_familiar">Renda Familiar Total</label>
+                <input type="text" id="renda_familiar" name="renda_familiar" placeholder="R$ 0,00" />
+                <div class="help-text">Calculada automaticamente</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <div class="section-title">Situação Habitacional</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Como adquiriu a casa?</label>
+                <select id="aquisicao_casa" name="aquisicao_casa">
+                  <option value="">Selecione</option>
+                  <option value="doacao">Doação</option>
+                  <option value="ocupacao">Ocupação</option>
+                  <option value="comprada">Comprada</option>
+                  <option value="aluguel">Aluguel</option>
+                  <option value="cedida">Cedida</option>
+                  <option value="outro">Outro</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Características da Casa</label>
+                <select id="caracteristicas_casa" name="caracteristicas_casa">
+                  <option value="">Selecione</option>
+                  <option value="alvenaria">Alvenaria</option>
+                  <option value="madeira">Madeira</option>
+                  <option value="mista">Mista</option>
+                  <option value="outro">Outro</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="num_comodos">Número de Cômodos</label>
+                <input type="number" id="num_comodos" name="num_comodos" min="1" />
+              </div>
+              <div class="form-group">
+                <label for="num_moradores">Número de Moradores</label>
+                <input type="number" id="num_moradores" name="num_moradores" min="1" />
+              </div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="btn-prev-3">Anterior</button>
+            <button type="button" class="btn-primary" id="btn-next-3">Próximo</button>
+          </div>
+        </div>
+
+        <!-- Seção 4: Diagnóstico e Tratamento -->
+        <div class="form-section" id="section-4">
+          <div class="section-title">Diagnóstico e Tratamento</div>
+          
+          <div class="form-card">
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="diagnostico" class="required">Diagnóstico</label>
+                <input type="text" id="diagnostico" name="diagnostico" required />
+                <div class="error-message" id="diagnostico-error">Diagnóstico é obrigatório</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="data_diagnostico">Data do Diagnóstico</label>
+                <input type="date" id="data_diagnostico" name="data_diagnostico" />
+              </div>
+              <div class="form-group">
+                <label for="medico_resp">Médico Responsável</label>
+                <input type="text" id="medico_resp" name="medico_resp" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Quimioterapia</label>
+                <select id="quimioterapia" name="quimioterapia">
+                  <option value="">Selecione</option>
+                  <option value="sim">Sim</option>
+                  <option value="nao">Não</option>
+                </select>
+              </div>
+<div class="form-group" id="quimio_detalhes_container" style="display: none;">
+                <label for="quimio_detalhes">Detalhes da Quimioterapia</label>
+                <input type="text" id="quimio_detalhes" name="quimio_detalhes" placeholder="Protocolo, ciclos, etc." />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Radioterapia</label>
+                <select id="radioterapia" name="radioterapia">
+                  <option value="">Selecione</option>
+                  <option value="sim">Sim</option>
+                  <option value="nao">Não</option>
+                </select>
+              </div>
+              <div class="form-group" id="radio_detalhes_container" style="display: none;">
+                <label for="radio_detalhes">Detalhes da Radioterapia</label>
+                <input type="text" id="radio_detalhes" name="radio_detalhes" placeholder="Localização, sessões, etc." />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Cirurgia</label>
+                <select id="cirurgia" name="cirurgia">
+                  <option value="">Selecione</option>
+                  <option value="sim">Sim</option>
+                  <option value="nao">Não</option>
+                </select>
+              </div>
+              <div class="form-group" id="cirurgia_detalhes_container" style="display: none;">
+                <label for="cirurgia_detalhes">Detalhes da Cirurgia</label>
+                <input type="text" id="cirurgia_detalhes" name="cirurgia_detalhes" placeholder="Tipo, data, etc." />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Transplante de Medula Óssea</label>
+                <select id="transplante" name="transplante">
+                  <option value="">Selecione</option>
+                  <option value="sim">Sim</option>
+                  <option value="nao">Não</option>
+                  <option value="aguardando">Aguardando</option>
+                </select>
+              </div>
+              <div class="form-group" id="transplante_detalhes_container" style="display: none;">
+                <label for="transplante_detalhes">Detalhes do Transplante</label>
+                <input type="text" id="transplante_detalhes" name="transplante_detalhes" placeholder="Tipo, data, doador, etc." />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="outros_tratamentos">Outros Tratamentos</label>
+                <textarea id="outros_tratamentos" name="outros_tratamentos" placeholder="Descreva outros tratamentos relevantes..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <div class="section-title">Hospitais e Atendimentos</div>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="hospital_tratamento" class="required">Hospital de Tratamento</label>
+                <input type="text" id="hospital_tratamento" name="hospital_tratamento" required />
+                <div class="error-message" id="hospital_tratamento-error">Hospital de tratamento é obrigatório</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="unidade_origem">Unidade de Origem</label>
+                <input type="text" id="unidade_origem" name="unidade_origem" />
+              </div>
+              <div class="form-group">
+                <label for="municipio_origem">Município de Origem</label>
+                <input type="text" id="municipio_origem" name="municipio_origem" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="observacoes_medicas">Observações Médicas</label>
+                <textarea id="observacoes_medicas" name="observacoes_medicas" placeholder="Informações adicionais relevantes sobre o quadro clínico..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="btn-prev-4">Anterior</button>
+            <button type="button" class="btn-primary" id="btn-next-4">Próximo</button>
+          </div>
+        </div>
+
+        <!-- Seção 5: Finalizar -->
+        <div class="form-section" id="section-5">
+          <div class="section-title">Finalizar Cadastro</div>
+          
+          <div class="form-card">
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="necessidades_especiais">Necessidades Especiais</label>
+                <textarea id="necessidades_especiais" name="necessidades_especiais" placeholder="Descreva quaisquer necessidades especiais do paciente..."></textarea>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label>Apoio Social Necessário</label>
+                <div class="checkbox-group">
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="apoio_alimentacao" name="apoio_alimentacao" value="1">
+                    <label for="apoio_alimentacao">Alimentação</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="apoio_transporte" name="apoio_transporte" value="1">
+                    <label for="apoio_transporte">Transporte</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="apoio_medicamentos" name="apoio_medicamentos" value="1">
+                    <label for="apoio_medicamentos">Medicamentos</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="apoio_hospedagem" name="apoio_hospedagem" value="1">
+                    <label for="apoio_hospedagem">Hospedagem</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="apoio_higiene" name="apoio_higiene" value="1">
+                    <label for="apoio_higiene">Material de Higiene</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="apoio_psicologico" name="apoio_psicologico" value="1">
+                    <label for="apoio_psicologico">Apoio Psicológico</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="apoio_juridico" name="apoio_juridico" value="1">
+                    <label for="apoio_juridico">Assistência Jurídica</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="apoio_outro" name="apoio_outro" value="1">
+                    <label for="apoio_outro">Outro</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row" id="outro_apoio_container" style="display: none;">
+              <div class="form-group full-width">
+                <label for="outro_apoio_detalhe">Especifique outro apoio</label>
+                <input type="text" id="outro_apoio_detalhe" name="outro_apoio_detalhe" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="observacoes_gerais">Observações Gerais</label>
+                <textarea id="observacoes_gerais" name="observacoes_gerais" placeholder="Informações adicionais relevantes..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <div class="section-title">Encaminhamentos</div>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label>Encaminhamentos Realizados</label>
+                <div class="checkbox-group">
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="enc_assistente_social" name="enc_assistente_social" value="1">
+                    <label for="enc_assistente_social">Assistente Social</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="enc_psicologo" name="enc_psicologo" value="1">
+                    <label for="enc_psicologo">Psicólogo</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="enc_nutricionista" name="enc_nutricionista" value="1">
+                    <label for="enc_nutricionista">Nutricionista</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="enc_fisioterapeuta" name="enc_fisioterapeuta" value="1">
+                    <label for="enc_fisioterapeuta">Fisioterapeuta</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="enc_terapia_ocupacional" name="enc_terapia_ocupacional" value="1">
+                    <label for="enc_terapia_ocupacional">Terapia Ocupacional</label>
+                  </div>
+                  <div class="checkbox-item">
+                    <input type="checkbox" id="enc_outro" name="enc_outro" value="1">
+                    <label for="enc_outro">Outro</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row" id="outro_enc_container" style="display: none;">
+              <div class="form-group full-width">
+                <label for="outro_enc_detalhe">Especifique outro encaminhamento</label>
+                <input type="text" id="outro_enc_detalhe" name="outro_enc_detalhe" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <div class="section-title">Termo de Consentimento</div>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="consentimento" name="consentimento" required>
+                  <label for="consentimento" class="required">Declaro que as informações fornecidas são verdadeiras e autorizo o uso dessas informações para fins de acompanhamento e assistência do GUIDO.</label>
+                </div>
+                <div class="error-message" id="consentimento-error">É necessário aceitar o termo de consentimento</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="data_cadastro">Data do Cadastro</label>
+                <input type="date" id="data_cadastro" name="data_cadastro" value="" readonly />
+                <div class="help-text">Preenchido automaticamente</div>
+              </div>
+              <div class="form-group">
+                <label for="responsavel_cadastro" class="required">Responsável pelo Cadastro</label>
+                <input type="text" id="responsavel_cadastro" name="responsavel_cadastro" required />
+                <div class="error-message" id="responsavel_cadastro-error">Responsável pelo cadastro é obrigatório</div>
+              </div>
+            </div>
+
+            <div class="signatures">
+              <div class="signature-line">
+                <p>Assinatura do Responsável</p>
+              </div>
+              <div class="signature-line">
+                <p>Assinatura do Profissional</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="btn-prev-5">Anterior</button>
+            <button type="submit" class="btn-primary" id="btn-submit">Finalizar Cadastro</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <script src="../js/registro.js"></script>
+  </body>
+</html>
+
