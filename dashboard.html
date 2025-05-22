@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Casa Guido - Painel de Controle</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+  </head>
+  <body>
+    <div class="grid-container">
+      <header class="header">
+        <div class="menu-icon" onclick="openSidebar()">
+          <span class="material-icons-outlined">menu</span>
+        </div>
+        <div class="header-left">
+          <div class="logo-colored">
+            <span style="color: red;">G</span><span style="color: #ffd700;">U</span><span style="color: blue;">I</span><span style="color: green;">D</span>O
+          </div>
+        </div>
+        <div class="header-right">
+          <span class="material-icons-outlined">notifications</span>
+          <span class="material-icons-outlined">email</span>
+          <a href="html/login.html" title="Sair">
+            <span class="material-icons-outlined">logout</span>
+          </a>
+        </div>
+      </header>
+      <aside id="sidebar">
+        <div class="sidebar-title">
+          <div class="sidebar-brand">
+            <span style="color: red;">G</span><span style="color: #ffd700;">U</span><span style="color: blue;">I</span><span style="color: green;">D</span>O
+          </div>
+          <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
+        </div>
+        <ul class="sidebar-list">
+          <li class="sidebar-list-item active">
+            <a href="dashboard.html">
+              <span class="material-icons-outlined">dashboard</span> Início
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="html/registro.html">
+              <span class="material-icons-outlined">person_add</span> Registro
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="html/pacientes.html" id="listar-pacientes">
+              <span class="material-icons-outlined">people</span> Pacientes
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="html/agenda.html" id="agenda-consultas">
+              <span class="material-icons-outlined">event_note</span> Agenda
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="#" id="ver-relatorios">
+              <span class="material-icons-outlined">description</span> Relatórios
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="#" id="ver-estatisticas">
+              <span class="material-icons-outlined">analytics</span> Estatísticas
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="#" id="configuracoes">
+              <span class="material-icons-outlined">settings</span> Configurações
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="html/login.html">
+              <span class="material-icons-outlined">logout</span> Sair
+            </a>
+          </li>
+        </ul>
+      </aside>
+      <main class="main-container">
+        <div class="main-title">
+          <h2>PAINEL DE CONTROLE - CASA GUIDO</h2>
+          <p class="welcome-message">Olá, <span id="user-name">Administrador</span>! 
+          <span id="current-date"></span></p>
+        </div>
+        <div class="main-cards">
+          <div class="card" onclick="window.location.href='html/registro.html'">
+            <div class="card-inner">
+              <h2>CRIANÇAS REGISTRADAS</h2>
+              <span class="material-icons-outlined">child_friendly</span>
+            </div>
+            <h1>4,021</h1>
+            <p class="card-progress">+12 esta semana</p>
+          </div>
+          <div class="card" onclick="document.getElementById('agenda-consultas').click()">
+            <div class="card-inner">
+              <h2>CIRURGIAS MARCADAS</h2>
+              <span class="material-icons-outlined">medical_services</span>
+            </div>
+            <h1>86</h1>
+            <p class="card-progress">3 para hoje</p>
+          </div>
+          <div class="card" onclick="document.getElementById('agenda-consultas').click()">
+            <div class="card-inner">
+              <h2>EXAMES PENDENTES</h2>
+              <span class="material-icons-outlined">science</span>
+            </div>
+            <h1>124</h1>
+            <p class="card-progress">15 para esta semana</p>
+          </div>
+          <div class="card" onclick="document.getElementById('agenda-consultas').click()">
+            <div class="card-inner">
+              <h2>CONSULTAS HOJE</h2>
+              <span class="material-icons-outlined">event_available</span>
+            </div>
+            <h1>27</h1>
+            <p class="card-progress">3 em andamento</p>
+          </div>
+        </div>
+
+        <div class="products">
+          <div class="calendar-section">
+            <div class="section-header">
+              <h2>Calendário de Atividades</h2>
+              <button class="action-button">
+                <span class="material-icons-outlined">add</span> Nova Atividade
+              </button>
+            </div>
+            <div class="calendar-body">
+              <div class="calendar-nav">
+                <button class="nav-button"><span class="material-icons-outlined">chevron_left</span></button>
+                <h3>Maio 2025</h3>
+                <button class="nav-button"><span class="material-icons-outlined">chevron_right</span></button>
+              </div>
+              <div class="calendar-grid">
+                <div class="calendar-day day-header">Dom</div>
+                <div class="calendar-day day-header">Seg</div>
+                <div class="calendar-day day-header">Ter</div>
+                <div class="calendar-day day-header">Qua</div>
+                <div class="calendar-day day-header">Qui</div>
+                <div class="calendar-day day-header">Sex</div>
+                <div class="calendar-day day-header">Sáb</div>
+                
+                <div class="calendar-day inactive">28</div>
+                <div class="calendar-day inactive">29</div>
+                <div class="calendar-day inactive">30</div>
+                <div class="calendar-day">1</div>
+                <div class="calendar-day">2</div>
+                <div class="calendar-day">3</div>
+                <div class="calendar-day">4</div>
+                
+                <div class="calendar-day">5</div>
+                <div class="calendar-day">6</div>
+                <div class="calendar-day">7</div>
+                <div class="calendar-day">8</div>
+                <div class="calendar-day">9</div>
+                <div class="calendar-day">10</div>
+                <div class="calendar-day">11</div>
+                
+                <div class="calendar-day">12</div>
+                <div class="calendar-day">13</div>
+                <div class="calendar-day">14</div>
+                <div class="calendar-day">15</div>
+                <div class="calendar-day">16</div>
+                <div class="calendar-day">17</div>
+                <div class="calendar-day">18</div>
+                
+                <div class="calendar-day">19
+                  <div class="event event-medical">12 consultas</div>
+                </div>
+                <div class="calendar-day">20
+                  <div class="event event-surgery">5 cirurgias</div>
+                </div>
+                <div class="calendar-day">21
+                  <div class="event event-exam">8 exames</div>
+                </div>
+                <div class="calendar-day">22</div>
+                <div class="calendar-day">23</div>
+                <div class="calendar-day">24</div>
+                <div class="calendar-day">25</div>
+                
+                <div class="calendar-day">26</div>
+                <div class="calendar-day">27</div>
+                <div class="calendar-day">28</div>
+                <div class="calendar-day">29</div>
+                <div class="calendar-day">30</div>
+                <div class="calendar-day">31</div>
+                <div class="calendar-day inactive">1</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="activity-section">
+            <div class="section-header">
+              <h2>Atividades Recentes</h2>
+              <button class="action-button">
+                <span class="material-icons-outlined">refresh</span> Atualizar
+              </button>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon background-blue">
+                  <span class="material-icons-outlined">person_add</span>
+                </div>
+                <div class="activity-content">
+                  <h4>Novo cadastro realizado</h4>
+                  <p>Paciente: Maria Silva, 8 anos</p>
+                  <span class="activity-time">Hoje, 10:45</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon background-green">
+                  <span class="material-icons-outlined">event_available</span>
+                </div>
+                <div class="activity-content">
+                  <h4>Consulta realizada</h4>
+                  <p>Paciente: João Pereira, Dr. Marcos</p>
+                  <span class="activity-time">Hoje, 09:30</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon background-orange">
+                  <span class="material-icons-outlined">science</span>
+                </div>
+                <div class="activity-content">
+                  <h4>Resultados de exames</h4>
+                  <p>Paciente: Ana Costa, Hemograma</p>
+                  <span class="activity-time">Ontem, 15:20</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon background-red">
+                  <span class="material-icons-outlined">medical_services</span>
+                </div>
+                <div class="activity-content">
+                  <h4>Cirurgia agendada</h4>
+                  <p>Paciente: Pedro Santos, Dr. Carlos</p>
+                  <span class="activity-time">Ontem, 13:15</span>
+                </div>
+              </div>
+            </div>
+            <a href="#" class="see-more">Ver todas as atividades</a>
+          </div>
+        </div>
+        
+        <div class="quick-access">
+          <h2>Acesso Rápido</h2>
+          <div class="quick-buttons">
+            <a href="html/registro.html" class="quick-button">
+              <span class="material-icons-outlined">person_add</span>
+              <span>Novo Cadastro</span>
+            </a>
+            <a href="#" class="quick-button">
+              <span class="material-icons-outlined">search</span>
+              <span>Buscar Paciente</span>
+            </a>
+            <a href="#" class="quick-button">
+              <span class="material-icons-outlined">event_note</span>
+              <span>Agendar Consulta</span>
+            </a>
+            <a href="#" class="quick-button">
+              <span class="material-icons-outlined">description</span>
+              <span>Relatórios</span>
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="js/scripts.js"></script>
+    <script>
+      // Mostrar data atual
+      document.addEventListener('DOMContentLoaded', function() {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const today = new Date();
+        document.getElementById('current-date').textContent = today.toLocaleDateString('pt-BR', options);
+        
+        // Highlight do dia atual no calendário
+        const currentDay = today.getDate();
+        const calendarDays = document.querySelectorAll('.calendar-day:not(.inactive):not(.day-header)');
+        calendarDays.forEach(day => {
+          if (parseInt(day.textContent) === currentDay) {
+            day.classList.add('current-day');
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
