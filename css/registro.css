@@ -24,27 +24,25 @@
   --text-light: #ffffff;
   --text-label: #464751;
   --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --navbar-height: 70px; /* Variável para altura da navbar */
 }
 
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
   background-color: var(--background);
   color: var(--text-primary);
-  padding: 20px;
+  padding-top: var(--navbar-height); /* Espaçamento para compensar a navbar fixa */
+  min-height: 100vh;
 }
 
 .navbar {
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
+  height: var(--navbar-height); /* Altura fixa da navbar */
 }
 
 .navbar-container {
@@ -54,6 +52,7 @@ body {
   padding: 15px 20px;
   max-width: 1200px;
   margin: 0 auto;
+  height: 100%;
 }
 
 .navbar-logo {
@@ -200,7 +199,7 @@ body {
 
 .container {
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 20px auto; /* Margem superior para dar mais espaço */
   background-color: var(--card-bg);
   padding: 30px;
   border-radius: 12px;
@@ -539,8 +538,17 @@ tr:nth-child(even) {
 }
 
 @media (max-width: 768px) {
+  :root {
+    --navbar-height: 60px; /* Navbar menor em dispositivos móveis */
+  }
+  
+  body {
+    padding-top: var(--navbar-height);
+  }
+  
   .container {
     padding: 20px 15px;
+    margin: 15px auto;
   }
 
   .form-group {
