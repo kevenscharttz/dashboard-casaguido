@@ -610,3 +610,588 @@
               </div>
               <div class="form-group">
                 <label>Possui BPC (Benefício de Prestação Continuada)?</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="tem_bpc_sim" name="tem_bpc" value="sim">
+                    <label for="tem_bpc_sim">Sim</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="tem_bpc_nao" name="tem_bpc" value="nao">
+                    <label for="tem_bpc_nao">Não</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row" id="bpc-fields" style="display: none;">
+              <div class="form-group">
+                <label for="valor_bpc">Valor do BPC</label>
+                <input type="text" id="valor_bpc" name="valor_bpc" placeholder="R$ 0,00" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Frequenta Instituição de Ensino?</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="estuda_sim" name="estuda" value="sim">
+                    <label for="estuda_sim">Sim</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="estuda_nao" name="estuda" value="nao">
+                    <label for="estuda_nao">Não</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="escola-fields" style="display: none;">
+              <div class="form-row">
+                <div class="form-group full-width">
+                  <label for="instituicao_ensino">Nome da Instituição de Ensino</label>
+                  <input type="text" id="instituicao_ensino" name="instituicao_ensino" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="escolaridade_paciente">Escolaridade</label>
+                  <select id="escolaridade_paciente" name="escolaridade_paciente">
+                    <option value="">Selecione</option>
+                    <option value="creche">Creche</option>
+                    <option value="pre_escola">Pré-escola</option>
+                    <option value="fundamental_anos_iniciais">Ensino Fundamental - Anos Iniciais</option>
+                    <option value="fundamental_anos_finais">Ensino Fundamental - Anos Finais</option>
+                    <option value="medio">Ensino Médio</option>
+                    <option value="tecnico">Ensino Técnico</option>
+                    <option value="superior">Ensino Superior</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Tipo de Instituição</label>
+                  <div class="radio-group">
+                    <div class="radio-item">
+                      <input type="radio" id="publica" name="tipo_instituicao" value="publica">
+                      <label for="publica">Pública</label>
+                    </div>
+                    <div class="radio-item">
+                      <input type="radio" id="privada" name="tipo_instituicao" value="privada">
+                      <label for="privada">Privada</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="situacao_habitacional">Situação Habitacional</label>
+                <select id="situacao_habitacional" name="situacao_habitacional">
+                  <option value="">Selecione</option>
+                  <option value="propria">Casa Própria</option>
+                  <option value="alugada">Casa Alugada</option>
+                  <option value="cedida">Casa Cedida</option>
+                  <option value="financiada">Casa Financiada</option>
+                  <option value="outros">Outros</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="pessoas_casa">Número de Pessoas na Casa</label>
+                <input type="number" id="pessoas_casa" name="pessoas_casa" min="1" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="comodos">Número de Cômodos</label>
+                <input type="number" id="comodos" name="comodos" min="1" />
+              </div>
+              <div class="form-group">
+                <label for="quartos">Número de Quartos</label>
+                <input type="number" id="quartos" name="quartos" min="1" />
+              </div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="btn-prev-6">Anterior</button>
+            <button type="button" class="btn-primary" id="btn-next-6">Próximo</button>
+          </div>
+        </div>
+
+        <!-- Seção 7: Quimioterapia -->
+        <div class="form-section" id="section-7">
+          <div class="section-title">Quimioterapia</div>
+          
+          <div class="form-card">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Já fez Quimioterapia?</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="quimio_sim" name="fez_quimio" value="sim">
+                    <label for="quimio_sim">Sim</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="quimio_nao" name="fez_quimio" value="nao">
+                    <label for="quimio_nao">Não</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="quimio-fields" style="display: none;">
+              <div id="quimio-list">
+                <div class="quimio-item">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="quimio_data_1">Data</label>
+                      <input type="date" id="quimio_data_1" name="quimio_data_1" />
+                    </div>
+                    <div class="form-group full-width">
+                      <label for="quimio_local_1">Local</label>
+                      <input type="text" id="quimio_local_1" name="quimio_local_1" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn-add" id="add-quimio">+ Adicionar Outra Quimioterapia</button>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="btn-prev-7">Anterior</button>
+            <button type="button" class="btn-primary" id="btn-next-7">Próximo</button>
+          </div>
+        </div>
+
+        <!-- Seção 8: Radioterapia -->
+        <div class="form-section" id="section-8">
+          <div class="section-title">Radioterapia</div>
+          
+          <div class="form-card">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Já fez Radioterapia?</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="radio_sim" name="fez_radio" value="sim">
+                    <label for="radio_sim">Sim</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="radio_nao" name="fez_radio" value="nao">
+                    <label for="radio_nao">Não</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="radio-fields" style="display: none;">
+              <div id="radio-list">
+                <div class="radio-item-form">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="radio_data_1">Data</label>
+                      <input type="date" id="radio_data_1" name="radio_data_1" />
+                    </div>
+                    <div class="form-group full-width">
+                      <label for="radio_local_1">Local</label>
+                      <input type="text" id="radio_local_1" name="radio_local_1" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn-add" id="add-radio">+ Adicionar Outra Radioterapia</button>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="btn-prev-8">Anterior</button>
+            <button type="button" class="btn-primary" id="btn-next-8">Próximo</button>
+          </div>
+        </div>
+
+        <!-- Seção 9: Cirurgia -->
+        <div class="form-section" id="section-9">
+          <div class="section-title">Cirurgia</div>
+          
+          <div class="form-card">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Já fez Cirurgia?</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="cirurgia_sim" name="fez_cirurgia" value="sim">
+                    <label for="cirurgia_sim">Sim</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="cirurgia_nao" name="fez_cirurgia" value="nao">
+                    <label for="cirurgia_nao">Não</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="cirurgia-fields" style="display: none;">
+              <div id="cirurgia-list">
+                <div class="cirurgia-item">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="cirurgia_data_1">Data</label>
+                      <input type="date" id="cirurgia_data_1" name="cirurgia_data_1" />
+                    </div>
+                    <div class="form-group full-width">
+                      <label for="cirurgia_local_1">Local</label>
+                      <input type="text" id="cirurgia_local_1" name="cirurgia_local_1" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn-add" id="add-cirurgia">+ Adicionar Outra Cirurgia</button>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="btn-prev-9">Anterior</button>
+            <button type="button" class="btn-primary" id="btn-next-9">Próximo</button>
+          </div>
+        </div>
+
+        <!-- Seção 10: Histórico de Saúde -->
+        <div class="form-section" id="section-10">
+          <div class="section-title">Histórico de Saúde do Paciente</div>
+          
+          <div class="form-card">
+            <div class="subsection-title">Condições de Saúde</div>
+            <div class="checkbox-grid">
+              <div class="checkbox-item">
+                <input type="checkbox" id="deficiencia_intelectual" name="condicoes_saude[]" value="deficiencia_intelectual">
+                <label for="deficiencia_intelectual">Deficiência Intelectual</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="deficiencia_fisica" name="condicoes_saude[]" value="deficiencia_fisica">
+                <label for="deficiencia_fisica">Deficiência Física</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="deficiencia_auditiva" name="condicoes_saude[]" value="deficiencia_auditiva">
+                <label for="deficiencia_auditiva">Deficiência Auditiva</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="deficiencia_visual" name="condicoes_saude[]" value="deficiencia_visual">
+                <label for="deficiencia_visual">Deficiência Visual</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="cardiopatia" name="condicoes_saude[]" value="cardiopatia">
+                <label for="cardiopatia">Cardiopatia</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="asma" name="condicoes_saude[]" value="asma">
+                <label for="asma">Asma</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="bronquite" name="condicoes_saude[]" value="bronquite">
+                <label for="bronquite">Bronquite</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="hipertensao" name="condicoes_saude[]" value="hipertensao">
+                <label for="hipertensao">Hipertensão Arterial</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="toxoplasmose" name="condicoes_saude[]" value="toxoplasmose">
+                <label for="toxoplasmose">Toxoplasmose</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="dependencia_quimica" name="condicoes_saude[]" value="dependencia_quimica">
+                <label for="dependencia_quimica">Dependência Química</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="epilepsia" name="condicoes_saude[]" value="epilepsia">
+                <label for="epilepsia">Epilepsia</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="desnutricao" name="condicoes_saude[]" value="desnutricao">
+                <label for="desnutricao">Desnutrição</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="diabetes" name="condicoes_saude[]" value="diabetes">
+                <label for="diabetes">Diabetes</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="cancer" name="condicoes_saude[]" value="cancer">
+                <label for="cancer">Câncer</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="outras_condicoes" name="condicoes_saude[]" value="outras">
+                <label for="outras_condicoes">Outras</label>
+              </div>
+            </div>
+
+            <div class="subsection-title">Diagnósticos</div>
+            <div id="diagnosticos-list">
+              <div class="diagnostico-item">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="cid_1">CID</label>
+                    <input type="text" id="cid_1" name="cid_1" />
+                  </div>
+                  <div class="form-group full-width">
+                    <label for="descricao_1">Descrição</label>
+                    <input type="text" id="descricao_1" name="descricao_1" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group full-width">
+                    <label for="observacao_1">Observação</label>
+                    <textarea id="observacao_1" name="observacao_1" rows="2"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn-add" id="add-diagnostico">+ Adicionar Diagnóstico</button>
+
+            <div class="subsection-title">Medicamentos de Uso Contínuo</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Faz uso de medicamentos contínuos?</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="medicamentos_sim" name="usa_medicamentos" value="sim">
+                    <label for="medicamentos_sim">Sim</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="medicamentos_nao" name="usa_medicamentos" value="nao">
+                    <label for="medicamentos_nao">Não</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="medicamentos-fields" style="display: none;">
+              <div id="medicamentos-list">
+                <div class="medicamento-item">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="medicamento_nome_1">Nome do Medicamento</label>
+                      <input type="text" id="medicamento_nome_1" name="medicamento_nome_1" />
+                    </div>
+                    <div class="form-group">
+                      <label for="medicamento_dosagem_1">Dosagem</label>
+                      <input type="text" id="medicamento_dosagem_1" name="medicamento_dosagem_1" />
+                    </div>
+                    <div class="form-group">
+                      <label for="medicamento_frequencia_1">Frequência</label>
+                      <input type="text" id="medicamento_frequencia_1" name="medicamento_frequencia_1" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn-add" id="add-medicamento">+ Adicionar Medicamento</button>
+            </div>
+
+            <div class="subsection-title">UBS de Referência</div>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="ubs_nome">Nome da UBS</label>
+                <input type="text" id="ubs_nome" name="ubs_nome" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="ubs_municipio">Município</label>
+                <input type="text" id="ubs_municipio" name="ubs_municipio" />
+              </div>
+              <div class="form-group">
+                <label for="ubs_bairro">Bairro</label>
+                <input type="text" id="ubs_bairro" name="ubs_bairro" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="ubs_observacao">Observação</label>
+                <textarea id="ubs_observacao" name="ubs_observacao" rows="2"></textarea>
+              </div>
+            </div>
+
+            <div class="subsection-title">CRAS de Referência</div>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="cras_nome">Nome do CRAS</label>
+                <input type="text" id="cras_nome" name="cras_nome" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cras_municipio">Município</label>
+                <input type="text" id="cras_municipio" name="cras_municipio" />
+              </div>
+              <div class="form-group">
+                <label for="cras_bairro">Bairro</label>
+                <input type="text" id="cras_bairro" name="cras_bairro" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="cras_observacao">Observação</label>
+                <textarea id="cras_observacao" name="cras_observacao" rows="2"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="btn-prev-10">Anterior</button>
+            <button type="button" class="btn-primary" id="btn-next-10">Próximo</button>
+          </div>
+        </div>
+
+        <!-- Seção 11: Histórico Familiar -->
+        <div class="form-section" id="section-11">
+          <div class="section-title">Histórico Familiar de Saúde</div>
+          
+          <div class="form-card">
+            <div class="subsection-title">Condições de Saúde na Família</div>
+            <div class="checkbox-grid">
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_deficiencia_intelectual" name="condicoes_familia[]" value="deficiencia_intelectual">
+                <label for="familia_deficiencia_intelectual">Deficiência Intelectual</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_deficiencia_fisica" name="condicoes_familia[]" value="deficiencia_fisica">
+                <label for="familia_deficiencia_fisica">Deficiência Física</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_deficiencia_auditiva" name="condicoes_familia[]" value="deficiencia_auditiva">
+                <label for="familia_deficiencia_auditiva">Deficiência Auditiva</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_deficiencia_visual" name="condicoes_familia[]" value="deficiencia_visual">
+                <label for="familia_deficiencia_visual">Deficiência Visual</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_cardiopatia" name="condicoes_familia[]" value="cardiopatia">
+                <label for="familia_cardiopatia">Cardiopatia</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_asma" name="condicoes_familia[]" value="asma">
+                <label for="familia_asma">Asma</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_bronquite" name="condicoes_familia[]" value="bronquite">
+                <label for="familia_bronquite">Bronquite</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_hipertensao" name="condicoes_familia[]" value="hipertensao">
+                <label for="familia_hipertensao">Hipertensão Arterial</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_toxoplasmose" name="condicoes_familia[]" value="toxoplasmose">
+                <label for="familia_toxoplasmose">Toxoplasmose</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_dependencia_quimica" name="condicoes_familia[]" value="dependencia_quimica">
+                <label for="familia_dependencia_quimica">Dependência Química</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_epilepsia" name="condicoes_familia[]" value="epilepsia">
+                <label for="familia_epilepsia">Epilepsia</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_desnutricao" name="condicoes_familia[]" value="desnutricao">
+                <label for="familia_desnutricao">Desnutrição</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_diabetes" name="condicoes_familia[]" value="diabetes">
+                <label for="familia_diabetes">Diabetes</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_cancer" name="condicoes_familia[]" value="cancer">
+                <label for="familia_cancer">Câncer</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="familia_outras_condicoes" name="condicoes_familia[]" value="outras">
+                <label for="familia_outras_condicoes">Outras</label>
+              </div>
+            </div>
+
+            <div class="subsection-title">Diagnósticos Familiares</div>
+            <div id="diagnosticos-familia-list">
+              <div class="diagnostico-familia-item">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="familia_cid_1">CID</label>
+                    <input type="text" id="familia_cid_1" name="familia_cid_1" />
+                  </div>
+                  <div class="form-group">
+                    <label for="familia_parentesco_1">Parentesco</label>
+                    <input type="text" id="familia_parentesco_1" name="familia_parentesco_1" placeholder="Ex: Mãe, Pai, Avó..." />
+                  </div>
+                  <div class="form-group">
+                    <label for="familia_descricao_1">Descrição</label>
+                    <input type="text" id="familia_descricao_1" name="familia_descricao_1" />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group full-width">
+                    <label for="familia_observacao_1">Observação</label>
+                    <textarea id="familia_observacao_1" name="familia_observacao_1" rows="2"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn-add" id="add-diagnostico-familia">+ Adicionar Diagnóstico Familiar</button>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="btn-prev-11">Anterior</button>
+            <button type="button" class="btn-primary" id="btn-next-11">Próximo</button>
+          </div>
+        </div>
+
+        <!-- Seção 12: Finalizar -->
+        <div class="form-section" id="section-12">
+          <div class="section-title">Finalizar Cadastro</div>
+          
+          <div class="form-card">
+            <div class="summary-section">
+              <h3>Resumo dos Dados</h3>
+              <p>Revise as informações antes de finalizar o cadastro.</p>
+              
+              <div class="summary-item">
+                <strong>Paciente:</strong> <span id="summary-paciente">-</span>
+              </div>
+              <div class="summary-item">
+                <strong>Data de Nascimento:</strong> <span id="summary-nascimento">-</span>
+              </div>
+              <div class="summary-item">
+                <strong>CPF:</strong> <span id="summary-cpf">-</span>
+              </div>
+              <div class="summary-item">
+                <strong>Telefone:</strong> <span id="summary-telefone">-</span>
+              </div>
+              <div class="summary-item">
+                <strong>Endereço:</strong> <span id="summary-endereco">-</span>
+              </div>
+              <div class="summary-item">
+                <strong>Responsável Principal:</strong> <span id="summary-responsavel">-</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="checkbox-item">
+                <input type="checkbox" id="confirmar_dados" name="confirmar_dados" required>
+                <label for="confirmar_dados" class="required">Confirmo que todas as informações estão corretas</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="btn-prev-12">Anterior</button>
+            <button type="submit" class="btn-success" id="btn-submit">Finalizar Cadastro</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script src="../js/registro.js"></script>
+  </body>
+</html>
