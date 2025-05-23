@@ -53,21 +53,6 @@
             </a>
           </li>
           <li class="sidebar-list-item">
-            <a href="html/agenda.html" id="agenda-consultas">
-              <span class="material-icons-outlined">event_note</span> Agenda
-            </a>
-          </li>
-          <li class="sidebar-list-item">
-            <a href="html/relatorios.html" id="ver-relatorios">
-              <span class="material-icons-outlined">description</span> Relatórios
-            </a>
-          </li>
-          <li class="sidebar-list-item">
-            <a href="html/estatisticas.html" id="ver-estatisticas">
-              <span class="material-icons-outlined">analytics</span> Estatísticas
-            </a>
-          </li>
-          <li class="sidebar-list-item">
             <a href="#" id="configuracoes">
               <span class="material-icons-outlined">settings</span> Configurações
             </a>
@@ -86,162 +71,89 @@
           <span id="current-date"></span></p>
         </div>
         <div class="main-cards">
+          <div class="card" onclick="window.location.href='html/pacientes.html'">
+            <div class="card-inner">
+              <h2>PACIENTES CADASTRADOS</h2>
+              <span class="material-icons-outlined">people</span>
+            </div>
+            <h1 id="total-pacientes">0</h1>
+            <p class="card-progress">Total de registros</p>
+          </div>
           <div class="card" onclick="window.location.href='html/registro.html'">
             <div class="card-inner">
-              <h2>CRIANÇAS REGISTRADAS</h2>
-              <span class="material-icons-outlined">child_friendly</span>
+              <h2>NOVOS CADASTROS</h2>
+              <span class="material-icons-outlined">person_add</span>
             </div>
-            <h1>4,021</h1>
-            <p class="card-progress">+12 esta semana</p>
+            <h1 id="novos-cadastros">0</h1>
+            <p class="card-progress">Esta semana</p>
           </div>
-          <div class="card" onclick="document.getElementById('agenda-consultas').click()">
+          <div class="card" onclick="window.location.href='html/pacientes.html'">
             <div class="card-inner">
-              <h2>CIRURGIAS MARCADAS</h2>
-              <span class="material-icons-outlined">medical_services</span>
+              <h2>PACIENTES ATIVOS</h2>
+              <span class="material-icons-outlined">verified_user</span>
             </div>
-            <h1>86</h1>
-            <p class="card-progress">3 para hoje</p>
+            <h1 id="pacientes-ativos">0</h1>
+            <p class="card-progress">Em acompanhamento</p>
           </div>
-          <div class="card" onclick="document.getElementById('agenda-consultas').click()">
+          <div class="card" onclick="window.location.href='html/registro.html'">
             <div class="card-inner">
-              <h2>EXAMES PENDENTES</h2>
-              <span class="material-icons-outlined">science</span>
+              <h2>CADASTROS HOJE</h2>
+              <span class="material-icons-outlined">today</span>
             </div>
-            <h1>124</h1>
-            <p class="card-progress">15 para esta semana</p>
-          </div>
-          <div class="card" onclick="document.getElementById('agenda-consultas').click()">
-            <div class="card-inner">
-              <h2>CONSULTAS HOJE</h2>
-              <span class="material-icons-outlined">event_available</span>
-            </div>
-            <h1>27</h1>
-            <p class="card-progress">3 em andamento</p>
+            <h1 id="cadastros-hoje">0</h1>
+            <p class="card-progress">Registros de hoje</p>
           </div>
         </div>
 
         <div class="products">
-          <div class="calendar-section">
-            <div class="section-header">
-              <h2>Calendário de Atividades</h2>
-              <button class="action-button">
-                <span class="material-icons-outlined">add</span> Nova Atividade
-              </button>
-            </div>
-            <div class="calendar-body">
-              <div class="calendar-nav">
-                <button class="nav-button"><span class="material-icons-outlined">chevron_left</span></button>
-                <h3>Maio 2025</h3>
-                <button class="nav-button"><span class="material-icons-outlined">chevron_right</span></button>
-              </div>
-              <div class="calendar-grid">
-                <div class="calendar-day day-header">Dom</div>
-                <div class="calendar-day day-header">Seg</div>
-                <div class="calendar-day day-header">Ter</div>
-                <div class="calendar-day day-header">Qua</div>
-                <div class="calendar-day day-header">Qui</div>
-                <div class="calendar-day day-header">Sex</div>
-                <div class="calendar-day day-header">Sáb</div>
-                
-                <div class="calendar-day inactive">28</div>
-                <div class="calendar-day inactive">29</div>
-                <div class="calendar-day inactive">30</div>
-                <div class="calendar-day">1</div>
-                <div class="calendar-day">2</div>
-                <div class="calendar-day">3</div>
-                <div class="calendar-day">4</div>
-                
-                <div class="calendar-day">5</div>
-                <div class="calendar-day">6</div>
-                <div class="calendar-day">7</div>
-                <div class="calendar-day">8</div>
-                <div class="calendar-day">9</div>
-                <div class="calendar-day">10</div>
-                <div class="calendar-day">11</div>
-                
-                <div class="calendar-day">12</div>
-                <div class="calendar-day">13</div>
-                <div class="calendar-day">14</div>
-                <div class="calendar-day">15</div>
-                <div class="calendar-day">16</div>
-                <div class="calendar-day">17</div>
-                <div class="calendar-day">18</div>
-                
-                <div class="calendar-day">19
-                  <div class="event event-medical">12 consultas</div>
-                </div>
-                <div class="calendar-day">20
-                  <div class="event event-surgery">5 cirurgias</div>
-                </div>
-                <div class="calendar-day">21
-                  <div class="event event-exam">8 exames</div>
-                </div>
-                <div class="calendar-day">22</div>
-                <div class="calendar-day">23</div>
-                <div class="calendar-day">24</div>
-                <div class="calendar-day">25</div>
-                
-                <div class="calendar-day">26</div>
-                <div class="calendar-day">27</div>
-                <div class="calendar-day">28</div>
-                <div class="calendar-day">29</div>
-                <div class="calendar-day">30</div>
-                <div class="calendar-day">31</div>
-                <div class="calendar-day inactive">1</div>
-              </div>
-            </div>
-          </div>
-          
           <div class="activity-section">
             <div class="section-header">
-              <h2>Atividades Recentes</h2>
-              <button class="action-button">
-                <span class="material-icons-outlined">refresh</span> Atualizar
+              <h2>Últimos Pacientes Cadastrados</h2>
+              <button class="action-button" onclick="window.location.href='html/pacientes.html'">
+                <span class="material-icons-outlined">visibility</span> Ver Todos
               </button>
             </div>
             <div class="activity-list">
               <div class="activity-item">
                 <div class="activity-icon background-blue">
-                  <span class="material-icons-outlined">person_add</span>
+                  <span class="material-icons-outlined">person</span>
                 </div>
                 <div class="activity-content">
-                  <h4>Novo cadastro realizado</h4>
-                  <p>Paciente: Maria Silva, 8 anos</p>
-                  <span class="activity-time">Hoje, 10:45</span>
-                </div>
-              </div>
-              <div class="activity-item">
-                <div class="activity-icon background-green">
-                  <span class="material-icons-outlined">event_available</span>
-                </div>
-                <div class="activity-content">
-                  <h4>Consulta realizada</h4>
-                  <p>Paciente: João Pereira, Dr. Marcos</p>
-                  <span class="activity-time">Hoje, 09:30</span>
-                </div>
-              </div>
-              <div class="activity-item">
-                <div class="activity-icon background-orange">
-                  <span class="material-icons-outlined">science</span>
-                </div>
-                <div class="activity-content">
-                  <h4>Resultados de exames</h4>
-                  <p>Paciente: Ana Costa, Hemograma</p>
-                  <span class="activity-time">Ontem, 15:20</span>
-                </div>
-              </div>
-              <div class="activity-item">
-                <div class="activity-icon background-red">
-                  <span class="material-icons-outlined">medical_services</span>
-                </div>
-                <div class="activity-content">
-                  <h4>Cirurgia agendada</h4>
-                  <p>Paciente: Pedro Santos, Dr. Carlos</p>
-                  <span class="activity-time">Ontem, 13:15</span>
+                  <h4>Nenhum paciente cadastrado ainda</h4>
+                  <p>Clique em "Registro" para adicionar o primeiro paciente</p>
+                  <span class="activity-time">Sistema iniciado</span>
                 </div>
               </div>
             </div>
-            <a href="#" class="see-more">Ver todas as atividades</a>
+            <a href="html/pacientes.html" class="see-more">Ver todos os pacientes</a>
+          </div>
+
+          <div class="calendar-section">
+            <div class="section-header">
+              <h2>Informações do Sistema</h2>
+              <button class="action-button" onclick="window.location.href='html/registro.html'">
+                <span class="material-icons-outlined">add</span> Novo Cadastro
+              </button>
+            </div>
+            <div style="padding: 20px; text-align: center;">
+              <div style="margin-bottom: 20px;">
+                <span class="material-icons-outlined" style="font-size: 48px; color: #1D266A;">medical_information</span>
+              </div>
+              <h3 style="color: #1D266A; margin-bottom: 10px;">Sistema de Gestão Casa Guido</h3>
+              <p style="color: #666; margin-bottom: 20px;">
+                Gerencie os cadastros e informações dos pacientes de forma simples e eficiente.
+              </p>
+              <div style="display: flex; justify-content: space-around; text-align: center;">
+                <div>
+                  <div style="color: #1D266A; font-size: 24px; font-weight: bold;" id="sistema-pacientes">0</div>
+                  <div style="color: #666; font-size: 14px;">Pacientes</div>
+                </div>
+                <div>
+                  <div style="color: #2E7D32; font-size: 24px; font-weight: bold;" id="sistema-ativos">0</div>
+                  <div style="color: #666; font-size: 14px;">Ativos</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         
@@ -252,17 +164,17 @@
               <span class="material-icons-outlined">person_add</span>
               <span>Novo Cadastro</span>
             </a>
-            <a href="#" class="quick-button">
+            <a href="html/pacientes.html" class="quick-button">
+              <span class="material-icons-outlined">people</span>
+              <span>Ver Pacientes</span>
+            </a>
+            <a href="html/pacientes.html" class="quick-button">
               <span class="material-icons-outlined">search</span>
               <span>Buscar Paciente</span>
             </a>
-            <a href="#" class="quick-button">
-              <span class="material-icons-outlined">event_note</span>
-              <span>Agendar Consulta</span>
-            </a>
-            <a href="#" class="quick-button">
-              <span class="material-icons-outlined">description</span>
-              <span>Relatórios</span>
+            <a href="html/registro.html" class="quick-button">
+              <span class="material-icons-outlined">edit</span>
+              <span>Editar Cadastro</span>
             </a>
           </div>
         </div>
@@ -276,15 +188,107 @@
         const today = new Date();
         document.getElementById('current-date').textContent = today.toLocaleDateString('pt-BR', options);
         
-        // Highlight do dia atual no calendário
-        const currentDay = today.getDate();
-        const calendarDays = document.querySelectorAll('.calendar-day:not(.inactive):not(.day-header)');
-        calendarDays.forEach(day => {
-          if (parseInt(day.textContent) === currentDay) {
-            day.classList.add('current-day');
-          }
-        });
+        // Carregar dados dos pacientes do localStorage
+        carregarDadosDashboard();
       });
+
+      function carregarDadosDashboard() {
+        // Recuperar dados dos pacientes do localStorage
+        const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
+        
+        // Atualizar contadores
+        document.getElementById('total-pacientes').textContent = pacientes.length;
+        document.getElementById('sistema-pacientes').textContent = pacientes.length;
+        
+        // Calcular pacientes ativos (exemplo: pacientes cadastrados nos últimos 30 dias)
+        const hoje = new Date();
+        const trintaDiasAtras = new Date(hoje.getTime() - (30 * 24 * 60 * 60 * 1000));
+        
+        const pacientesAtivos = pacientes.filter(paciente => {
+          if (paciente.dataCadastro) {
+            const dataCadastro = new Date(paciente.dataCadastro);
+            return dataCadastro >= trintaDiasAtras;
+          }
+          return false;
+        });
+        
+        document.getElementById('pacientes-ativos').textContent = pacientesAtivos.length;
+        document.getElementById('sistema-ativos').textContent = pacientesAtivos.length;
+        
+        // Calcular cadastros desta semana
+        const inicioSemana = new Date(hoje);
+        inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+        inicioSemana.setHours(0, 0, 0, 0);
+        
+        const cadastrosEstaSemana = pacientes.filter(paciente => {
+          if (paciente.dataCadastro) {
+            const dataCadastro = new Date(paciente.dataCadastro);
+            return dataCadastro >= inicioSemana;
+          }
+          return false;
+        });
+        
+        document.getElementById('novos-cadastros').textContent = cadastrosEstaSemana.length;
+        
+        // Calcular cadastros de hoje
+        const inicioHoje = new Date(hoje);
+        inicioHoje.setHours(0, 0, 0, 0);
+        
+        const cadastrosHoje = pacientes.filter(paciente => {
+          if (paciente.dataCadastro) {
+            const dataCadastro = new Date(paciente.dataCadastro);
+            return dataCadastro >= inicioHoje;
+          }
+          return false;
+        });
+        
+        document.getElementById('cadastros-hoje').textContent = cadastrosHoje.length;
+        
+        // Atualizar lista de últimos pacientes
+        atualizarUltimosPacientes(pacientes);
+      }
+
+      function atualizarUltimosPacientes(pacientes) {
+        const activityList = document.querySelector('.activity-list');
+        
+        if (pacientes.length === 0) {
+          return; // Manter mensagem padrão
+        }
+        
+        // Ordenar por data de cadastro (mais recentes primeiro)
+        const pacientesOrdenados = pacientes.sort((a, b) => {
+          const dataA = new Date(a.dataCadastro || 0);
+          const dataB = new Date(b.dataCadastro || 0);
+          return dataB - dataA;
+        });
+        
+        // Pegar os 4 mais recentes
+        const ultimosPacientes = pacientesOrdenados.slice(0, 4);
+        
+        // Limpar lista atual
+        activityList.innerHTML = '';
+        
+        // Adicionar últimos pacientes
+        ultimosPacientes.forEach(paciente => {
+          const activityItem = document.createElement('div');
+          activityItem.className = 'activity-item';
+          
+          const dataCadastro = paciente.dataCadastro ? new Date(paciente.dataCadastro).toLocaleDateString('pt-BR') : 'Data não informada';
+          
+          activityItem.innerHTML = `
+            <div class="activity-icon background-blue">
+              <span class="material-icons-outlined">person</span>
+            </div>
+            <div class="activity-content">
+              <h4>Paciente cadastrado</h4>
+              <p>Nome: ${paciente.nome || 'Nome não informado'}</p>
+              <span class="activity-time">${dataCadastro}</span>
+            </div>
+          `;
+          
+          activityList.appendChild(activityItem);
+        });
+      }
     </script>
   </body>
 </html>
