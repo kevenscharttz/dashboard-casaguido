@@ -794,3 +794,479 @@ class GuidoFormValidator {
             <div class="form-row">
                 <div class="form-group full-width">
                     <label for="observacao_${index}">
+<label for="observacao_${index}">Observação</label>
+                    <textarea id="observacao_${index}" name="observacao_${index}" rows="2"></textarea>
+                </div>
+            </div>
+        `;
+        return div;
+    }
+
+    addMedicamentoField() {
+        this.counters.medicamento++;
+        const container = document.getElementById('medicamentos-list');
+        const newItem = this.createMedicamentoField(this.counters.medicamento);
+        container.appendChild(newItem);
+    }
+
+    createMedicamentoField(index) {
+        const div = document.createElement('div');
+        div.className = 'medicamento-item';
+        div.innerHTML = `
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label for="medicamento_nome_${index}">Nome do Medicamento</label>
+                    <input type="text" id="medicamento_nome_${index}" name="medicamento_nome_${index}" />
+                </div>
+                <div class="form-group">
+                    <label for="medicamento_dosagem_${index}">Dosagem</label>
+                    <input type="text" id="medicamento_dosagem_${index}" name="medicamento_dosagem_${index}" />
+                </div>
+                <button type="button" class="btn-remove" onclick="this.parentElement.parentElement.remove()">
+                    Remover
+                </button>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="medicamento_frequencia_${index}">Frequência</label>
+                    <select id="medicamento_frequencia_${index}" name="medicamento_frequencia_${index}">
+                        <option value="">Selecione...</option>
+                        <option value="1x_dia">1x ao dia</option>
+                        <option value="2x_dia">2x ao dia</option>
+                        <option value="3x_dia">3x ao dia</option>
+                        <option value="4x_dia">4x ao dia</option>
+                        <option value="12_12h">De 12 em 12 horas</option>
+                        <option value="8_8h">De 8 em 8 horas</option>
+                        <option value="6_6h">De 6 em 6 horas</option>
+                        <option value="quando_necessario">Quando necessário</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label for="medicamento_observacao_${index}">Observação</label>
+                    <textarea id="medicamento_observacao_${index}" name="medicamento_observacao_${index}" rows="2"></textarea>
+                </div>
+            </div>
+        `;
+        return div;
+    }
+
+    addDiagnosticoFamiliaField() {
+        this.counters.diagnosticoFamilia++;
+        const container = document.getElementById('diagnosticos-familia-list');
+        const newItem = this.createDiagnosticoFamiliaField(this.counters.diagnosticoFamilia);
+        container.appendChild(newItem);
+    }
+
+    createDiagnosticoFamiliaField(index) {
+        const div = document.createElement('div');
+        div.className = 'diagnostico-familia-item';
+        div.innerHTML = `
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="familia_parentesco_${index}">Parentesco</label>
+                    <select id="familia_parentesco_${index}" name="familia_parentesco_${index}">
+                        <option value="">Selecione...</option>
+                        <option value="mae">Mãe</option>
+                        <option value="pai">Pai</option>
+                        <option value="irmao">Irmão(ã)</option>
+                        <option value="avo_paterno">Avô Paterno</option>
+                        <option value="avo_materna">Avó Materna</option>
+                        <option value="avo_paterno">Avô Paterno</option>
+                        <option value="avo_materna">Avó Paterna</option>
+                        <option value="tio_paterno">Tio Paterno</option>
+                        <option value="tia_paterna">Tia Paterna</option>
+                        <option value="tio_materno">Tio Materno</option>
+                        <option value="tia_materna">Tia Materna</option>
+                        <option value="primo">Primo(a)</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="familia_cid_${index}">CID</label>
+                    <input type="text" id="familia_cid_${index}" name="familia_cid_${index}" />
+                </div>
+                <div class="form-group full-width">
+                    <label for="familia_descricao_${index}">Descrição</label>
+                    <input type="text" id="familia_descricao_${index}" name="familia_descricao_${index}" />
+                </div>
+                <button type="button" class="btn-remove" onclick="this.parentElement.parentElement.remove()">
+                    Remover
+                </button>
+            </div>
+        `;
+        return div;
+    }
+
+    // Coleta de dados do formulário
+    collectFormData() {
+        this.formData = {};
+        const form = document.getElementById('cadastro-form');
+        const formData = new FormData(form);
+        
+        for (let [key, value] of formData.entries()) {
+            this.formData[key] = value;
+        }
+
+        // Coletar dados dos campos dinâmicos
+        this.collectDynamicData();
+        
+        return this.formData;
+    }
+
+    collectDynamicData() {
+        // Quimioterapias
+        this.formData.quimioterapias = [];
+        for (let i = 1; i <= this.counters.quimio; i++) {
+            const dataField = document.getElementById(`quimio_data_${i}`);
+            const localField = document.getElementById(`quimio_local_${i}`);
+            
+            if (dataField && localField && (dataField.value || localField.value)) {
+                this.formData.quimioterapias.push({
+                    data: dataField.value,
+                    local: localField.value
+                });
+            }
+        }
+
+        // Radioterapias
+        this.formData.radioterapias = [];
+        for (let i = 1; i <= this.counters.radio; i++) {
+            const dataField = document.getElementById(`radio_data_${i}`);
+            const localField = document.getElementById(`radio_local_${i}`);
+            
+            if (dataField && localField && (dataField.value || localField.value)) {
+                this.formData.radioterapias.push({
+                    data: dataField.value,
+                    local: localField.value
+                });
+            }
+        }
+
+        // Cirurgias
+        this.formData.cirurgias = [];
+        for (let i = 1; i <= this.counters.cirurgia; i++) {
+            const dataField = document.getElementById(`cirurgia_data_${i}`);
+            const localField = document.getElementById(`cirurgia_local_${i}`);
+            
+            if (dataField && localField && (dataField.value || localField.value)) {
+                this.formData.cirurgias.push({
+                    data: dataField.value,
+                    local: localField.value
+                });
+            }
+        }
+
+        // Diagnósticos
+        this.formData.diagnosticos = [];
+        for (let i = 1; i <= this.counters.diagnostico; i++) {
+            const cidField = document.getElementById(`cid_${i}`);
+            const descricaoField = document.getElementById(`descricao_${i}`);
+            const observacaoField = document.getElementById(`observacao_${i}`);
+            
+            if (cidField && descricaoField && (cidField.value || descricaoField.value)) {
+                this.formData.diagnosticos.push({
+                    cid: cidField.value,
+                    descricao: descricaoField.value,
+                    observacao: observacaoField ? observacaoField.value : ''
+                });
+            }
+        }
+
+        // Medicamentos
+        this.formData.medicamentos = [];
+        for (let i = 1; i <= this.counters.medicamento; i++) {
+            const nomeField = document.getElementById(`medicamento_nome_${i}`);
+            const dosagemField = document.getElementById(`medicamento_dosagem_${i}`);
+            const frequenciaField = document.getElementById(`medicamento_frequencia_${i}`);
+            const observacaoField = document.getElementById(`medicamento_observacao_${i}`);
+            
+            if (nomeField && nomeField.value) {
+                this.formData.medicamentos.push({
+                    nome: nomeField.value,
+                    dosagem: dosagemField ? dosagemField.value : '',
+                    frequencia: frequenciaField ? frequenciaField.value : '',
+                    observacao: observacaoField ? observacaoField.value : ''
+                });
+            }
+        }
+
+        // Diagnósticos familiares
+        this.formData.diagnosticosFamilia = [];
+        for (let i = 1; i <= this.counters.diagnosticoFamilia; i++) {
+            const parentescoField = document.getElementById(`familia_parentesco_${i}`);
+            const cidField = document.getElementById(`familia_cid_${i}`);
+            const descricaoField = document.getElementById(`familia_descricao_${i}`);
+            
+            if (parentescoField && cidField && descricaoField && 
+                (parentescoField.value || cidField.value || descricaoField.value)) {
+                this.formData.diagnosticosFamilia.push({
+                    parentesco: parentescoField.value,
+                    cid: cidField.value,
+                    descricao: descricaoField.value
+                });
+            }
+        }
+    }
+
+    // Submissão do formulário
+    async handleSubmit(event) {
+        event.preventDefault();
+        
+        // Validar todas as seções
+        let allValid = true;
+        for (let i = 1; i <= this.totalSections; i++) {
+            if (!this.validateSection(i)) {
+                allValid = false;
+                // Ir para a primeira seção com erro
+                if (this.currentSection !== i) {
+                    this.currentSection = i;
+                    this.showSection(i);
+                    this.updateProgress();
+                    this.updateStepIndicator();
+                }
+                break;
+            }
+        }
+
+        if (!allValid) {
+            this.showError('Por favor, corrija os erros antes de continuar.');
+            return;
+        }
+
+        // Coletar dados
+        const formData = this.collectFormData();
+        
+        // Mostrar loading
+        this.showLoading(true);
+        
+        try {
+            // Enviar dados para o servidor
+            const response = await this.submitData(formData);
+            
+            if (response.success) {
+                this.showSuccess('Cadastro realizado com sucesso!');
+                // Redirecionar ou limpar formulário
+                setTimeout(() => {
+                    this.resetForm();
+                }, 2000);
+            } else {
+                this.showError(response.message || 'Erro ao salvar os dados. Tente novamente.');
+            }
+        } catch (error) {
+            console.error('Erro no envio:', error);
+            this.showError('Erro de conexão. Verifique sua internet e tente novamente.');
+        } finally {
+            this.showLoading(false);
+        }
+    }
+
+    async submitData(formData) {
+        const response = await fetch('/api/registro', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        return await response.json();
+    }
+
+    showLoading(show) {
+        let loadingDiv = document.getElementById('loading-overlay');
+        
+        if (show) {
+            if (!loadingDiv) {
+                loadingDiv = document.createElement('div');
+                loadingDiv.id = 'loading-overlay';
+                loadingDiv.innerHTML = `
+                    <div class="loading-content">
+                        <div class="spinner"></div>
+                        <p>Salvando dados...</p>
+                    </div>
+                `;
+                loadingDiv.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.7);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 9999;
+                `;
+                document.body.appendChild(loadingDiv);
+            }
+            loadingDiv.style.display = 'flex';
+        } else if (loadingDiv) {
+            loadingDiv.style.display = 'none';
+        }
+    }
+
+    showSuccess(message) {
+        const successDiv = document.createElement('div');
+        successDiv.className = 'success-message';
+        successDiv.innerHTML = `
+            <div class="success-content">
+                <i class="fas fa-check-circle"></i>
+                <p>${message}</p>
+            </div>
+        `;
+        successDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 10000;
+            max-width: 400px;
+        `;
+        
+        document.body.appendChild(successDiv);
+        
+        setTimeout(() => {
+            successDiv.remove();
+        }, 5000);
+    }
+
+    resetForm() {
+        document.getElementById('cadastro-form').reset();
+        this.currentSection = 1;
+        this.showSection(1);
+        this.updateProgress();
+        this.updateStepIndicator();
+        this.clearAllErrors();
+        
+        // Resetar contadores
+        this.counters = {
+            quimio: 1,
+            radio: 1,
+            cirurgia: 1,
+            diagnostico: 1,
+            medicamento: 1,
+            diagnosticoFamilia: 1
+        };
+        
+        // Limpar campos dinâmicos
+        this.clearDynamicFields();
+    }
+
+    clearAllErrors() {
+        document.querySelectorAll('.error').forEach(el => {
+            el.classList.remove('error');
+        });
+        
+        document.querySelectorAll('[id$="-error"]').forEach(el => {
+            el.style.display = 'none';
+        });
+        
+        this.clearGeneralError();
+    }
+
+    clearDynamicFields() {
+        const containers = [
+            'quimio-list',
+            'radio-list', 
+            'cirurgia-list',
+            'diagnosticos-list',
+            'medicamentos-list',
+            'diagnosticos-familia-list'
+        ];
+        
+        containers.forEach(containerId => {
+            const container = document.getElementById(containerId);
+            if (container) {
+                // Manter apenas o primeiro item de cada tipo
+                const items = container.children;
+                for (let i = items.length - 1; i > 0; i--) {
+                    items[i].remove();
+                }
+            }
+        });
+    }
+
+    // Método para salvar progresso (opcional)
+    saveProgress() {
+        const progressData = {
+            currentSection: this.currentSection,
+            formData: this.collectFormData(),
+            timestamp: new Date().toISOString()
+        };
+        
+        // Salvar no sessionStorage (se disponível)
+        try {
+            sessionStorage.setItem('guido_progress', JSON.stringify(progressData));
+        } catch (error) {
+            console.warn('Não foi possível salvar o progresso:', error);
+        }
+    }
+
+    // Método para carregar progresso salvo (opcional)
+    loadProgress() {
+        try {
+            const savedProgress = sessionStorage.getItem('guido_progress');
+            if (savedProgress) {
+                const progressData = JSON.parse(savedProgress);
+                
+                // Verificar se o progresso não é muito antigo (ex: 1 hora)
+                const savedTime = new Date(progressData.timestamp);
+                const now = new Date();
+                const hoursDiff = (now - savedTime) / (1000 * 60 * 60);
+                
+                if (hoursDiff < 1) {
+                    // Restaurar dados do formulário
+                    this.restoreFormData(progressData.formData);
+                    
+                    // Restaurar seção atual
+                    this.currentSection = progressData.currentSection;
+                    this.showSection(this.currentSection);
+                    this.updateProgress();
+                    this.updateStepIndicator();
+                    
+                    return true;
+                }
+            }
+        } catch (error) {
+            console.warn('Erro ao carregar progresso salvo:', error);
+        }
+        
+        return false;
+    }
+
+    restoreFormData(formData) {
+        Object.entries(formData).forEach(([key, value]) => {
+            const field = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
+            if (field) {
+                if (field.type === 'checkbox' || field.type === 'radio') {
+                    field.checked = value === field.value;
+                } else {
+                    field.value = value;
+                }
+            }
+        });
+    }
+
+    // Método público para inicializar o validador
+    static init() {
+        return new GuidoFormValidator();
+    }
+}
+
+// Inicializar quando o DOM estiver carregado
+document.addEventListener('DOMContentLoaded', () => {
+    window.guidoValidator = GuidoFormValidator.init();
+});
+
+// Salvar progresso periodicamente
+setInterval(() => {
+    if (window.guidoValidator) {
+        window.guidoValidator.saveProgress();
+    }
+}, 30000); // A cada 30 segundos
