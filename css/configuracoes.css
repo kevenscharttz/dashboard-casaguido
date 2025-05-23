@@ -23,15 +23,15 @@ body {
     height: 100vh;
 }
 
-/* Header */
+/* Header - Padronizado com navbar da tela de pacientes */
 .header {
     grid-area: header;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     position: relative;
     z-index: 1000;
 }
@@ -39,13 +39,30 @@ body {
 .menu-icon {
     display: none;
     cursor: pointer;
-    color: white;
+    color: #495057;
 }
 
 .header-left .logo-colored {
     font-size: 24px;
-    font-weight: bold;
-    letter-spacing: 2px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #343a40;
+}
+
+.header-left .logo-colored span:nth-child(1) {
+    color: #d50000;
+}
+
+.header-left .logo-colored span:nth-child(2) {
+    color: #ffd700;
+}
+
+.header-left .logo-colored span:nth-child(3) {
+    color: #2196f3;
+}
+
+.header-left .logo-colored span:nth-child(4) {
+    color: #4caf50;
 }
 
 .header-right {
@@ -54,18 +71,64 @@ body {
     gap: 15px;
 }
 
-.header-right span,
-.header-right a {
-    color: white;
+.user-dropdown {
+    position: relative;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
 }
 
-.header-right span:hover,
-.header-right a:hover {
-    opacity: 0.8;
-    transform: scale(1.1);
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #1D266A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.user-name {
+    font-weight: 500;
+    color: #495057;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    min-width: 200px;
+    z-index: 100;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #343a40;
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #e9ecef;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #e9ecef;
 }
 
 /* Sidebar */
@@ -90,6 +153,7 @@ body {
     font-size: 20px;
     font-weight: bold;
     letter-spacing: 1px;
+    color: white;
 }
 
 .sidebar-title span {
@@ -171,7 +235,7 @@ body {
     border-left: 4px solid #3498db;
 }
 
-/* Config Cards */
+/* Config Cards - Removido efeito hover */
 .config-card {
     background: white;
     border-radius: 12px;
@@ -179,12 +243,6 @@ body {
     margin-bottom: 20px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.07);
     border: 1px solid #e9ecef;
-    transition: all 0.3s ease;
-}
-
-.config-card:hover {
-    box-shadow: 0 6px 12px rgba(0,0,0,0.12);
-    transform: translateY(-2px);
 }
 
 .config-card h4 {
@@ -568,6 +626,10 @@ body {
     .usuarios-table th,
     .usuarios-table td {
         padding: 10px 8px;
+    }
+
+    .user-dropdown {
+        margin-left: auto;
     }
 }
 
