@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Casa Guido - Configurações</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/configuracoes.css">
+</head>
+<body>
+    <div class="grid-container">
+        <header class="header">
+            <div class="menu-icon" onclick="openSidebar()">
+                <span class="material-icons-outlined">menu</span>
+            </div>
+            <div class="header-left">
+                <div class="logo-colored">
+                    <span style="color: red;">G</span><span style="color: #ffd700;">U</span><span style="color: blue;">I</span><span style="color: green;">D</span>O
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="material-icons-outlined">notifications</span>
+                <span class="material-icons-outlined">email</span>
+                <a href="login.html" title="Sair">
+                    <span class="material-icons-outlined">logout</span>
+                </a>
+            </div>
+        </header>
+        
+        <aside id="sidebar">
+            <div class="sidebar-title">
+                <div class="sidebar-brand">
+                    <span style="color: red;">G</span><span style="color: #ffd700;">U</span><span style="color: blue;">I</span><span style="color: green;">D</span>O
+                </div>
+                <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
+            </div>
+            <ul class="sidebar-list">
+                <li class="sidebar-list-item">
+                    <a href="../index.html">
+                        <span class="material-icons-outlined">dashboard</span> Início
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="registro.html">
+                        <span class="material-icons-outlined">person_add</span> Registro
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="pacientes.html">
+                        <span class="material-icons-outlined">people</span> Pacientes
+                    </a>
+                </li>
+                <li class="sidebar-list-item active">
+                    <a href="configuracoes.html">
+                        <span class="material-icons-outlined">settings</span> Configurações
+                    </a>
+                </li>
+                <li class="sidebar-list-item">
+                    <a href="login.html">
+                        <span class="material-icons-outlined">logout</span> Sair
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        
+        <main class="main-container">
+            <div class="main-title">
+                <h2>CONFIGURAÇÕES - CASA GUIDO</h2>
+                <p>Painel de administração do sistema</p>
+            </div>
+            
+            <!-- Seção de Gerenciamento de Usuários -->
+            <div class="config-section">
+                <h3>Gerenciamento de Usuários</h3>
+                
+                <!-- Cadastro de Novo Usuário -->
+                <div class="config-card">
+                    <h4>Cadastrar Novo Usuário</h4>
+                    <form id="novo-usuario-form">
+                        <div class="form-group">
+                            <label for="nome-usuario">Nome Completo:</label>
+                            <input type="text" id="nome-usuario" name="nome-usuario" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email-usuario">Email:</label>
+                            <input type="email" id="email-usuario" name="email-usuario" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tipo-usuario">Tipo de Usuário:</label>
+                            <select id="tipo-usuario" name="tipo-usuario" required>
+                                <option value="">Selecione...</option>
+                                <option value="administrador">Administrador</option>
+                                <option value="medico">Médico</option>
+                                <option value="enfermeiro">Enfermeiro</option>
+                                <option value="recepcionista">Recepcionista</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="senha-usuario">Senha Temporária:</label>
+                            <input type="password" id="senha-usuario" name="senha-usuario" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmar-senha">Confirmar Senha:</label>
+                            <input type="password" id="confirmar-senha" name="confirmar-senha" required>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Cadastrar Usuário</button>
+                    </form>
+                </div>
+                
+                <!-- Lista de Usuários Existentes -->
+                <div class="config-card">
+                    <h4>Usuários Cadastrados</h4>
+                    <div class="usuarios-lista">
+                        <table class="usuarios-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Tipo</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Dr. João Silva</td>
+                                    <td>joao.silva@casaguido.com</td>
+                                    <td>Médico</td>
+                                    <td>Ativo</td>
+                                    <td>
+                                        <button class="btn-edit" title="Editar">
+                                            <span class="material-icons-outlined">edit</span>
+                                        </button>
+                                        <button class="btn-reset-password" title="Resetar Senha">
+                                            <span class="material-icons-outlined">lock_reset</span>
+                                        </button>
+                                        <button class="btn-deactivate" title="Desativar">
+                                            <span class="material-icons-outlined">person_off</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Maria Santos</td>
+                                    <td>maria.santos@casaguido.com</td>
+                                    <td>Enfermeira</td>
+                                    <td>Ativo</td>
+                                    <td>
+                                        <button class="btn-edit" title="Editar">
+                                            <span class="material-icons-outlined">edit</span>
+                                        </button>
+                                        <button class="btn-reset-password" title="Resetar Senha">
+                                            <span class="material-icons-outlined">lock_reset</span>
+                                        </button>
+                                        <button class="btn-deactivate" title="Desativar">
+                                            <span class="material-icons-outlined">person_off</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Ana Costa</td>
+                                    <td>ana.costa@casaguido.com</td>
+                                    <td>Recepcionista</td>
+                                    <td>Inativo</td>
+                                    <td>
+                                        <button class="btn-edit" title="Editar">
+                                            <span class="material-icons-outlined">edit</span>
+                                        </button>
+                                        <button class="btn-reset-password" title="Resetar Senha">
+                                            <span class="material-icons-outlined">lock_reset</span>
+                                        </button>
+                                        <button class="btn-activate" title="Ativar">
+                                            <span class="material-icons-outlined">person</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Seção de Configurações do Sistema -->
+            <div class="config-section">
+                <h3>Configurações do Sistema</h3>
+                
+                <div class="config-card">
+                    <h4>Configurações Gerais</h4>
+                    <form id="config-sistema-form">
+                        <div class="form-group">
+                            <label for="nome-instituicao">Nome da Instituição:</label>
+                            <input type="text" id="nome-instituicao" name="nome-instituicao" value="Casa Guido">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="endereco-instituicao">Endereço:</label>
+                            <textarea id="endereco-instituicao" name="endereco-instituicao" rows="3">Rua das Flores, 123 - Centro - São Paulo/SP</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="telefone-instituicao">Telefone:</label>
+                            <input type="tel" id="telefone-instituicao" name="telefone-instituicao" value="(11) 1234-5678">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email-instituicao">Email Institucional:</label>
+                            <input type="email" id="email-instituicao" name="email-instituicao" value="contato@casaguido.com">
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Salvar Configurações</button>
+                    </form>
+                </div>
+                
+                <div class="config-card">
+                    <h4>Backup e Segurança</h4>
+                    <div class="backup-options">
+                        <div class="backup-item">
+                            <h5>Backup Automático</h5>
+                            <p>Último backup: 22/05/2025 às 23:30</p>
+                            <button class="btn-secondary">Fazer Backup Manual</button>
+                        </div>
+                        
+                        <div class="backup-item">
+                            <h5>Configurações de Segurança</h5>
+                            <div class="security-options">
+                                <label>
+                                    <input type="checkbox" checked> Exigir senha forte
+                                </label>
+                                <label>
+                                    <input type="checkbox" checked> Expirar sessão após inatividade
+                                </label>
+                                <label>
+                                    <input type="checkbox"> Autenticação de dois fatores
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Seção de Logs do Sistema -->
+            <div class="config-section">
+                <h3>Logs do Sistema</h3>
+                
+                <div class="config-card">
+                    <h4>Atividades Recentes</h4>
+                    <div class="logs-container">
+                        <div class="log-item">
+                            <span class="log-time">23/05/2025 10:45</span>
+                            <span class="log-user">admin@casaguido.com</span>
+                            <span class="log-action">Criou novo usuário: maria.santos@casaguido.com</span>
+                        </div>
+                        <div class="log-item">
+                            <span class="log-time">23/05/2025 09:30</span>
+                            <span class="log-user">joao.silva@casaguido.com</span>
+                            <span class="log-action">Realizou login no sistema</span>
+                        </div>
+                        <div class="log-item">
+                            <span class="log-time">22/05/2025 15:20</span>
+                            <span class="log-user">admin@casaguido.com</span>
+                            <span class="log-action">Resetou senha do usuário: ana.costa@casaguido.com</span>
+                        </div>
+                        <div class="log-item">
+                            <span class="log-time">22/05/2025 14:15</span>
+                            <span class="log-user">maria.santos@casaguido.com</span>
+                            <span class="log-action">Cadastrou novo paciente: Pedro Santos</span>
+                        </div>
+                    </div>
+                    <button class="btn-secondary">Ver Todos os Logs</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Modal para Resetar Senha -->
+    <div id="modal-reset-password" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Resetar Senha de Usuário</h3>
+                <span class="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Usuário: <span id="reset-user-name"></span></p>
+                <form id="reset-password-form">
+                    <div class="form-group">
+                        <label for="nova-senha">Nova Senha:</label>
+                        <input type="password" id="nova-senha" name="nova-senha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmar-nova-senha">Confirmar Nova Senha:</label>
+                        <input type="password" id="confirmar-nova-senha" name="confirmar-nova-senha" required>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="forcar-troca"> Forçar troca de senha no próximo login
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" form="reset-password-form" class="btn-primary">Resetar Senha</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../js/configuracoes.js"></script>
+</body>
+</html>
