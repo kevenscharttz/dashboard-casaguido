@@ -13,153 +13,165 @@
   <body>
     <div class="grid-container">
       <header class="header">
-        <div class="menu-icon" onclick="openSidebar()">
+        <button class="menu-icon" onclick="openSidebar()" aria-label="Abrir menu">
           <span class="material-icons-outlined">menu</span>
-        </div>
+        </button>
         <div class="header-left">
-          <div class="logo-colored">
+          <h1 class="logo-colored">
             <span style="color: red;">G</span><span style="color: #ffd700;">U</span><span style="color: blue;">I</span><span style="color: green;">D</span>O
-          </div>
+          </h1>
         </div>
-        <div class="header-right">
-          <span class="material-icons-outlined">notifications</span>
-          <span class="material-icons-outlined">email</span>
+        <nav class="header-right">
+          <button aria-label="Notificações">
+            <span class="material-icons-outlined">notifications</span>
+          </button>
+          <button aria-label="Email">
+            <span class="material-icons-outlined">email</span>
+          </button>
           <a href="html/login.html" title="Sair">
             <span class="material-icons-outlined">logout</span>
           </a>
-        </div>
+        </nav>
       </header>
+      
       <aside id="sidebar">
-        <div class="sidebar-title">
-          <div class="sidebar-brand">
+        <header class="sidebar-title">
+          <h2 class="sidebar-brand">
             <span style="color: red;">G</span><span style="color: #ffd700;">U</span><span style="color: blue;">I</span><span style="color: green;">D</span>O
-          </div>
-          <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
-        </div>
-        <ul class="sidebar-list">
-          <li class="sidebar-list-item active">
-            <a href="dashboard.html">
-              <span class="material-icons-outlined">dashboard</span> Início
-            </a>
-          </li>
-          <li class="sidebar-list-item">
-            <a href="html/registro.html">
-              <span class="material-icons-outlined">person_add</span> Registro
-            </a>
-          </li>
-          <li class="sidebar-list-item">
-            <a href="html/pacientes.html" id="listar-pacientes">
-              <span class="material-icons-outlined">people</span> Pacientes
-            </a>
-          </li>
-          <li class="sidebar-list-item">
-            <a href="html/configuracoes.html" id="configuracoes">
-              <span class="material-icons-outlined">settings</span> Configurações
-            </a>
-          </li>
-          <li class="sidebar-list-item">
-            <a href="html/login.html">
-              <span class="material-icons-outlined">logout</span> Sair
-            </a>
-          </li>
-        </ul>
+          </h2>
+          <button class="material-icons-outlined" onclick="closeSidebar()" aria-label="Fechar menu">close</button>
+        </header>
+        <nav class="sidebar-list">
+          <ul>
+            <li class="sidebar-list-item active">
+              <a href="dashboard.html">
+                <span class="material-icons-outlined">dashboard</span> Início
+              </a>
+            </li>
+            <li class="sidebar-list-item">
+              <a href="html/registro.html">
+                <span class="material-icons-outlined">person_add</span> Registro
+              </a>
+            </li>
+            <li class="sidebar-list-item">
+              <a href="html/pacientes.html" id="listar-pacientes">
+                <span class="material-icons-outlined">people</span> Pacientes
+              </a>
+            </li>
+            <li class="sidebar-list-item">
+              <a href="html/configuracoes.html" id="configuracoes">
+                <span class="material-icons-outlined">settings</span> Configurações
+              </a>
+            </li>
+            <li class="sidebar-list-item">
+              <a href="html/login.html">
+                <span class="material-icons-outlined">logout</span> Sair
+              </a>
+            </li>
+          </ul>
+        </nav>
       </aside>
+      
       <main class="main-container">
-        <div class="main-title">
-          <h2>PAINEL DE CONTROLE - CASA GUIDO</h2>
+        <header class="main-title">
+          <h1>PAINEL DE CONTROLE - CASA GUIDO</h1>
           <p class="welcome-message">Olá, <span id="user-name">Administrador</span>! 
-          <span id="current-date"></span></p>
-        </div>
-        <div class="main-cards">
-          <div class="card" onclick="window.location.href='html/pacientes.html'">
-            <div class="card-inner">
+          <time id="current-date"></time></p>
+        </header>
+        
+        <section class="main-cards">
+          <article class="card" onclick="window.location.href='html/pacientes.html'">
+            <header class="card-inner">
               <h2>PACIENTES CADASTRADOS</h2>
               <span class="material-icons-outlined">people</span>
-            </div>
-            <h1 id="total-pacientes">0</h1>
+            </header>
+            <data value="0" id="total-pacientes">0</data>
             <p class="card-progress">Total de registros</p>
-          </div>
-          <div class="card" onclick="window.location.href='html/registro.html'">
-            <div class="card-inner">
+          </article>
+          
+          <article class="card" onclick="window.location.href='html/registro.html'">
+            <header class="card-inner">
               <h2>NOVOS CADASTROS</h2>
               <span class="material-icons-outlined">person_add</span>
-            </div>
-            <h1 id="novos-cadastros">0</h1>
+            </header>
+            <data value="0" id="novos-cadastros">0</data>
             <p class="card-progress">Esta semana</p>
-          </div>
-          <div class="card" onclick="window.location.href='html/pacientes.html'">
-            <div class="card-inner">
+          </article>
+          
+          <article class="card" onclick="window.location.href='html/pacientes.html'">
+            <header class="card-inner">
               <h2>PACIENTES ATIVOS</h2>
               <span class="material-icons-outlined">verified_user</span>
-            </div>
-            <h1 id="pacientes-ativos">0</h1>
+            </header>
+            <data value="0" id="pacientes-ativos">0</data>
             <p class="card-progress">Em acompanhamento</p>
-          </div>
-          <div class="card" onclick="window.location.href='html/registro.html'">
-            <div class="card-inner">
+          </article>
+          
+          <article class="card" onclick="window.location.href='html/registro.html'">
+            <header class="card-inner">
               <h2>CADASTROS HOJE</h2>
               <span class="material-icons-outlined">today</span>
-            </div>
-            <h1 id="cadastros-hoje">0</h1>
+            </header>
+            <data value="0" id="cadastros-hoje">0</data>
             <p class="card-progress">Registros de hoje</p>
-          </div>
-        </div>
+          </article>
+        </section>
 
-        <div class="products">
-          <div class="activity-section">
-            <div class="section-header">
+        <section class="products">
+          <article class="activity-section">
+            <header class="section-header">
               <h2>Últimos Pacientes Cadastrados</h2>
               <button class="action-button" onclick="window.location.href='html/pacientes.html'">
                 <span class="material-icons-outlined">visibility</span> Ver Todos
               </button>
-            </div>
+            </header>
             <div class="activity-list">
               <div class="activity-item">
-                <div class="activity-icon background-blue">
+                <figure class="activity-icon background-blue">
                   <span class="material-icons-outlined">person</span>
-                </div>
+                </figure>
                 <div class="activity-content">
-                  <h4>Nenhum paciente cadastrado ainda</h4>
+                  <h3>Nenhum paciente cadastrado ainda</h3>
                   <p>Clique em "Registro" para adicionar o primeiro paciente</p>
-                  <span class="activity-time">Sistema iniciado</span>
+                  <time class="activity-time">Sistema iniciado</time>
                 </div>
               </div>
             </div>
             <a href="html/pacientes.html" class="see-more">Ver todos os pacientes</a>
-          </div>
+          </article>
 
-          <div class="calendar-section">
-            <div class="section-header">
+          <article class="calendar-section">
+            <header class="section-header">
               <h2>Informações do Sistema</h2>
               <button class="action-button" onclick="window.location.href='html/registro.html'">
                 <span class="material-icons-outlined">add</span> Novo Cadastro
               </button>
-            </div>
+            </header>
             <div style="padding: 20px; text-align: center;">
-              <div style="margin-bottom: 20px;">
+              <figure style="margin-bottom: 20px;">
                 <span class="material-icons-outlined" style="font-size: 48px; color: #1D266A;">medical_information</span>
-              </div>
+              </figure>
               <h3 style="color: #1D266A; margin-bottom: 10px;">Sistema de Gestão Casa Guido</h3>
               <p style="color: #666; margin-bottom: 20px;">
                 Gerencie os cadastros e informações dos pacientes de forma simples e eficiente.
               </p>
               <div style="display: flex; justify-content: space-around; text-align: center;">
                 <div>
-                  <div style="color: #1D266A; font-size: 24px; font-weight: bold;" id="sistema-pacientes">0</div>
+                  <data value="0" style="color: #1D266A; font-size: 24px; font-weight: bold;" id="sistema-pacientes">0</data>
                   <div style="color: #666; font-size: 14px;">Pacientes</div>
                 </div>
                 <div>
-                  <div style="color: #2E7D32; font-size: 24px; font-weight: bold;" id="sistema-ativos">0</div>
+                  <data value="0" style="color: #2E7D32; font-size: 24px; font-weight: bold;" id="sistema-ativos">0</data>
                   <div style="color: #666; font-size: 14px;">Ativos</div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </article>
+        </section>
         
-        <div class="quick-access">
+        <section class="quick-access">
           <h2>Acesso Rápido</h2>
-          <div class="quick-buttons">
+          <nav class="quick-buttons">
             <a href="html/registro.html" class="quick-button">
               <span class="material-icons-outlined">person_add</span>
               <span>Novo Cadastro</span>
@@ -176,119 +188,9 @@
               <span class="material-icons-outlined">edit</span>
               <span>Editar Cadastro</span>
             </a>
-          </div>
-        </div>
+          </nav>
+        </section>
       </main>
     </div>
-    <script src="js/scripts.js"></script>
-    <script>
-      // Mostrar data atual
-      document.addEventListener('DOMContentLoaded', function() {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const today = new Date();
-        document.getElementById('current-date').textContent = today.toLocaleDateString('pt-BR', options);
-        
-        // Carregar dados dos pacientes do localStorage
-        carregarDadosDashboard();
-      });
-
-      function carregarDadosDashboard() {
-        // Recuperar dados dos pacientes do localStorage
-        const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
-        
-        // Atualizar contadores
-        document.getElementById('total-pacientes').textContent = pacientes.length;
-        document.getElementById('sistema-pacientes').textContent = pacientes.length;
-        
-        // Calcular pacientes ativos (exemplo: pacientes cadastrados nos últimos 30 dias)
-        const hoje = new Date();
-        const trintaDiasAtras = new Date(hoje.getTime() - (30 * 24 * 60 * 60 * 1000));
-        
-        const pacientesAtivos = pacientes.filter(paciente => {
-          if (paciente.dataCadastro) {
-            const dataCadastro = new Date(paciente.dataCadastro);
-            return dataCadastro >= trintaDiasAtras;
-          }
-          return false;
-        });
-        
-        document.getElementById('pacientes-ativos').textContent = pacientesAtivos.length;
-        document.getElementById('sistema-ativos').textContent = pacientesAtivos.length;
-        
-        // Calcular cadastros desta semana
-        const inicioSemana = new Date(hoje);
-        inicioSemana.setDate(hoje.getDate() - hoje.getDay());
-        inicioSemana.setHours(0, 0, 0, 0);
-        
-        const cadastrosEstaSemana = pacientes.filter(paciente => {
-          if (paciente.dataCadastro) {
-            const dataCadastro = new Date(paciente.dataCadastro);
-            return dataCadastro >= inicioSemana;
-          }
-          return false;
-        });
-        
-        document.getElementById('novos-cadastros').textContent = cadastrosEstaSemana.length;
-        
-        // Calcular cadastros de hoje
-        const inicioHoje = new Date(hoje);
-        inicioHoje.setHours(0, 0, 0, 0);
-        
-        const cadastrosHoje = pacientes.filter(paciente => {
-          if (paciente.dataCadastro) {
-            const dataCadastro = new Date(paciente.dataCadastro);
-            return dataCadastro >= inicioHoje;
-          }
-          return false;
-        });
-        
-        document.getElementById('cadastros-hoje').textContent = cadastrosHoje.length;
-        
-        // Atualizar lista de últimos pacientes
-        atualizarUltimosPacientes(pacientes);
-      }
-
-      function atualizarUltimosPacientes(pacientes) {
-        const activityList = document.querySelector('.activity-list');
-        
-        if (pacientes.length === 0) {
-          return; // Manter mensagem padrão
-        }
-        
-        // Ordenar por data de cadastro (mais recentes primeiro)
-        const pacientesOrdenados = pacientes.sort((a, b) => {
-          const dataA = new Date(a.dataCadastro || 0);
-          const dataB = new Date(b.dataCadastro || 0);
-          return dataB - dataA;
-        });
-        
-        // Pegar os 4 mais recentes
-        const ultimosPacientes = pacientesOrdenados.slice(0, 4);
-        
-        // Limpar lista atual
-        activityList.innerHTML = '';
-        
-        // Adicionar últimos pacientes
-        ultimosPacientes.forEach(paciente => {
-          const activityItem = document.createElement('div');
-          activityItem.className = 'activity-item';
-          
-          const dataCadastro = paciente.dataCadastro ? new Date(paciente.dataCadastro).toLocaleDateString('pt-BR') : 'Data não informada';
-          
-          activityItem.innerHTML = `
-            <div class="activity-icon background-blue">
-              <span class="material-icons-outlined">person</span>
-            </div>
-            <div class="activity-content">
-              <h4>Paciente cadastrado</h4>
-              <p>Nome: ${paciente.nome || 'Nome não informado'}</p>
-              <span class="activity-time">${dataCadastro}</span>
-            </div>
-          `;
-          
-          activityList.appendChild(activityItem);
-        });
-      }
-    </script>
   </body>
 </html>
