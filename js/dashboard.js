@@ -1,35 +1,67 @@
 // Funções para o menu responsivo
 function openSidebar() {
+  console.log('Abrindo sidebar...'); // Debug
   const sidebar = document.getElementById('sidebar');
-  sidebar.classList.add('sidebar-responsive');
+  if (sidebar) {
+    sidebar.classList.add('sidebar-responsive');
+    console.log('Classe adicionada:', sidebar.classList); // Debug
+  } else {
+    console.error('Sidebar não encontrado!');
+  }
 }
 
 function closeSidebar() {
+  console.log('Fechando sidebar...'); // Debug
   const sidebar = document.getElementById('sidebar');
-  sidebar.classList.remove('sidebar-responsive');
+  if (sidebar) {
+    sidebar.classList.remove('sidebar-responsive');
+    console.log('Classe removida:', sidebar.classList); // Debug
+  } else {
+    console.error('Sidebar não encontrado!');
+  }
 }
 
-// Fechar sidebar ao clicar fora dele (opcional)
+// Fechar sidebar ao clicar fora dele
 document.addEventListener('click', function(event) {
   const sidebar = document.getElementById('sidebar');
   const menuIcon = document.querySelector('.menu-icon');
   
   // Se o sidebar está aberto e o clique foi fora do sidebar e não no menu
-  if (sidebar.classList.contains('sidebar-responsive') && 
+  if (sidebar && sidebar.classList.contains('sidebar-responsive') && 
       !sidebar.contains(event.target) && 
       !menuIcon.contains(event.target)) {
     closeSidebar();
   }
 });
 
+// Fechar sidebar com a tecla Escape
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar && sidebar.classList.contains('sidebar-responsive')) {
+      closeSidebar();
+    }
+  }
+});
+
 // Mostrar data atual
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM carregado'); // Debug
+  
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   const today = new Date();
-  document.getElementById('current-date').textContent = today.toLocaleDateString('pt-BR', options);
+  const currentDateElement = document.getElementById('current-date');
+  
+  if (currentDateElement) {
+    currentDateElement.textContent = today.toLocaleDateString('pt-BR', options);
+  }
   
   // Carregar dados dos pacientes do localStorage
   carregarDadosDashboard();
+  
+  // Verificar se os elementos existem (debug)
+  console.log('Menu icon:', document.querySelector('.menu-icon'));
+  console.log('Sidebar:', document.getElementById('sidebar'));
 });
 
 function carregarDadosDashboard() {
@@ -40,10 +72,15 @@ function carregarDadosDashboard() {
   const totalPacientes = document.getElementById('total-pacientes');
   const sistemaPacientes = document.getElementById('sistema-pacientes');
   
-  totalPacientes.textContent = pacientes.length;
-  totalPacientes.setAttribute('value', pacientes.length);
-  sistemaPacientes.textContent = pacientes.length;
-  sistemaPacientes.setAttribute('value', pacientes.length);
+  if (totalPacientes) {
+    totalPacientes.textContent = pacientes.length;
+    totalPacientes.setAttribute('value', pacientes.length);
+  }
+  
+  if (sistemaPacientes) {
+    sistemaPacientes.textContent = pacientes.length;
+    sistemaPacientes.setAttribute('value', pacientes.length);
+  }
   
   // Calcular pacientes ativos (exemplo: pacientes cadastrados nos últimos 30 dias)
   const hoje = new Date();
@@ -60,10 +97,15 @@ function carregarDadosDashboard() {
   const pacientesAtivosEl = document.getElementById('pacientes-ativos');
   const sistemaAtivosEl = document.getElementById('sistema-ativos');
   
-  pacientesAtivosEl.textContent = pacientesAtivos.length;
-  pacientesAtivosEl.setAttribute('value', pacientesAtivos.length);
-  sistemaAtivosEl.textContent = pacientesAtivos.length;
-  sistemaAtivosEl.setAttribute('value', pacientesAtivos.length);
+  if (pacientesAtivosEl) {
+    pacientesAtivosEl.textContent = pacientesAtivos.length;
+    pacientesAtivosEl.setAttribute('value', pacientesAtivos.length);
+  }
+  
+  if (sistemaAtivosEl) {
+    sistemaAtivosEl.textContent = pacientesAtivos.length;
+    sistemaAtivosEl.setAttribute('value', pacientesAtivos.length);
+  }
   
   // Calcular cadastros desta semana
   const inicioSemana = new Date(hoje);
@@ -79,8 +121,10 @@ function carregarDadosDashboard() {
   });
   
   const novosCadastrosEl = document.getElementById('novos-cadastros');
-  novosCadastrosEl.textContent = cadastrosEstaSemana.length;
-  novosCadastrosEl.setAttribute('value', cadastrosEstaSemana.length);
+  if (novosCadastrosEl) {
+    novosCadastrosEl.textContent = cadastrosEstaSemana.length;
+    novosCadastrosEl.setAttribute('value', cadastrosEstaSemana.length);
+  }
   
   // Calcular cadastros de hoje
   const inicioHoje = new Date(hoje);
@@ -95,8 +139,10 @@ function carregarDadosDashboard() {
   });
   
   const cadastrosHojeEl = document.getElementById('cadastros-hoje');
-  cadastrosHojeEl.textContent = cadastrosHoje.length;
-  cadastrosHojeEl.setAttribute('value', cadastrosHoje.length);
+  if (cadastrosHojeEl) {
+    cadastrosHojeEl.textContent = cadastrosHoje.length;
+    cadastrosHojeEl.setAttribute('value', cadastrosHoje.length);
+  }
   
   // Atualizar lista de últimos pacientes
   atualizarUltimosPacientes(pacientes);
@@ -105,7 +151,7 @@ function carregarDadosDashboard() {
 function atualizarUltimosPacientes(pacientes) {
   const activityList = document.querySelector('.activity-list');
   
-  if (pacientes.length === 0) {
+  if (!activityList || pacientes.length === 0) {
     return; // Manter mensagem padrão
   }
   
