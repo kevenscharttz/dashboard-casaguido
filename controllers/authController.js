@@ -3,22 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-exports.register = async (req, res) => {
-  const { nome, email, senha, tipo } = req.body;
-
-  try {
-    const senhaHash = await bcrypt.hash(senha, 10);
-    await pool.execute(
-      'INSERT INTO usuarios (nome, email, senha_hash, tipo, status) VALUES (?, ?, ?, ?, ?)',
-      [nome, email, senhaHash, tipo, 'ativo']
-    );
-    res.status(201).json({ mensagem: 'Usuário registrado com sucesso.' });
-  } catch (error) {
-    console.error('Erro no registro:', error);
-    res.status(500).json({ erro: 'Erro ao registrar usuário.' });
-  }
-};
-
 exports.login = async (req, res) => {
   const { username, password } = req.body;
 
