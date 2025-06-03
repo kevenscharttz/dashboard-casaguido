@@ -3,405 +3,408 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUIDO - Sistema de Gestão de Pacientes Oncológicos</title>
-    <link rel="stylesheet" href="../css/pacientes.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/4.0.0/font/MaterialIcons-Regular.ttf" rel="stylesheet">
+    <title>Pacientes - Casa Guido</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="../css/pacientes.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar" role="navigation" aria-label="Navegação principal">
-            <div class="navbar-container">
-                <a href="#" class="navbar-logo" aria-label="GUIDO - Página inicial">
-                    <div class="logo-colored">
-                        <span>G</span><span>U</span><span>I</span><span>D</span>O
-                    </div>
+    <div class="grid-container">
+        <header class="header">
+            <button class="menu-icon" onclick="openSidebar()" aria-label="Abrir menu">
+                <span class="material-icons-outlined">menu</span>
+            </button>
+            <div class="header-left">
+                <img src="/img/logo-nova.png" alt="Casa Guido">
+            </div>
+            <nav class="header-right">
+                <button aria-label="Notificações">
+                    <span class="material-icons-outlined">notifications</span>
+                </button>
+                <button aria-label="Email">
+                    <span class="material-icons-outlined">email</span>
+                </button>
+                <a href="login.html" title="Sair">
+                    <span class="material-icons-outlined">logout</span>
                 </a>
-                <div class="navbar-menu">
-                    <a href="../index.html" class="navbar-item">Início</a>
-                    <a href="./registro.html" class="navbar-item">Registro</a>
-                    <a href="./pacientes.html" class="navbar-item" aria-current="page">Pacientes</a>
-                    <div class="user-dropdown">
-                        <button class="user-info" aria-expanded="false" aria-haspopup="true" id="user-menu-button">
-                            <div class="user-avatar" aria-hidden="true">AD</div>
-                            <span class="user-name">Admin</span>
-                        </button>
-                        <div class="dropdown-content" role="menu" aria-labelledby="user-menu-button">
-                            <a href="#" class="dropdown-item" role="menuitem">
-                                <span class="material-icons-outlined" aria-hidden="true">person</span>
-                                Meu Perfil
-                            </a>
-                            <a href="#" class="dropdown-item" role="menuitem">
-                                <span class="material-icons-outlined" aria-hidden="true">settings</span>
-                                Configurações
-                            </a>
-                            <div class="dropdown-divider" role="separator"></div>
-                            <a href="#" class="dropdown-item" role="menuitem">
-                                <span class="material-icons-outlined" aria-hidden="true">logout</span>
-                                Sair
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
+            </nav>
+        </header>
+        
+        <aside id="sidebar">
+            <header class="sidebar-title">
+                <button class="material-icons-outlined" onclick="closeSidebar()" aria-label="Fechar menu">close</button>
+            </header>
+            <nav class="sidebar-list">
+                <ul>
+                    <li class="sidebar-list-item">
+                        <a href="../dashboard.html">
+                            <span class="material-icons-outlined">dashboard</span> Início
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item">
+                        <a href="registro.html">
+                            <span class="material-icons-outlined">person_add</span> Registro
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item active">
+                        <a href="pacientes.html">
+                            <span class="material-icons-outlined">people</span> Pacientes
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item">
+                        <a href="configuracoes.html">
+                            <span class="material-icons-outlined">settings</span> Configurações
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item">
+                        <a href="login.html">
+                            <span class="material-icons-outlined">logout</span> Sair
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
-    <main class="container">
-        <section class="stats-section" aria-labelledby="stats-heading">
-            <h1 id="stats-heading" class="sr-only">Estatísticas dos Pacientes</h1>
-            <div class="stats-row">
-                <article class="stat-card">
-                    <div class="stat-icon blue" aria-hidden="true">
+        <main class="main-container">
+            <header class="main-title">
+                <h1>PACIENTES</h1>
+                <p class="welcome-message">Gerencie os pacientes cadastrados no sistema</p>
+            </header>
+
+            <!-- Statistics Cards -->
+            <section class="main-cards">
+                <article class="card">
+                    <header class="card-inner">
+                        <h2>TOTAL DE PACIENTES</h2>
                         <span class="material-icons-outlined">people</span>
-                    </div>
-                    <div class="stat-content">
-                        <h2>157</h2>
-                        <p>Total de Pacientes</p>
-                    </div>
+                    </header>
+                    <data value="157">157</data>
+                    <p class="card-progress">Pacientes cadastrados</p>
                 </article>
-                <article class="stat-card">
-                    <div class="stat-icon orange" aria-hidden="true">
+                
+                <article class="card">
+                    <header class="card-inner">
+                        <h2>NOVOS ESTE MÊS</h2>
                         <span class="material-icons-outlined">calendar_today</span>
-                    </div>
-                    <div class="stat-content">
-                        <h2>42</h2>
-                        <p>Novos este mês</p>
-                    </div>
+                    </header>
+                    <data value="42">42</data>
+                    <p class="card-progress">Cadastros recentes</p>
                 </article>
-                <article class="stat-card">
-                    <div class="stat-icon green" aria-hidden="true">
+                
+                <article class="card">
+                    <header class="card-inner">
+                        <h2>EM TRATAMENTO</h2>
                         <span class="material-icons-outlined">trending_up</span>
-                    </div>
-                    <div class="stat-content">
-                        <h2>89</h2>
-                        <p>Em tratamento</p>
-                    </div>
+                    </header>
+                    <data value="89">89</data>
+                    <p class="card-progress">Pacientes ativos</p>
                 </article>
-                <article class="stat-card">
-                    <div class="stat-icon red" aria-hidden="true">
+                
+                <article class="card">
+                    <header class="card-inner">
+                        <h2>ACOMPANHAMENTO URGENTE</h2>
                         <span class="material-icons-outlined">priority_high</span>
-                    </div>
-                    <div class="stat-content">
-                        <h2>12</h2>
-                        <p>Acompanhamento urgente</p>
-                    </div>
+                    </header>
+                    <data value="12">12</data>
+                    <p class="card-progress">Requer atenção</p>
                 </article>
-            </div>
-        </section>
+            </section>
 
-        <section class="patients-section" aria-labelledby="patients-heading">
-            <div class="header-actions">
+            <!-- Search and Actions -->
+            <section class="search-section">
                 <div class="search-container">
                     <label for="searchInput" class="sr-only">Buscar pacientes</label>
                     <input type="search" id="searchInput" placeholder="Buscar pacientes..." aria-describedby="search-help">
                     <span class="material-icons-outlined search-icon" aria-hidden="true">search</span>
                     <div id="search-help" class="sr-only">Digite o nome, prontuário ou diagnóstico do paciente</div>
                 </div>
-                <a href="registro.html" class="btn btn-primary">
-                    <span class="material-icons-outlined" aria-hidden="true">add</span>
-                    Novo Paciente
-                </a>
-            </div>
+                <div class="action-buttons">
+                    <button class="btn-filter" id="filterBtn">
+                        <span class="material-icons-outlined">filter_list</span>
+                        Filtros
+                    </button>
+                    <a href="registro.html" class="btn-primary">
+                        <span class="material-icons-outlined">add</span>
+                        Novo Paciente
+                    </a>
+                </div>
+            </section>
 
-            <div class="filter-bar" role="search" aria-label="Filtros de pacientes">
+            <!-- Filter Bar -->
+            <section class="filter-section" id="filterSection" style="display: none;">
                 <div class="filter-group">
-                    <label for="filterTratamento" class="filter-label">Tratamento:</label>
-                    <select class="filter-select" id="filterTratamento" aria-describedby="filter-help">
+                    <label for="filterTratamento">Tratamento:</label>
+                    <select id="filterTratamento">
                         <option value="">Todos</option>
                         <option value="quimio">Quimioterapia</option>
                         <option value="radio">Radioterapia</option>
                         <option value="cirurgia">Cirurgia</option>
                     </select>
-                    <div id="filter-help" class="sr-only">Filtrar pacientes por tipo de tratamento</div>
                 </div>
-            </div>
-
-            <article class="card">
-                <header class="card-header">
-                    <h2 id="patients-heading" class="card-title">Lista de Pacientes</h2>
-                    <div class="card-options">
-                        <button class="btn btn-outline" id="exportData" aria-describedby="export-help">
-                            <span class="material-icons-outlined" aria-hidden="true">download</span>
-                            Exportar
-                        </button>
-                        <div id="export-help" class="sr-only">Exportar dados dos pacientes em formato Excel ou PDF</div>
-                    </div>
-                </header>
-                
-                <div class="card-body">
-                    <div class="table-container" role="region" aria-label="Tabela de pacientes" tabindex="0">
-                        <table class="patients-table" role="table">
-                            <caption class="sr-only">
-                                Lista de 5 pacientes com informações de prontuário, diagnóstico e tratamento
-                            </caption>
-                            <thead>
-                                <tr role="row">
-                                    <th scope="col" role="columnheader">Prontuário</th>
-                                    <th scope="col" role="columnheader">Nome</th>
-                                    <th scope="col" role="columnheader">Idade</th>
-                                    <th scope="col" role="columnheader">Diagnóstico</th>
-                                    <th scope="col" role="columnheader">Status</th>
-                                    <th scope="col" role="columnheader">Último atendimento</th>
-                                    <th scope="col" role="columnheader">Próximo tratamento</th>
-                                    <th scope="col" role="columnheader">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr role="row">
-                                    <td role="gridcell">
-                                        <strong>P00123</strong>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="patient-info">
-                                            <div class="patient-avatar" aria-hidden="true">LS</div>
-                                            <div class="patient-details">
-                                                <span class="patient-name">Laura Silva</span>
-                                                <span class="patient-id">12.345.678-9</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td role="gridcell">8 anos</td>
-                                    <td role="gridcell">
-                                        <span class="badge badge-primary">Leucemia Linfóide Aguda</span>
-                                    </td>
-                                    <td role="gridcell">
-                                        <span class="status status-active" role="status" aria-label="Status: Em tratamento">Em tratamento</span>
-                                    </td>
-                                    <td role="gridcell">
-                                        <time datetime="2025-05-15">15/05/2025</time>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="next-treatment">
-                                            <time class="date" datetime="2025-05-22">22/05/2025</time>
-                                            <span class="treatment-type">Quimioterapia</span>
-                                        </div>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="actions" role="group" aria-label="Ações para Laura Silva">
-                                            <button class="action-btn" aria-label="Ver prontuário de Laura Silva">
-                                                <span class="material-icons-outlined" aria-hidden="true">visibility</span>
-                                            </button>
-                                            <button class="action-btn" aria-label="Editar dados de Laura Silva">
-                                                <span class="material-icons-outlined" aria-hidden="true">edit</span>
-                                            </button>
-                                            <button class="action-btn" aria-label="Agendar consulta para Laura Silva">
-                                                <span class="material-icons-outlined" aria-hidden="true">event</span>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr role="row">
-                                    <td role="gridcell">
-                                        <strong>P00124</strong>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="patient-info">
-                                            <div class="patient-avatar" aria-hidden="true">MC</div>
-                                            <div class="patient-details">
-                                                <span class="patient-name">Miguel Costa</span>
-                                                <span class="patient-id">23.456.789-0</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td role="gridcell">12 anos</td>
-                                    <td role="gridcell">
-                                        <span class="badge badge-secondary">Linfoma de Hodgkin</span>
-                                    </td>
-                                    <td role="gridcell">
-                                        <span class="status status-warning" role="status" aria-label="Status: Em acompanhamento">Em acompanhamento</span>
-                                    </td>
-                                    <td role="gridcell">
-                                        <time datetime="2025-05-10">10/05/2025</time>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="next-treatment">
-                                            <time class="date" datetime="2025-05-25">25/05/2025</time>
-                                            <span class="treatment-type">Consulta de acompanhamento</span>
-                                        </div>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="actions" role="group" aria-label="Ações para Miguel Costa">
-                                            <button class="action-btn" aria-label="Ver prontuário de Miguel Costa">
-                                                <span class="material-icons-outlined" aria-hidden="true">visibility</span>
-                                            </button>
-                                            <button class="action-btn" aria-label="Editar dados de Miguel Costa">
-                                                <span class="material-icons-outlined" aria-hidden="true">edit</span>
-                                            </button>
-                                            <button class="action-btn" aria-label="Agendar consulta para Miguel Costa">
-                                                <span class="material-icons-outlined" aria-hidden="true">event</span>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr role="row">
-                                    <td role="gridcell">
-                                        <strong>P00125</strong>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="patient-info">
-                                            <div class="patient-avatar" aria-hidden="true">JO</div>
-                                            <div class="patient-details">
-                                                <span class="patient-name">Julia Oliveira</span>
-                                                <span class="patient-id">34.567.890-1</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td role="gridcell">6 anos</td>
-                                    <td role="gridcell">
-                                        <span class="badge badge-tertiary">Neuroblastoma</span>
-                                    </td>
-                                    <td role="gridcell">
-                                        <span class="status status-urgent" role="status" aria-label="Status: Acompanhamento urgente">Acompanhamento urgente</span>
-                                    </td>
-                                    <td role="gridcell">
-                                        <time datetime="2025-05-18">18/05/2025</time>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="next-treatment">
-                                            <time class="date urgent" datetime="2025-05-29">HOJE</time>
-                                            <span class="treatment-type">Avaliação pós-cirúrgica</span>
-                                        </div>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="actions" role="group" aria-label="Ações para Julia Oliveira">
-                                            <button class="action-btn" aria-label="Ver prontuário de Julia Oliveira">
-                                                <span class="material-icons-outlined" aria-hidden="true">visibility</span>
-                                            </button>
-                                            <button class="action-btn" aria-label="Editar dados de Julia Oliveira">
-                                                <span class="material-icons-outlined" aria-hidden="true">edit</span>
-                                            </button>
-                                            <button class="action-btn" aria-label="Agendar consulta para Julia Oliveira">
-                                                <span class="material-icons-outlined" aria-hidden="true">event</span>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr role="row">
-                                    <td role="gridcell">
-                                        <strong>P00126</strong>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="patient-info">
-                                            <div class="patient-avatar" aria-hidden="true">PM</div>
-                                            <div class="patient-details">
-                                                <span class="patient-name">Pedro Martins</span>
-                                                <span class="patient-id">45.678.901-2</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td role="gridcell">10 anos</td>
-                                    <td role="gridcell">
-                                        <span class="badge badge-primary">Leucemia Mielóide Aguda</span>
-                                    </td>
-                                    <td role="gridcell">
-                                        <span class="status status-active" role="status" aria-label="Status: Em tratamento">Em tratamento</span>
-                                    </td>
-                                    <td role="gridcell">
-                                        <time datetime="2025-05-12">12/05/2025</time>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="next-treatment">
-                                            <time class="date" datetime="2025-05-24">24/05/2025</time>
-                                            <span class="treatment-type">Quimioterapia</span>
-                                        </div>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="actions" role="group" aria-label="Ações para Pedro Martins">
-                                            <button class="action-btn" aria-label="Ver prontuário de Pedro Martins">
-                                                <span class="material-icons-outlined" aria-hidden="true">visibility</span>
-                                            </button>
-                                            <button class="action-btn" aria-label="Editar dados de Pedro Martins">
-                                                <span class="material-icons-outlined" aria-hidden="true">edit</span>
-                                            </button>
-                                            <button class="action-btn" aria-label="Agendar consulta para Pedro Martins">
-                                                <span class="material-icons-outlined" aria-hidden="true">event</span>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr role="row">
-                                    <td role="gridcell">
-                                        <strong>P00127</strong>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="patient-info">
-                                            <div class="patient-avatar" aria-hidden="true">AS</div>
-                                            <div class="patient-details">
-                                                <span class="patient-name">Ana Santos</span>
-                                                <span class="patient-id">56.789.012-3</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td role="gridcell">14 anos</td>
-                                    <td role="gridcell">
-                                        <span class="badge badge-secondary">Osteossarcoma</span>
-                                    </td>
-                                    <td role="gridcell">
-                                        <span class="status status-success" role="status" aria-label="Status: Alta">Alta</span>
-                                    </td>
-                                    <td role="gridcell">
-                                        <time datetime="2025-04-05">05/04/2025</time>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="next-treatment">
-                                            <time class="date" datetime="2025-08-05">05/08/2025</time>
-                                            <span class="treatment-type">Revisão trimestral</span>
-                                        </div>
-                                    </td>
-                                    <td role="gridcell">
-                                        <div class="actions" role="group" aria-label="Ações para Ana Santos">
-                                            <button class="action-btn" aria-label="Ver prontuário de Ana Santos">
-                                                <span class="material-icons-outlined" aria-hidden="true">visibility</span>
-                                            </button>
-                                            <button class="action-btn" aria-label="Editar dados de Ana Santos">
-                                                <span class="material-icons-outlined" aria-hidden="true">edit</span>
-                                            </button>
-                                            <button class="action-btn" aria-label="Agendar consulta para Ana Santos">
-                                                <span class="material-icons-outlined" aria-hidden="true">event</span>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="filter-group">
+                    <label for="filterStatus">Status:</label>
+                    <select id="filterStatus">
+                        <option value="">Todos</option>
+                        <option value="ativo">Em tratamento</option>
+                        <option value="acompanhamento">Em acompanhamento</option>
+                        <option value="urgente">Acompanhamento urgente</option>
+                        <option value="alta">Alta</option>
+                    </select>
                 </div>
-                
-                <footer class="card-footer">
-                    <nav class="pagination" aria-label="Navegação de páginas">
-                        <button class="pagination-btn disabled" aria-label="Página anterior" disabled>
-                            <span class="material-icons-outlined" aria-hidden="true">keyboard_arrow_left</span>
-                        </button>
-                        <button class="pagination-btn active" aria-current="page" aria-label="Página 1">1</button>
-                        <button class="pagination-btn" aria-label="Página 2">2</button>
-                        <button class="pagination-btn" aria-label="Página 3">3</button>
-                        <button class="pagination-btn" aria-label="Página 4">4</button>
-                        <button class="pagination-btn" aria-label="Página 5">5</button>
-                        <button class="pagination-btn" aria-label="Próxima página">
-                            <span class="material-icons-outlined" aria-hidden="true">keyboard_arrow_right</span>
-                        </button>
-                    </nav>
-                    <div class="items-per-page">
-                        <label for="itemsPerPage">Registros por página:</label>
-                        <select id="itemsPerPage" aria-describedby="items-help">
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                        </select>
-                        <div id="items-help" class="sr-only">Escolha quantos registros mostrar por página</div>
-                    </div>
-                </footer>
-            </article>
-        </section>
-    </main>
+                <div class="filter-group">
+                    <label for="filterIdade">Idade:</label>
+                    <select id="filterIdade">
+                        <option value="">Todas</option>
+                        <option value="0-5">0-5 anos</option>
+                        <option value="6-10">6-10 anos</option>
+                        <option value="11-15">11-15 anos</option>
+                        <option value="16+">16+ anos</option>
+                    </select>
+                </div>
+                <button class="btn-clear-filters" id="clearFilters">
+                    <span class="material-icons-outlined">clear</span>
+                    Limpar Filtros
+                </button>
+            </section>
 
-    <footer class="footer">
-        <div class="footer-content">
-            <p>&copy; 2025 GUIDO - Sistema de Gestão de Pacientes Oncológicos. Todos os direitos reservados.</p>
-        </div>
-    </footer>
+            <!-- Patients Table -->
+            <section class="patients-table-section">
+                <article class="card">
+                    <header class="card-header">
+                        <h2 class="card-title">Lista de Pacientes</h2>
+                        <div class="card-options">
+                            <button class="btn-outline" id="exportData">
+                                <span class="material-icons-outlined">download</span>
+                                Exportar
+                            </button>
+                        </div>
+                    </header>
+                    
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="patients-table">
+                                <thead>
+                                    <tr>
+                                        <th>Prontuário</th>
+                                        <th>Nome</th>
+                                        <th>Idade</th>
+                                        <th>Diagnóstico</th>
+                                        <th>Status</th>
+                                        <th>Último atendimento</th>
+                                        <th>Próximo tratamento</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>P00123</strong></td>
+                                        <td>
+                                            <div class="patient-info">
+                                                <div class="patient-avatar">LS</div>
+                                                <div class="patient-details">
+                                                    <span class="patient-name">Laura Silva</span>
+                                                    <span class="patient-id">12.345.678-9</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>8 anos</td>
+                                        <td><span class="badge badge-primary">Leucemia Linfóide Aguda</span></td>
+                                        <td><span class="status status-active">Em tratamento</span></td>
+                                        <td><time datetime="2025-05-15">15/05/2025</time></td>
+                                        <td>
+                                            <div class="next-treatment">
+                                                <time class="date" datetime="2025-05-22">22/05/2025</time>
+                                                <span class="treatment-type">Quimioterapia</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="actions">
+                                                <button class="action-btn" title="Ver prontuário">
+                                                    <span class="material-icons-outlined">visibility</span>
+                                                </button>
+                                                <button class="action-btn" title="Editar dados">
+                                                    <span class="material-icons-outlined">edit</span>
+                                                </button>
+                                                <button class="action-btn" title="Agendar consulta">
+                                                    <span class="material-icons-outlined">event</span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>P00124</strong></td>
+                                        <td>
+                                            <div class="patient-info">
+                                                <div class="patient-avatar">MC</div>
+                                                <div class="patient-details">
+                                                    <span class="patient-name">Miguel Costa</span>
+                                                    <span class="patient-id">23.456.789-0</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>12 anos</td>
+                                        <td><span class="badge badge-secondary">Linfoma de Hodgkin</span></td>
+                                        <td><span class="status status-warning">Em acompanhamento</span></td>
+                                        <td><time datetime="2025-05-10">10/05/2025</time></td>
+                                        <td>
+                                            <div class="next-treatment">
+                                                <time class="date" datetime="2025-05-25">25/05/2025</time>
+                                                <span class="treatment-type">Consulta de acompanhamento</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="actions">
+                                                <button class="action-btn" title="Ver prontuário">
+                                                    <span class="material-icons-outlined">visibility</span>
+                                                </button>
+                                                <button class="action-btn" title="Editar dados">
+                                                    <span class="material-icons-outlined">edit</span>
+                                                </button>
+                                                <button class="action-btn" title="Agendar consulta">
+                                                    <span class="material-icons-outlined">event</span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>P00125</strong></td>
+                                        <td>
+                                            <div class="patient-info">
+                                                <div class="patient-avatar">JO</div>
+                                                <div class="patient-details">
+                                                    <span class="patient-name">Julia Oliveira</span>
+                                                    <span class="patient-id">34.567.890-1</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>6 anos</td>
+                                        <td><span class="badge badge-tertiary">Neuroblastoma</span></td>
+                                        <td><span class="status status-urgent">Acompanhamento urgente</span></td>
+                                        <td><time datetime="2025-05-18">18/05/2025</time></td>
+                                        <td>
+                                            <div class="next-treatment">
+                                                <time class="date urgent" datetime="2025-05-29">HOJE</time>
+                                                <span class="treatment-type">Avaliação pós-cirúrgica</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="actions">
+                                                <button class="action-btn" title="Ver prontuário">
+                                                    <span class="material-icons-outlined">visibility</span>
+                                                </button>
+                                                <button class="action-btn" title="Editar dados">
+                                                    <span class="material-icons-outlined">edit</span>
+                                                </button>
+                                                <button class="action-btn" title="Agendar consulta">
+                                                    <span class="material-icons-outlined">event</span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>P00126</strong></td>
+                                        <td>
+                                            <div class="patient-info">
+                                                <div class="patient-avatar">PM</div>
+                                                <div class="patient-details">
+                                                    <span class="patient-name">Pedro Martins</span>
+                                                    <span class="patient-id">45.678.901-2</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>10 anos</td>
+                                        <td><span class="badge badge-primary">Leucemia Mielóide Aguda</span></td>
+                                        <td><span class="status status-active">Em tratamento</span></td>
+                                        <td><time datetime="2025-05-12">12/05/2025</time></td>
+                                        <td>
+                                            <div class="next-treatment">
+                                                <time class="date" datetime="2025-05-24">24/05/2025</time>
+                                                <span class="treatment-type">Quimioterapia</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="actions">
+                                                <button class="action-btn" title="Ver prontuário">
+                                                    <span class="material-icons-outlined">visibility</span>
+                                                </button>
+                                                <button class="action-btn" title="Editar dados">
+                                                    <span class="material-icons-outlined">edit</span>
+                                                </button>
+                                                <button class="action-btn" title="Agendar consulta">
+                                                    <span class="material-icons-outlined">event</span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>P00127</strong></td>
+                                        <td>
+                                            <div class="patient-info">
+                                                <div class="patient-avatar">AS</div>
+                                                <div class="patient-details">
+                                                    <span class="patient-name">Ana Santos</span>
+                                                    <span class="patient-id">56.789.012-3</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>14 anos</td>
+                                        <td><span class="badge badge-secondary">Osteossarcoma</span></td>
+                                        <td><span class="status status-success">Alta</span></td>
+                                        <td><time datetime="2025-04-05">05/04/2025</time></td>
+                                        <td>
+                                            <div class="next-treatment">
+                                                <time class="date" datetime="2025-08-05">05/08/2025</time>
+                                                <span class="treatment-type">Revisão trimestral</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="actions">
+                                                <button class="action-btn" title="Ver prontuário">
+                                                    <span class="material-icons-outlined">visibility</span>
+                                                </button>
+                                                <button class="action-btn" title="Editar dados">
+                                                    <span class="material-icons-outlined">edit</span>
+                                                </button>
+                                                <button class="action-btn" title="Agendar consulta">
+                                                    <span class="material-icons-outlined">event</span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <footer class="card-footer">
+                        <nav class="pagination">
+                            <button class="pagination-btn disabled" disabled>
+                                <span class="material-icons-outlined">keyboard_arrow_left</span>
+                            </button>
+                            <button class="pagination-btn active">1</button>
+                            <button class="pagination-btn">2</button>
+                            <button class="pagination-btn">3</button>
+                            <button class="pagination-btn">4</button>
+                            <button class="pagination-btn">5</button>
+                            <button class="pagination-btn">
+                                <span class="material-icons-outlined">keyboard_arrow_right</span>
+                            </button>
+                        </nav>
+                        <div class="items-per-page">
+                            <label for="itemsPerPage">Registros por página:</label>
+                            <select id="itemsPerPage">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                    </footer>
+                </article>
+            </section>
+        </main>
+    </div>
+
     <script src="../js/pacientes.js"></script>
 </body>
 </html>

@@ -1,191 +1,177 @@
-// Funções para o menu responsivo
-function openSidebar() {
-  console.log('Abrindo sidebar...'); // Debug
-  const sidebar = document.getElementById('sidebar');
-  if (sidebar) {
-    sidebar.classList.add('sidebar-responsive');
-    console.log('Classe adicionada:', sidebar.classList); // Debug
-  } else {
-    console.error('Sidebar não encontrado!');
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', function() {
+  // Set current date
+  const currentDateElement = document.getElementById('current-date');
+  if (currentDateElement) {
+    const now = new Date();
+    const options = { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    };
+    currentDateElement.textContent = now.toLocaleDateString('pt-BR', options);
   }
+  
+  // Initialize sample data with smooth counting animation
+  setTimeout(() => {
+    animateCounter('total-pacientes', 0, 42, 1500);
+    animateCounter('novos-cadastros', 0, 7, 1200);
+    animateCounter('pacientes-ativos', 0, 38, 1800);
+    animateCounter('cadastros-hoje', 0, 3, 800);
+    animateCounter('sistema-pacientes', 0, 42, 1500);
+    animateCounter('sistema-ativos', 0, 38, 1800);
+  }, 300);
+  
+  // Add sample patient data
+  updatePatientList();
+});
+
+// Sidebar toggle functions
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('active');
+  document.body.classList.add('sidebar-open');
 }
 
 function closeSidebar() {
-  console.log('Fechando sidebar...'); // Debug
-  const sidebar = document.getElementById('sidebar');
-  if (sidebar) {
-    sidebar.classList.remove('sidebar-responsive');
-    console.log('Classe removida:', sidebar.classList); // Debug
-  } else {
-    console.error('Sidebar não encontrado!');
-  }
+  document.getElementById('sidebar').classList.remove('active');
+  document.body.classList.remove('sidebar-open');
 }
 
-// Fechar sidebar ao clicar fora dele
+// Close sidebar when clicking outside on mobile
 document.addEventListener('click', function(event) {
   const sidebar = document.getElementById('sidebar');
   const menuIcon = document.querySelector('.menu-icon');
   
-  // Se o sidebar está aberto e o clique foi fora do sidebar e não no menu
-  if (sidebar && sidebar.classList.contains('sidebar-responsive') && 
+  if (window.innerWidth <= 768 && 
+      sidebar.classList.contains('active') && 
       !sidebar.contains(event.target) && 
       !menuIcon.contains(event.target)) {
     closeSidebar();
   }
 });
 
-// Fechar sidebar com a tecla Escape
-document.addEventListener('keydown', function(event) {
-  if (event.key === 'Escape') {
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar && sidebar.classList.contains('sidebar-responsive')) {
-      closeSidebar();
+// Smooth counter animation
+function animateCounter(elementId, start, end, duration = 1000) {
+  const element = document.getElementById(elementId);
+  if (!element) return;
+  
+  const startTime = performance.now();
+  const difference = end - start;
+  
+  function updateCounter(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // Easing function for smooth animation
+    const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+    const current = Math.round(start + (difference * easeOutQuart));
+    
+    element.textContent = current;
+    
+    if (progress < 1) {
+      requestAnimationFrame(updateCounter);
     }
   }
-});
-
-// Mostrar data atual
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM carregado'); // Debug
   
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  const today = new Date();
-  const currentDateElement = document.getElementById('current-date');
-  
-  if (currentDateElement) {
-    currentDateElement.textContent = today.toLocaleDateString('pt-BR', options);
-  }
-  
-  // Carregar dados dos pacientes do localStorage
-  carregarDadosDashboard();
-  
-  // Verificar se os elementos existem (debug)
-  console.log('Menu icon:', document.querySelector('.menu-icon'));
-  console.log('Sidebar:', document.getElementById('sidebar'));
-});
-
-function carregarDadosDashboard() {
-  // Recuperar dados dos pacientes do localStorage
-  const pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
-  
-  // Atualizar contadores
-  const totalPacientes = document.getElementById('total-pacientes');
-  const sistemaPacientes = document.getElementById('sistema-pacientes');
-  
-  if (totalPacientes) {
-    totalPacientes.textContent = pacientes.length;
-    totalPacientes.setAttribute('value', pacientes.length);
-  }
-  
-  if (sistemaPacientes) {
-    sistemaPacientes.textContent = pacientes.length;
-    sistemaPacientes.setAttribute('value', pacientes.length);
-  }
-  
-  // Calcular pacientes ativos (exemplo: pacientes cadastrados nos últimos 30 dias)
-  const hoje = new Date();
-  const trintaDiasAtras = new Date(hoje.getTime() - (30 * 24 * 60 * 60 * 1000));
-  
-  const pacientesAtivos = pacientes.filter(paciente => {
-    if (paciente.dataCadastro) {
-      const dataCadastro = new Date(paciente.dataCadastro);
-      return dataCadastro >= trintaDiasAtras;
-    }
-    return false;
-  });
-  
-  const pacientesAtivosEl = document.getElementById('pacientes-ativos');
-  const sistemaAtivosEl = document.getElementById('sistema-ativos');
-  
-  if (pacientesAtivosEl) {
-    pacientesAtivosEl.textContent = pacientesAtivos.length;
-    pacientesAtivosEl.setAttribute('value', pacientesAtivos.length);
-  }
-  
-  if (sistemaAtivosEl) {
-    sistemaAtivosEl.textContent = pacientesAtivos.length;
-    sistemaAtivosEl.setAttribute('value', pacientesAtivos.length);
-  }
-  
-  // Calcular cadastros desta semana
-  const inicioSemana = new Date(hoje);
-  inicioSemana.setDate(hoje.getDate() - hoje.getDay());
-  inicioSemana.setHours(0, 0, 0, 0);
-  
-  const cadastrosEstaSemana = pacientes.filter(paciente => {
-    if (paciente.dataCadastro) {
-      const dataCadastro = new Date(paciente.dataCadastro);
-      return dataCadastro >= inicioSemana;
-    }
-    return false;
-  });
-  
-  const novosCadastrosEl = document.getElementById('novos-cadastros');
-  if (novosCadastrosEl) {
-    novosCadastrosEl.textContent = cadastrosEstaSemana.length;
-    novosCadastrosEl.setAttribute('value', cadastrosEstaSemana.length);
-  }
-  
-  // Calcular cadastros de hoje
-  const inicioHoje = new Date(hoje);
-  inicioHoje.setHours(0, 0, 0, 0);
-  
-  const cadastrosHoje = pacientes.filter(paciente => {
-    if (paciente.dataCadastro) {
-      const dataCadastro = new Date(paciente.dataCadastro);
-      return dataCadastro >= inicioHoje;
-    }
-    return false;
-  });
-  
-  const cadastrosHojeEl = document.getElementById('cadastros-hoje');
-  if (cadastrosHojeEl) {
-    cadastrosHojeEl.textContent = cadastrosHoje.length;
-    cadastrosHojeEl.setAttribute('value', cadastrosHoje.length);
-  }
-  
-  // Atualizar lista de últimos pacientes
-  atualizarUltimosPacientes(pacientes);
+  requestAnimationFrame(updateCounter);
 }
 
-function atualizarUltimosPacientes(pacientes) {
+// APENAS PARA ENFEITE!!!!!!!! ARRUMAREM QUANDO LIGAR O BANCO 
+function updatePatientList() {
   const activityList = document.querySelector('.activity-list');
+  if (!activityList) return;
   
-  if (!activityList || pacientes.length === 0) {
-    return; // Manter mensagem padrão
-  }
+  const samplePatients = [
+    {
+      name: 'Ana Silva',
+      date: '15/05/2024',
+      status: 'Ativo'
+    },
+    {
+      name: 'João Santos',
+      date: '14/05/2024',
+      status: 'Em tratamento'
+    },
+    {
+      name: 'Maria Oliveira',
+      date: '13/05/2024',
+      status: 'Consulta agendada'
+    }
+  ];
   
-  // Ordenar por data de cadastro (mais recentes primeiro)
-  const pacientesOrdenados = pacientes.sort((a, b) => {
-    const dataA = new Date(a.dataCadastro || 0);
-    const dataB = new Date(b.dataCadastro || 0);
-    return dataB - dataA;
-  });
-  
-  // Pegar os 4 mais recentes
-  const ultimosPacientes = pacientesOrdenados.slice(0, 4);
-  
-  // Limpar lista atual
+  // Clear existing content
   activityList.innerHTML = '';
   
-  // Adicionar últimos pacientes
-  ultimosPacientes.forEach(paciente => {
-    const activityItem = document.createElement('div');
-    activityItem.className = 'activity-item';
-    
-    const dataCadastro = paciente.dataCadastro ? new Date(paciente.dataCadastro).toLocaleDateString('pt-BR') : 'Data não informada';
-    
-    activityItem.innerHTML = `
-      <figure class="activity-icon background-blue">
+  // Add sample patients
+  samplePatients.forEach(patient => {
+    const patientItem = document.createElement('div');
+    patientItem.className = 'activity-item';
+    patientItem.innerHTML = `
+      <figure class="activity-icon">
         <span class="material-icons-outlined">person</span>
       </figure>
       <div class="activity-content">
-        <h3>Paciente cadastrado</h3>
-        <p>Nome: ${paciente.nome || 'Nome não informado'}</p>
-        <time class="activity-time">${dataCadastro}</time>
+        <h3>${patient.name}</h3>
+        <p>Cadastrado em: ${patient.date}</p>
+        <time class="activity-time">Status: ${patient.status}</time>
       </div>
     `;
-    
-    activityList.appendChild(activityItem);
+    activityList.appendChild(patientItem);
   });
+}
+
+// Add smooth hover effects
+document.addEventListener('DOMContentLoaded', function() {
+  // Card hover effects
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-2px)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
+    });
+  });
+  
+  // Quick button hover effects
+  const quickButtons = document.querySelectorAll('.quick-button');
+  quickButtons.forEach(button => {
+    button.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-2px)';
+    });
+    
+    button.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
+    });
+  });
+});
+
+// Handle window resize
+window.addEventListener('resize', function() {
+  if (window.innerWidth > 768) {
+    closeSidebar();
+  }
+});
+
+//Menu Funcional
+document.addEventListener('click', function(event) {
+    const body = document.body;
+    const sidebar = document.getElementById('sidebar');
+
+    const isSidebarOpen = body.classList.contains('sidebar-open');
+    const clickedInsideSidebar = sidebar.contains(event.target);
+    const clickedMenuButton = event.target.closest('.menu-icon');
+
+    if (isSidebarOpen && !clickedInsideSidebar && !clickedMenuButton) {
+      body.classList.remove('sidebar-open');
+    }
+  });
+
+function openSidebar() {
+  const body = document.body;
+
+  // Alterna a classe para abrir ou fechar
+  body.classList.toggle('sidebar-open');
 }

@@ -3,29 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Casa Guido</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="../css/login.css">
-    <title>Tela de Login</title>
-    <style>
-
-    </style>
 </head>
 <body>
     <div class="login-container">
-        <h2>Login</h2>
-        <form id="login-form">
-            <div class="input-group">
-                <label for="username">Usuário</label>
-                <input type="text" id="username" name="username" required>
+        <!-- Background Image -->
+        <div class="background-image"></div>
+        
+        <!-- Login Form Container -->
+        <div class="login-form-container">
+            <div class="login-card">
+                <!-- Logo and Header -->
+                <header class="login-header">
+                    <div class="logo">
+                        <img src="/img/logo-nova.png" alt="Casa Guido">
+                    </div>
+                    <h2 class="welcome-title">Bem-vindo de volta</h2>
+                    <p class="welcome-subtitle">Acesse o sistema de gestão de pacientes</p>
+                </header>
+
+                <!-- Login Form -->
+                <form class="login-form" id="loginForm" novalidate>
+                    <div class="form-group">
+                        <label for="email" class="form-label">
+                            <span class="material-icons-outlined">email</span>
+                            Email
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input" 
+                            placeholder="Digite seu email"
+                            required
+                            autocomplete="email"
+                        >
+                        <span class="error-message" id="emailError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">
+                            <span class="material-icons-outlined">lock</span>
+                            Senha
+                        </label>
+                        <div class="password-input-container">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                class="form-input" 
+                                placeholder="Digite sua senha"
+                                required
+                                autocomplete="current-password"
+                            >
+                            <button type="button" class="password-toggle" id="passwordToggle" aria-label="Mostrar/ocultar senha">
+                                <span class="material-icons-outlined">visibility</span>
+                            </button>
+                        </div>
+                        <span class="error-message" id="passwordError"></span>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="rememberMe" name="rememberMe">
+                            <span class="checkmark"></span>
+                            Lembrar de mim
+                        </label>
+                        <a href="#" class="forgot-password">Esqueceu a senha?</a>
+                    </div>
+
+                    <button type="submit" class="login-button" id="loginButton">
+                        <span class="button-text">Entrar</span>
+                        <span class="button-loading" style="display: none;">
+                            <span class="loading-spinner"></span>
+                            Entrando...
+                        </span>
+                    </button>
+                </form>
+
+                <!-- Additional Options -->
+                <div class="login-footer">
+                    <p class="help-text">
+                        Precisa de ajuda? 
+                        <a href="#" class="help-link">Entre em contato com o suporte</a>
+                    </p>
+                </div>
             </div>
-            <div class="input-group">
-                <label for="password">Senha</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="login-btn">Entrar</button>
-            <div class="forgot-password">
-                <a href="#">Esqueceu sua senha?</a>
-            </div>
-        </form>
+        </div>
+
+        <!-- Footer
+        <footer class="login-page-footer">
+            <p>&copy; 2025 Casa Guido - Sistema de Gestão de Pacientes Oncológicos</p>
+            <p>Todos os direitos reservados</p>
+        </footer> -->
     </div>
+
+    <script src="../js/login.js"></script>
 </body>
 </html>
