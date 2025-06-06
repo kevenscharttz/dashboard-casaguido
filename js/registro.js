@@ -603,3 +603,25 @@ class FormNavigation {
 document.addEventListener('DOMContentLoaded', function() {
     new FormNavigation();
 });
+
+//Menu Funcional
+document.addEventListener('click', function(event) {
+    const body = document.body;
+    const sidebar = document.getElementById('sidebar');
+
+    const isSidebarOpen = body.classList.contains('sidebar-open');
+    const clickedInsideSidebar = sidebar.contains(event.target);
+    const clickedMenuButton = event.target.closest('.menu-icon');
+
+    if (isSidebarOpen && !clickedInsideSidebar && !clickedMenuButton) {
+      body.classList.remove('sidebar-open');
+    }
+  });
+
+function openSidebar() {
+  const body = document.body;
+
+  // Alterna a classe para abrir ou fechar
+  body.classList.toggle('sidebar-open');
+}
+  

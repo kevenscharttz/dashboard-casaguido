@@ -9,54 +9,63 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   </head>
   <body>
-    <!-- Componente de Navegação GUIDO -->
-<nav class="navbar">
-    <div class="navbar-container">
-        <a href="index.html" class="navbar-logo">
-            <div class="logo-colored">
-                <span>G</span><span>U</span><span>I</span><span>D</span>O
-            </div>
-        </a>
-        <div class="navbar-menu">
-            <a href="../index.html" class="navbar-item">Início</a>
-            <a href="./registro.html" class="navbar-item">Registro</a>
-            <a href="./pacientes.html" class="navbar-item">Pacientes</a>
-            <div class="user-dropdown">
-                <div class="user-info">
-                    <div class="user-avatar">AD</div>
-                    <span class="user-name">Admin</span>
-                </div>
-                <div class="dropdown-content">
-                    <a href="perfil.html" class="dropdown-item">
-                        <span class="material-icons-outlined">person</span>
-                        Meu Perfil
-                    </a>
-                    <a href="configuracoes.html" class="dropdown-item">
-                        <span class="material-icons-outlined">settings</span>
-                        Configurações
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="login.html" class="dropdown-item">
-                        <span class="material-icons-outlined">logout</span>
-                        Sair
-                    </a>
-                </div>
-            </div>
+    <div class="grid-container">
+      <header class="header">
+        <button class="menu-icon" onclick="openSidebar()" aria-label="Abrir menu">
+          <span class="material-icons-outlined">menu</span>
+        </button>
+        <div class="header-left">
+          <img src="/img/logo-nova.png" alt="Casa Guido">
         </div>
-    </div>
-</nav>
-    <div class="container">
-      <div class="logo-section">
-        <div class="logo">
-          <div class="logo-colored">
-            <span>G</span><span>U</span><span>I</span><span>D</span>O
-          </div>
-          <div class="logo-text">
-            Grupo pela Unidade Infanto-juvenil de Onco-hematologia
-          </div>
-        </div>
-      </div>
-
+        <nav class="header-right">
+          <button aria-label="Notificações">
+            <span class="material-icons-outlined">notifications</span>
+          </button>
+          <button aria-label="Email">
+            <span class="material-icons-outlined">email</span>
+          </button>
+          <a href="html/login.html" title="Sair">
+            <span class="material-icons-outlined">logout</span>
+          </a>
+        </nav>
+      </header>
+      
+      <aside id="sidebar">
+        <header class="sidebar-title">
+          <button class="material-icons-outlined" onclick="closeSidebar()" aria-label="Fechar menu">close</button>
+        </header>
+        <nav class="sidebar-list">
+          <ul>
+            <li class="sidebar-list-item">
+              <a href="/dashboard.html">
+                <span class="material-icons-outlined">dashboard</span> Início
+              </a>
+            </li>
+            <li class="sidebar-list-item active">
+              <a href="registro.html">
+                <span class="material-icons-outlined">person_add</span> Registro
+              </a>
+            </li>
+            <li class="sidebar-list-item">
+              <a href="pacientes.html" id="listar-pacientes">
+                <span class="material-icons-outlined">people</span> Pacientes
+              </a>
+            </li>
+            <li class="sidebar-list-item">
+              <a href="configuracoes.html" id="configuracoes">
+                <span class="material-icons-outlined">settings</span> Configurações
+              </a>
+            </li>
+            <li class="sidebar-list-item">
+              <a href="login.html">
+                <span class="material-icons-outlined">logout</span> Sair
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      
+      <main class="main-container">
       <h1>FICHA DE IDENTIFICAÇÃO</h1>
 
       <!-- Progress bar -->
@@ -82,15 +91,15 @@
         </div>
         <div class="step">
           <div class="step-circle" id="step-3">3</div>
-          <div class="step-text">Dados da Mãe</div>
+          <div class="step-text">Dados dos Familiares</div>
         </div>
         <div class="step">
           <div class="step-circle" id="step-4">4</div>
-          <div class="step-text">Dados do Pai</div>
+          <div class="step-text">Histórico de Saúde</div>
         </div>
         <div class="step">
           <div class="step-circle" id="step-5">5</div>
-          <div class="step-text">Outro Responsável</div>
+          <div class="step-text">Histórico Familiar</div>
         </div>
         <div class="step">
           <div class="step-circle" id="step-6">6</div>
@@ -98,26 +107,6 @@
         </div>
         <div class="step">
           <div class="step-circle" id="step-7">7</div>
-          <div class="step-text">Quimioterapia</div>
-        </div>
-        <div class="step">
-          <div class="step-circle" id="step-8">8</div>
-          <div class="step-text">Radioterapia</div>
-        </div>
-        <div class="step">
-          <div class="step-circle" id="step-9">9</div>
-          <div class="step-text">Cirurgia</div>
-        </div>
-        <div class="step">
-          <div class="step-circle" id="step-10">10</div>
-          <div class="step-text">Histórico de Saúde</div>
-        </div>
-        <div class="step">
-          <div class="step-circle" id="step-11">11</div>
-          <div class="step-text">Histórico Familiar</div>
-        </div>
-        <div class="step">
-          <div class="step-circle" id="step-12">12</div>
           <div class="step-text">Finalizar</div>
         </div>
       </div>
@@ -181,11 +170,131 @@
             </div>
           </div>
 
-          <div class="button-row">
-            <div></div>
-            <button type="button" class="btn-primary" id="btn-next-1">Próximo</button>
+           <!-- Antiga Seção 7!!!!!!!!!!!!!! Nao sei se vai afetar o js
+           <div class="form-section" id="section-7"> -->
+
+          <div class="section-title">Quimioterapia</div>
+          <div class="form-card">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Já fez Quimioterapia?</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="quimio_sim" name="fez_quimio" value="sim">
+                    <label for="quimio_sim">Sim</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="quimio_nao" name="fez_quimio" value="nao">
+                    <label for="quimio_nao">Não</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="quimio-fields" style="display: none;">
+              <div id="quimio-list">
+                <div class="quimio-item">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="quimio_data_1">Data</label>
+                      <input type="date" id="quimio_data_1" name="quimio_data_1" />
+                    </div>
+                    <div class="form-group full-width">
+                      <label for="quimio_local_1">Local</label>
+                      <input type="text" id="quimio_local_1" name="quimio_local_1" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn-add" id="add-quimio">+ Adicionar Outra Quimioterapia</button>
+            </div>
           </div>
-        </div>
+
+        <!-- Antiga Seção 8!!!!!!!!!!!!!! Nao sei se vai afetar o js
+           <div class="form-section" id="section-8"> -->
+          <div class="section-title">Radioterapia</div>
+          
+          <div class="form-card">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Já fez Radioterapia?</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="radio_sim" name="fez_radio" value="sim">
+                    <label for="radio_sim">Sim</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="radio_nao" name="fez_radio" value="nao">
+                    <label for="radio_nao">Não</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="radio-fields" style="display: none;">
+              <div id="radio-list">
+                <div class="radio-item-form">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="radio_data_1">Data</label>
+                      <input type="date" id="radio_data_1" name="radio_data_1" />
+                    </div>
+                    <div class="form-group full-width">
+                      <label for="radio_local_1">Local</label>
+                      <input type="text" id="radio_local_1" name="radio_local_1" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn-add" id="add-radio">+ Adicionar Outra Radioterapia</button>
+            </div>
+          </div>
+
+          <!-- Antiga Seção 9!!!!!!!!!!!!!! Nao sei se vai afetar o js
+          <div class="form-section" id="section-9"> -->
+            <div class="section-title">Cirurgia</div>
+            
+            <div class="form-card">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Já fez Cirurgia?</label>
+                  <div class="radio-group">
+                    <div class="radio-item">
+                      <input type="radio" id="cirurgia_sim" name="fez_cirurgia" value="sim">
+                      <label for="cirurgia_sim">Sim</label>
+                    </div>
+                    <div class="radio-item">
+                      <input type="radio" id="cirurgia_nao" name="fez_cirurgia" value="nao">
+                      <label for="cirurgia_nao">Não</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+              <div id="cirurgia-fields" style="display: none;">
+                <div id="cirurgia-list">
+                  <div class="cirurgia-item">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="cirurgia_data_1">Data</label>
+                        <input type="date" id="cirurgia_data_1" name="cirurgia_data_1" />
+                      </div>
+                      <div class="form-group full-width">
+                        <label for="cirurgia_local_1">Local</label>
+                        <input type="text" id="cirurgia_local_1" name="cirurgia_local_1" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" class="btn-add" id="add-cirurgia">+ Adicionar Outra Cirurgia</button>
+              </div>
+            </div>
+  
+            <div class="button-row">
+              <button type="button" class="btn-secondary" id="btn-prev-1">Anterior</button>
+              <button type="button" class="btn-primary" id="btn-next-1">Próximo</button>
+            </div>
+          </div>
 
         <!-- Seção 2: Contato e Endereço -->
         <div class="form-section" id="section-2">
@@ -297,7 +406,7 @@
           </div>
         </div>
 
-        <!-- Seção 3: Dados da Mãe -->
+        <!-- Seção 3: Dados dos Familiares-->
         <div class="form-section" id="section-3">
           <div class="section-title">Dados da Mãe</div>
           
@@ -388,14 +497,8 @@
             </div>
           </div>
 
-          <div class="button-row">
-            <button type="button" class="btn-secondary" id="btn-prev-3">Anterior</button>
-            <button type="button" class="btn-primary" id="btn-next-3">Próximo</button>
-          </div>
-        </div>
-
-        <!-- Seção 4: Dados do Pai -->
-        <div class="form-section" id="section-4">
+        <!-- Antiga Seção 4!!!!!!!!!!!!!! Nao sei se vai afetar o js
+        <div class="form-section" id="section-4">-->
           <div class="section-title">Dados do Pai</div>
           
           <div class="form-card">
@@ -484,14 +587,8 @@
             </div>
           </div>
 
-          <div class="button-row">
-            <button type="button" class="btn-secondary" id="btn-prev-4">Anterior</button>
-            <button type="button" class="btn-primary" id="btn-next-4">Próximo</button>
-          </div>
-        </div>
-
-        <!-- Seção 5: Outro Responsável -->
-        <div class="form-section" id="section-5">
+        <!-- Antiga Seção 5!!!!!!!!!!!!!! Nao sei se vai afetar o js
+        <div class="form-section" id="section-5">-->
           <div class="section-title">Outro Responsável</div>
           
           <div class="form-card">
@@ -590,274 +687,16 @@
           </div>
 
           <div class="button-row">
-            <button type="button" class="btn-secondary" id="btn-prev-5">Anterior</button>
-            <button type="button" class="btn-primary" id="btn-next-5">Próximo</button>
+            <button type="button" class="btn-secondary" id="btn-prev-3">Anterior</button>
+            <button type="button" class="btn-primary" id="btn-next-3">Próximo</button>
           </div>
         </div>
 
-        <!-- Seção 6: Situação Socioeconômica -->
-        <div class="form-section" id="section-6">
-          <div class="section-title">Situação Socioeconômica</div>
-          
-          <div class="form-card">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="renda_familiar">Renda Familiar Total</label>
-                <input type="text" id="renda_familiar" name="renda_familiar" placeholder="R$ 0,00" readonly />
-                <div class="help-text">Calculada automaticamente</div>
-              </div>
-              <div class="form-group">
-                <label>Possui BPC (Benefício de Prestação Continuada)?</label>
-                <div class="radio-group">
-                  <div class="radio-item">
-                    <input type="radio" id="tem_bpc_sim" name="tem_bpc" value="sim">
-                    <label for="tem_bpc_sim">Sim</label>
-                  </div>
-                  <div class="radio-item">
-                    <input type="radio" id="tem_bpc_nao" name="tem_bpc" value="nao">
-                    <label for="tem_bpc_nao">Não</label>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <!-- Antiga Seção 10: Histórico de Saúde!!!!!!!!!!!!!! Nao sei se vai afetar o js
+        <div class="form-section" id="section-10">-->
 
-            <div class="form-row" id="bpc-fields" style="display: none;">
-              <div class="form-group">
-                <label for="valor_bpc">Valor do BPC</label>
-                <input type="text" id="valor_bpc" name="valor_bpc" placeholder="R$ 0,00" />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label>Frequenta Instituição de Ensino?</label>
-                <div class="radio-group">
-                  <div class="radio-item">
-                    <input type="radio" id="estuda_sim" name="estuda" value="sim">
-                    <label for="estuda_sim">Sim</label>
-                  </div>
-                  <div class="radio-item">
-                    <input type="radio" id="estuda_nao" name="estuda" value="nao">
-                    <label for="estuda_nao">Não</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div id="escola-fields" style="display: none;">
-              <div class="form-row">
-                <div class="form-group full-width">
-                  <label for="instituicao_ensino">Nome da Instituição de Ensino</label>
-                  <input type="text" id="instituicao_ensino" name="instituicao_ensino" />
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="escolaridade_paciente">Escolaridade</label>
-                  <select id="escolaridade_paciente" name="escolaridade_paciente">
-                    <option value="">Selecione</option>
-                    <option value="creche">Creche</option>
-                    <option value="pre_escola">Pré-escola</option>
-                    <option value="fundamental_anos_iniciais">Ensino Fundamental - Anos Iniciais</option>
-                    <option value="fundamental_anos_finais">Ensino Fundamental - Anos Finais</option>
-                    <option value="medio">Ensino Médio</option>
-                    <option value="tecnico">Ensino Técnico</option>
-                    <option value="superior">Ensino Superior</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label>Tipo de Instituição</label>
-                  <div class="radio-group">
-                    <div class="radio-item">
-                      <input type="radio" id="publica" name="tipo_instituicao" value="publica">
-                      <label for="publica">Pública</label>
-                    </div>
-                    <div class="radio-item">
-                      <input type="radio" id="privada" name="tipo_instituicao" value="privada">
-                      <label for="privada">Privada</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="situacao_habitacional">Situação Habitacional</label>
-                <select id="situacao_habitacional" name="situacao_habitacional">
-                  <option value="">Selecione</option>
-                  <option value="propria">Casa Própria</option>
-                  <option value="alugada">Casa Alugada</option>
-                  <option value="cedida">Casa Cedida</option>
-                  <option value="financiada">Casa Financiada</option>
-                  <option value="outros">Outros</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="pessoas_casa">Número de Pessoas na Casa</label>
-                <input type="number" id="pessoas_casa" name="pessoas_casa" min="1" />
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="comodos">Número de Cômodos</label>
-                <input type="number" id="comodos" name="comodos" min="1" />
-              </div>
-              <div class="form-group">
-                <label for="quartos">Número de Quartos</label>
-                <input type="number" id="quartos" name="quartos" min="1" />
-              </div>
-            </div>
-          </div>
-
-          <div class="button-row">
-            <button type="button" class="btn-secondary" id="btn-prev-6">Anterior</button>
-            <button type="button" class="btn-primary" id="btn-next-6">Próximo</button>
-          </div>
-        </div>
-
-        <!-- Seção 7: Quimioterapia -->
-        <div class="form-section" id="section-7">
-          <div class="section-title">Quimioterapia</div>
-          
-          <div class="form-card">
-            <div class="form-row">
-              <div class="form-group">
-                <label>Já fez Quimioterapia?</label>
-                <div class="radio-group">
-                  <div class="radio-item">
-                    <input type="radio" id="quimio_sim" name="fez_quimio" value="sim">
-                    <label for="quimio_sim">Sim</label>
-                  </div>
-                  <div class="radio-item">
-                    <input type="radio" id="quimio_nao" name="fez_quimio" value="nao">
-                    <label for="quimio_nao">Não</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div id="quimio-fields" style="display: none;">
-              <div id="quimio-list">
-                <div class="quimio-item">
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label for="quimio_data_1">Data</label>
-                      <input type="date" id="quimio_data_1" name="quimio_data_1" />
-                    </div>
-                    <div class="form-group full-width">
-                      <label for="quimio_local_1">Local</label>
-                      <input type="text" id="quimio_local_1" name="quimio_local_1" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <button type="button" class="btn-add" id="add-quimio">+ Adicionar Outra Quimioterapia</button>
-            </div>
-          </div>
-
-          <div class="button-row">
-            <button type="button" class="btn-secondary" id="btn-prev-7">Anterior</button>
-            <button type="button" class="btn-primary" id="btn-next-7">Próximo</button>
-          </div>
-        </div>
-
-        <!-- Seção 8: Radioterapia -->
-        <div class="form-section" id="section-8">
-          <div class="section-title">Radioterapia</div>
-          
-          <div class="form-card">
-            <div class="form-row">
-              <div class="form-group">
-                <label>Já fez Radioterapia?</label>
-                <div class="radio-group">
-                  <div class="radio-item">
-                    <input type="radio" id="radio_sim" name="fez_radio" value="sim">
-                    <label for="radio_sim">Sim</label>
-                  </div>
-                  <div class="radio-item">
-                    <input type="radio" id="radio_nao" name="fez_radio" value="nao">
-                    <label for="radio_nao">Não</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div id="radio-fields" style="display: none;">
-              <div id="radio-list">
-                <div class="radio-item-form">
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label for="radio_data_1">Data</label>
-                      <input type="date" id="radio_data_1" name="radio_data_1" />
-                    </div>
-                    <div class="form-group full-width">
-                      <label for="radio_local_1">Local</label>
-                      <input type="text" id="radio_local_1" name="radio_local_1" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <button type="button" class="btn-add" id="add-radio">+ Adicionar Outra Radioterapia</button>
-            </div>
-          </div>
-
-          <div class="button-row">
-            <button type="button" class="btn-secondary" id="btn-prev-8">Anterior</button>
-            <button type="button" class="btn-primary" id="btn-next-8">Próximo</button>
-          </div>
-        </div>
-
-        <!-- Seção 9: Cirurgia -->
-        <div class="form-section" id="section-9">
-          <div class="section-title">Cirurgia</div>
-          
-          <div class="form-card">
-            <div class="form-row">
-              <div class="form-group">
-                <label>Já fez Cirurgia?</label>
-                <div class="radio-group">
-                  <div class="radio-item">
-                    <input type="radio" id="cirurgia_sim" name="fez_cirurgia" value="sim">
-                    <label for="cirurgia_sim">Sim</label>
-                  </div>
-                  <div class="radio-item">
-                    <input type="radio" id="cirurgia_nao" name="fez_cirurgia" value="nao">
-                    <label for="cirurgia_nao">Não</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div id="cirurgia-fields" style="display: none;">
-              <div id="cirurgia-list">
-                <div class="cirurgia-item">
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label for="cirurgia_data_1">Data</label>
-                      <input type="date" id="cirurgia_data_1" name="cirurgia_data_1" />
-                    </div>
-                    <div class="form-group full-width">
-                      <label for="cirurgia_local_1">Local</label>
-                      <input type="text" id="cirurgia_local_1" name="cirurgia_local_1" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <button type="button" class="btn-add" id="add-cirurgia">+ Adicionar Outra Cirurgia</button>
-            </div>
-          </div>
-
-          <div class="button-row">
-            <button type="button" class="btn-secondary" id="btn-prev-9">Anterior</button>
-            <button type="button" class="btn-primary" id="btn-next-9">Próximo</button>
-          </div>
-        </div>
-
-        <!-- Seção 10: Histórico de Saúde -->
-        <div class="form-section" id="section-10">
+        <!-- Seção 4: Histórico de Saúde -->
+        <div class="form-section" id="section-4">
           <div class="section-title">Histórico de Saúde do Paciente</div>
           
           <div class="form-card">
@@ -1042,8 +881,11 @@
           </div>
         </div>
 
-        <!-- Seção 11: Histórico Familiar -->
-        <div class="form-section" id="section-11">
+        <!-- Antiga Seção 11: Histórico Familiar!!!!!!!!!!!!!! Nao sei se vai afetar o js
+        <div class="form-section" id="section-11">-->
+
+        <!-- Seção 5: Histórico Familiar -->
+        <div class="form-section" id="section-5">
           <div class="section-title">Histórico Familiar de Saúde</div>
           
           <div class="form-card">
@@ -1145,8 +987,134 @@
           </div>
         </div>
 
-        <!-- Seção 12: Finalizar -->
-        <div class="form-section" id="section-12">
+        <!-- Seção 6: Situação Socioeconômica -->
+        <div class="form-section" id="section-6">
+          <div class="section-title">Situação Socioeconômica</div>
+          
+          <div class="form-card">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="renda_familiar">Renda Familiar Total</label>
+                <input type="text" id="renda_familiar" name="renda_familiar" placeholder="R$ 0,00" readonly />
+                <div class="help-text">Calculada automaticamente</div>
+              </div>
+              <div class="form-group">
+                <label>Possui BPC (Benefício de Prestação Continuada)?</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="tem_bpc_sim" name="tem_bpc" value="sim">
+                    <label for="tem_bpc_sim">Sim</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="tem_bpc_nao" name="tem_bpc" value="nao">
+                    <label for="tem_bpc_nao">Não</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row" id="bpc-fields" style="display: none;">
+              <div class="form-group">
+                <label for="valor_bpc">Valor do BPC</label>
+                <input type="text" id="valor_bpc" name="valor_bpc" placeholder="R$ 0,00" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Frequenta Instituição de Ensino?</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="estuda_sim" name="estuda" value="sim">
+                    <label for="estuda_sim">Sim</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="estuda_nao" name="estuda" value="nao">
+                    <label for="estuda_nao">Não</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="escola-fields" style="display: none;">
+              <div class="form-row">
+                <div class="form-group full-width">
+                  <label for="instituicao_ensino">Nome da Instituição de Ensino</label>
+                  <input type="text" id="instituicao_ensino" name="instituicao_ensino" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="escolaridade_paciente">Escolaridade</label>
+                  <select id="escolaridade_paciente" name="escolaridade_paciente">
+                    <option value="">Selecione</option>
+                    <option value="creche">Creche</option>
+                    <option value="pre_escola">Pré-escola</option>
+                    <option value="fundamental_anos_iniciais">Ensino Fundamental - Anos Iniciais</option>
+                    <option value="fundamental_anos_finais">Ensino Fundamental - Anos Finais</option>
+                    <option value="medio">Ensino Médio</option>
+                    <option value="tecnico">Ensino Técnico</option>
+                    <option value="superior">Ensino Superior</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Tipo de Instituição</label>
+                  <div class="radio-group">
+                    <div class="radio-item">
+                      <input type="radio" id="publica" name="tipo_instituicao" value="publica">
+                      <label for="publica">Pública</label>
+                    </div>
+                    <div class="radio-item">
+                      <input type="radio" id="privada" name="tipo_instituicao" value="privada">
+                      <label for="privada">Privada</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="situacao_habitacional">Situação Habitacional</label>
+                <select id="situacao_habitacional" name="situacao_habitacional">
+                  <option value="">Selecione</option>
+                  <option value="propria">Casa Própria</option>
+                  <option value="alugada">Casa Alugada</option>
+                  <option value="cedida">Casa Cedida</option>
+                  <option value="financiada">Casa Financiada</option>
+                  <option value="outros">Outros</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="pessoas_casa">Número de Pessoas na Casa</label>
+                <input type="number" id="pessoas_casa" name="pessoas_casa" min="1" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="comodos">Número de Cômodos</label>
+                <input type="number" id="comodos" name="comodos" min="1" />
+              </div>
+              <div class="form-group">
+                <label for="quartos">Número de Quartos</label>
+                <input type="number" id="quartos" name="quartos" min="1" />
+              </div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button type="button" class="btn-secondary" id="btn-prev-6">Anterior</button>
+            <button type="button" class="btn-primary" id="btn-next-6">Próximo</button>
+          </div>
+        </div>
+
+        <!-- Antiga Seção 12: Finalizar!!!!!!!!!!!!!! Nao sei se vai afetar o js
+        <div class="form-section" id="section-12">-->
+
+        <!-- Seção 7: Finalizar -->
+        <div class="form-section" id="section-7">
           <div class="section-title">Finalizar Cadastro</div>
           
           <div class="form-card">
@@ -1188,6 +1156,7 @@
           </div>
         </div>
       </form>
+    </main>
     </div>
 
     <script src="../js/registro.js"></script>

@@ -3,6 +3,7 @@
 // const jwt = require('jsonwebtoken');
 // require('dotenv').config();
 
+<<<<<<< HEAD
 // exports.register = async (req, res) => {
 //   const { nome, email, senha, tipo } = req.body;
 
@@ -21,6 +22,10 @@
 
 // exports.login = async (req, res) => {
 //   const { username, password } = req.body;
+=======
+exports.login = async (req, res) => {
+  const { username, password } = req.body;
+>>>>>>> ac05d96457d4513a80fa255dfec187c53db53adb
 
 //   try {
 //     const [rows] = await pool.execute('SELECT * FROM usuarios WHERE email = ?', [username]);
