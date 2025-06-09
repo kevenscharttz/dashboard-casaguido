@@ -1,627 +1,564 @@
+document.addEventListener('DOMContentLoaded', function() {
+    initializeValidation();
+    initializeFormatting();
+    initializeFormLogic();
+});
 
-// Sistema de navegação entre seções do formulário
-class FormNavigation {
-    constructor() {
-        this.currentSection = 1;
-        this.totalSections = 12;
-        this.formData = {};
-        
-        this.init();
+function formatCPF(value) {
+    return value
+        .replace(/\D/g, '')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+        .replace(/(-\d{2})\d+?$/, '$1');
+}
+
+function formatPhone(value) {
+    return value
+        .replace(/\D/g, '')
+        .replace(/(\d{2})(\d)/, '($1) $2')
+        .replace(/(\d{4})(\d)/, '$1-$2')
+        .replace(/(\d{4})-(\d)(\d{4})/, '$1$2-$3')
+        .replace(/(-\d{4})\d+?$/, '$1');
+}
+
+function formatCEP(value) {
+    return value
+        .replace(/\D/g, '')
+        .replace(/(\d{5})(\d)/, '$1-$2')
+        .replace(/(-\d{3})\d+?$/, '$1');
+}
+
+function formatCartaoSUS(value) {
+    return value
+        .replace(/\D/g, '')
+        .replace(/(\d{3})(\d)/, '$1 $2')
+        .replace(/(\d{4})(\d)/, '$1 $2')
+        .replace(/(\d{4})(\d)/, '$1 $2')
+        .replace(/(\d{4})\d+?$/, '$1');
+}
+
+function formatMoney(value) {
+    value = value.replace(/\D/g, '');
+    value = (parseInt(value) / 100).toFixed(2);
+    return 'R$ ' + value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+function validateCPF(cpf) {
+    cpf = cpf.replace(/\D/g, '');
+    
+    if (cpf.length !== 11) return false;
+    if (/^(\d)\1{10}$/.test(cpf)) return false;
+    
+    let sum = 0;
+    let remainder;
+    
+    for (let i = 1; i <= 9; i++) {
+        sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
     }
-
-    init() {
-        this.setupEventListeners();
-        this.updateProgress();
-        this.updateStepIndicators();
-        this.setupConditionalFields();
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cpf.substring(9, 10))) return false;
+    
+    sum = 0;
+    for (let i = 1; i <= 10; i++) {
+        sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
     }
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cpf.substring(10, 11))) return false;
+    
+    return true;
+}
 
-    setupEventListeners() {
-        // Botões de navegação
-        for (let i = 1; i <= this.totalSections; i++) {
-            // Botão próximo
-            const nextBtn = document.getElementById(`btn-next-${i}`);
-            if (nextBtn) {
-                nextBtn.addEventListener('click', () => this.nextSection());
-            }
+function validateCartaoSUS(cartao) {
+    cartao = cartao.replace(/\D/g, '');
+    return cartao.length === 15;
+}
 
-            // Botão anterior
-            const prevBtn = document.getElementById(`btn-prev-${i}`);
-            if (prevBtn) {
-                prevBtn.addEventListener('click', () => this.prevSection());
-            }
-        }
+function validatePhone(phone) {
+    phone = phone.replace(/\D/g, '');
+    return phone.length === 10 || phone.length === 11;
+}
 
-        // Botão de submissão
-        const submitBtn = document.getElementById('btn-submit');
-        if (submitBtn) {
-            submitBtn.addEventListener('click', (e) => this.handleSubmit(e));
-        }
+function validateCEP(cep) {
+    cep = cep.replace(/\D/g, '');
+    return cep.length === 8;
+}
 
-        // Formulário
-        const form = document.getElementById('cadastro-form');
-        if (form) {
-            form.addEventListener('submit', (e) => this.handleSubmit(e));
-        }
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+function validateAge(birthDate) {
+    const today = new Date();
+    const birth = new Date(birthDate);
+    const age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        return age - 1;
     }
+    return age;
+}
 
-    setupConditionalFields() {
-        // Campo "outro responsável"
-        const temOutroResponsavel = document.getElementById('tem_outro_responsavel');
-        const outroResponsavelFields = document.getElementById('outro-responsavel-fields');
-        
-        if (temOutroResponsavel && outroResponsavelFields) {
-            temOutroResponsavel.addEventListener('change', function() {
-                outroResponsavelFields.style.display = this.checked ? 'block' : 'none';
-            });
-        }
-
-        // Campo BPC
-        const temBpcSim = document.getElementById('tem_bpc_sim');
-        const temBpcNao = document.getElementById('tem_bpc_nao');
-        const bpcFields = document.getElementById('bpc-fields');
-        
-        if (temBpcSim && temBpcNao && bpcFields) {
-            [temBpcSim, temBpcNao].forEach(radio => {
-                radio.addEventListener('change', function() {
-                    bpcFields.style.display = temBpcSim.checked ? 'block' : 'none';
-                });
-            });
-        }
-
-        // Campo escola
-        const estudaSim = document.getElementById('estuda_sim');
-        const estudaNao = document.getElementById('estuda_nao');
-        const escolaFields = document.getElementById('escola-fields');
-        
-        if (estudaSim && estudaNao && escolaFields) {
-            [estudaSim, estudaNao].forEach(radio => {
-                radio.addEventListener('change', function() {
-                    escolaFields.style.display = estudaSim.checked ? 'block' : 'none';
-                });
-            });
-        }
-
-        // Campos de tratamentos (quimio, radio, cirurgia)
-        this.setupTreatmentFields('quimio', 'fez_quimio');
-        this.setupTreatmentFields('radio', 'fez_radio');
-        this.setupTreatmentFields('cirurgia', 'fez_cirurgia');
-
-        // Campo medicamentos
-        const medicamentosSim = document.getElementById('medicamentos_sim');
-        const medicamentosNao = document.getElementById('medicamentos_nao');
-        const medicamentosFields = document.getElementById('medicamentos-fields');
-        
-        if (medicamentosSim && medicamentosNao && medicamentosFields) {
-            [medicamentosSim, medicamentosNao].forEach(radio => {
-                radio.addEventListener('change', function() {
-                    medicamentosFields.style.display = medicamentosSim.checked ? 'block' : 'none';
-                });
-            });
-        }
-
-        // Botões para adicionar itens dinâmicos
-        this.setupDynamicFields();
-
-        // Cálculo automático da idade
-        this.setupAgeCalculation();
-
-        // Cálculo automático da renda familiar
-        this.setupFamilyIncomeCalculation();
-
-        // Máscara para campos
-        this.setupFieldMasks();
+function calculateAge(birthDate) {
+    if (!birthDate) return '';
+    
+    const today = new Date();
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
     }
-
-    setupTreatmentFields(treatmentType, radioName) {
-        const simRadio = document.querySelector(`input[name="${radioName}"][value="sim"]`);
-        const naoRadio = document.querySelector(`input[name="${radioName}"][value="nao"]`);
-        const fields = document.getElementById(`${treatmentType}-fields`);
-        
-        if (simRadio && naoRadio && fields) {
-            [simRadio, naoRadio].forEach(radio => {
-                radio.addEventListener('change', function() {
-                    fields.style.display = simRadio.checked ? 'block' : 'none';
-                });
-            });
-        }
+    
+    if (age < 1) {
+        const months = today.getMonth() - birth.getMonth() + (12 * (today.getFullYear() - birth.getFullYear()));
+        return months + (months === 1 ? ' mês' : ' meses');
     }
+    
+    return age + (age === 1 ? ' ano' : ' anos');
+}
 
-    setupDynamicFields() {
-        // Adicionar quimioterapia
-        const addQuimioBtn = document.getElementById('add-quimio');
-        if (addQuimioBtn) {
-            addQuimioBtn.addEventListener('click', () => this.addDynamicField('quimio'));
-        }
-
-        // Adicionar radioterapia
-        const addRadioBtn = document.getElementById('add-radio');
-        if (addRadioBtn) {
-            addRadioBtn.addEventListener('click', () => this.addDynamicField('radio'));
-        }
-
-        // Adicionar cirurgia
-        const addCirurgiaBtn = document.getElementById('add-cirurgia');
-        if (addCirurgiaBtn) {
-            addCirurgiaBtn.addEventListener('click', () => this.addDynamicField('cirurgia'));
-        }
-
-        // Adicionar diagnóstico
-        const addDiagnosticoBtn = document.getElementById('add-diagnostico');
-        if (addDiagnosticoBtn) {
-            addDiagnosticoBtn.addEventListener('click', () => this.addDiagnosticoField());
-        }
-
-        // Adicionar medicamento
-        const addMedicamentoBtn = document.getElementById('add-medicamento');
-        if (addMedicamentoBtn) {
-            addMedicamentoBtn.addEventListener('click', () => this.addMedicamentoField());
-        }
-
-        // Adicionar diagnóstico familiar
-        const addDiagnosticoFamiliaBtn = document.getElementById('add-diagnostico-familia');
-        if (addDiagnosticoFamiliaBtn) {
-            addDiagnosticoFamiliaBtn.addEventListener('click', () => this.addDiagnosticoFamiliaField());
-        }
-    }
-
-    setupAgeCalculation() {
-        const dataNascimento = document.getElementById('data_nascimento');
-        const idadeField = document.getElementById('idade');
-        
-        if (dataNascimento && idadeField) {
-            dataNascimento.addEventListener('change', function() {
-                if (this.value) {
-                    const birthDate = new Date(this.value);
-                    const today = new Date();
-                    let age = today.getFullYear() - birthDate.getFullYear();
-                    const monthDiff = today.getMonth() - birthDate.getMonth();
-                    
-                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                        age--;
-                    }
-                    
-                    idadeField.value = age + ' anos';
-                }
-            });
-        }
-    }
-
-    setupFamilyIncomeCalculation() {
-        const salaryFields = ['mae_salario', 'pai_salario', 'outro_salario'];
-        const rendaFamiliar = document.getElementById('renda_familiar');
-        const valorBpc = document.getElementById('valor_bpc');
-        
-        const calculateIncome = () => {
-            let total = 0;
-            
-            salaryFields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (field && field.value) {
-                    const value = parseFloat(field.value.replace(/[^\d,]/g, '').replace(',', '.'));
-                    if (!isNaN(value)) {
-                        total += value;
+function initializeFormatting() {
+    const cpfFields = ['cpf', 'mae_cpf', 'pai_cpf', 'outro_cpf'];
+    cpfFields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+            element.addEventListener('input', function(e) {
+                e.target.value = formatCPF(e.target.value);
+                
+                const errorElement = document.getElementById(field + '-error');
+                if (errorElement) {
+                    if (e.target.value && !validateCPF(e.target.value)) {
+                        showError(field, 'CPF inválido');
+                    } else {
+                        hideError(field);
                     }
                 }
             });
+        }
+    });
+
+    const phoneFields = ['telefone1', 'telefone2', 'mae_telefone', 'pai_telefone', 'outro_telefone'];
+    phoneFields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+            element.addEventListener('input', function(e) {
+                e.target.value = formatPhone(e.target.value);
+                
+                const errorElement = document.getElementById(field + '-error');
+                if (errorElement && e.target.value) {
+                    if (!validatePhone(e.target.value)) {
+                        showError(field, 'Telefone inválido');
+                    } else {
+                        hideError(field);
+                    }
+                }
+            });
+        }
+    });
+
+    const cepElement = document.getElementById('cep');
+    if (cepElement) {
+        cepElement.addEventListener('input', function(e) {
+            e.target.value = formatCEP(e.target.value);
             
-            // Adicionar BPC se aplicável
-            if (valorBpc && valorBpc.value) {
-                const bpcValue = parseFloat(valorBpc.value.replace(/[^\d,]/g, '').replace(',', '.'));
-                if (!isNaN(bpcValue)) {
-                    total += bpcValue;
+            if (e.target.value && !validateCEP(e.target.value)) {
+                showError('cep', 'CEP inválido');
+            } else {
+                hideError('cep');
+                if (validateCEP(e.target.value)) {
+                    searchCEP(e.target.value.replace(/\D/g, ''));
                 }
             }
-            
-            if (rendaFamiliar) {
-                rendaFamiliar.value = 'R$ ' + total.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-            }
-        };
-        
-        salaryFields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                field.addEventListener('input', calculateIncome);
-            }
         });
-        
-        if (valorBpc) {
-            valorBpc.addEventListener('input', calculateIncome);
-        }
     }
 
-    setupFieldMasks() {
-        // Máscara para CPF
-        const cpfFields = ['cpf', 'mae_cpf', 'pai_cpf', 'outro_cpf'];
-        cpfFields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                field.addEventListener('input', function() {
-                    let value = this.value.replace(/\D/g, '');
-                    value = value.replace(/(\d{3})(\d)/, '$1.$2');
-                    value = value.replace(/(\d{3})(\d)/, '$1.$2');
-                    value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-                    this.value = value;
-                });
+    const cartaoSusElement = document.getElementById('cartao_sus');
+    if (cartaoSusElement) {
+        cartaoSusElement.addEventListener('input', function(e) {
+            e.target.value = formatCartaoSUS(e.target.value);
+            
+            if (e.target.value && !validateCartaoSUS(e.target.value)) {
+                showError('cartao_sus', 'Número de cartão SUS inválido');
+            } else {
+                hideError('cartao_sus');
             }
         });
+    }
 
-        // Máscara para telefone
-        const phoneFields = ['telefone1', 'telefone2', 'mae_telefone', 'pai_telefone', 'outro_telefone'];
-        phoneFields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                field.addEventListener('input', function() {
-                    let value = this.value.replace(/\D/g, '');
-                    value = value.replace(/(\d{2})(\d)/, '($1) $2');
-                    value = value.replace(/(\d{5})(\d{1,4})$/, '$1-$2');
-                    this.value = value;
-                });
-            }
-        });
-
-        // Máscara para CEP
-        const cepField = document.getElementById('cep');
-        if (cepField) {
-            cepField.addEventListener('input', function() {
-                let value = this.value.replace(/\D/g, '');
-                value = value.replace(/(\d{5})(\d)/, '$1-$2');
-                this.value = value;
+    const salaryFields = ['mae_salario', 'pai_salario', 'outro_salario', 'valor_bpc', 'renda_familiar'];
+    salaryFields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+            element.addEventListener('input', function(e) {
+                e.target.value = formatMoney(e.target.value);
+                calculateTotalIncome();
             });
         }
+    });
 
-        // Máscara para Cartão SUS
-        const cartaoSusField = document.getElementById('cartao_sus');
-        if (cartaoSusField) {
-            cartaoSusField.addEventListener('input', function() {
-                let value = this.value.replace(/\D/g, '');
-                value = value.replace(/(\d{3})(\d{4})(\d{4})(\d)/, '$1 $2 $3 $4');
-                this.value = value;
-            });
-        }
-
-        // Máscara para salários
-        const salaryFields = ['mae_salario', 'pai_salario', 'outro_salario', 'valor_bpc'];
-        salaryFields.forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                field.addEventListener('input', function() {
-                    let value = this.value.replace(/\D/g, '');
-                    value = (value / 100).toLocaleString('pt-BR', { 
-                        style: 'currency', 
-                        currency: 'BRL' 
-                    });
-                    this.value = value;
-                });
+    const birthDateElement = document.getElementById('data_nascimento');
+    if (birthDateElement) {
+        birthDateElement.addEventListener('change', function(e) {
+            const ageElement = document.getElementById('idade');
+            if (ageElement) {
+                ageElement.value = calculateAge(e.target.value);
+            }
+            
+            const today = new Date();
+            const birthDate = new Date(e.target.value);
+            if (birthDate > today) {
+                showError('data_nascimento', 'Data de nascimento não pode ser futura');
+            } else {
+                hideError('data_nascimento');
             }
         });
     }
 
-    addDynamicField(type) {
-        const container = document.getElementById(`${type}-list`);
-        if (!container) return;
-
-        const existingItems = container.querySelectorAll(`.${type}-item, .${type}-item-form`);
-        const newIndex = existingItems.length + 1;
-
-        let html = '';
-        if (type === 'radio') {
-            html = `
-                <div class="${type}-item-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="${type}_data_${newIndex}">Data</label>
-                            <input type="date" id="${type}_data_${newIndex}" name="${type}_data_${newIndex}" />
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="${type}_local_${newIndex}">Local</label>
-                            <input type="text" id="${type}_local_${newIndex}" name="${type}_local_${newIndex}" />
-                        </div>
-                    </div>
-                    <button type="button" class="btn-remove" onclick="this.parentElement.remove()">Remover</button>
-                </div>
-            `;
-        } else {
-            html = `
-                <div class="${type}-item">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="${type}_data_${newIndex}">Data</label>
-                            <input type="date" id="${type}_data_${newIndex}" name="${type}_data_${newIndex}" />
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="${type}_local_${newIndex}">Local</label>
-                            <input type="text" id="${type}_local_${newIndex}" name="${type}_local_${newIndex}" />
-                        </div>
-                    </div>
-                    <button type="button" class="btn-remove" onclick="this.parentElement.remove()">Remover</button>
-                </div>
-            `;
+    const numberOnlyFields = ['pessoas_casa', 'comodos', 'quartos'];
+    numberOnlyFields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+            element.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
         }
+    });
 
-        container.insertAdjacentHTML('beforeend', html);
-    }
+    const nameFields = ['paciente', 'mae_nome', 'pai_nome', 'outro_nome'];
+    nameFields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+            element.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+            });
+        }
+    });
+}
 
-    addDiagnosticoField() {
-        const container = document.getElementById('diagnosticos-list');
-        if (!container) return;
-
-        const existingItems = container.querySelectorAll('.diagnostico-item');
-        const newIndex = existingItems.length + 1;
-
-        const html = `
-            <div class="diagnostico-item">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="cid_${newIndex}">CID</label>
-                        <input type="text" id="cid_${newIndex}" name="cid_${newIndex}" />
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="descricao_${newIndex}">Descrição</label>
-                        <input type="text" id="descricao_${newIndex}" name="descricao_${newIndex}" />
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="observacao_${newIndex}">Observação</label>
-                        <textarea id="observacao_${newIndex}" name="observacao_${newIndex}" rows="2"></textarea>
-                    </div>
-                </div>
-                <button type="button" class="btn-remove" onclick="this.parentElement.remove()">Remover</button>
-            </div>
-        `;
-
-        container.insertAdjacentHTML('beforeend', html);
-    }
-
-    addMedicamentoField() {
-        const container = document.getElementById('medicamentos-list');
-        if (!container) return;
-
-        const existingItems = container.querySelectorAll('.medicamento-item');
-        const newIndex = existingItems.length + 1;
-
-        const html = `
-            <div class="medicamento-item">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="medicamento_nome_${newIndex}">Nome do Medicamento</label>
-                        <input type="text" id="medicamento_nome_${newIndex}" name="medicamento_nome_${newIndex}" />
-                    </div>
-                    <div class="form-group">
-                        <label for="medicamento_dosagem_${newIndex}">Dosagem</label>
-                        <input type="text" id="medicamento_dosagem_${newIndex}" name="medicamento_dosagem_${newIndex}" />
-                    </div>
-                    <div class="form-group">
-                        <label for="medicamento_frequencia_${newIndex}">Frequência</label>
-                        <input type="text" id="medicamento_frequencia_${newIndex}" name="medicamento_frequencia_${newIndex}" />
-                    </div>
-                </div>
-                <button type="button" class="btn-remove" onclick="this.parentElement.remove()">Remover</button>
-            </div>
-        `;
-
-        container.insertAdjacentHTML('beforeend', html);
-    }
-
-    addDiagnosticoFamiliaField() {
-        const container = document.getElementById('diagnosticos-familia-list');
-        if (!container) return;
-
-        const existingItems = container.querySelectorAll('.diagnostico-familia-item');
-        const newIndex = existingItems.length + 1;
-
-        const html = `
-            <div class="diagnostico-familia-item">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="familia_cid_${newIndex}">CID</label>
-                        <input type="text" id="familia_cid_${newIndex}" name="familia_cid_${newIndex}" />
-                    </div>
-                    <div class="form-group">
-                        <label for="familia_parentesco_${newIndex}">Parentesco</label>
-                        <input type="text" id="familia_parentesco_${newIndex}" name="familia_parentesco_${newIndex}" placeholder="Ex: Mãe, Pai, Avó..." />
-                    </div>
-                    <div class="form-group">
-                        <label for="familia_descricao_${newIndex}">Descrição</label>
-                        <input type="text" id="familia_descricao_${newIndex}" name="familia_descricao_${newIndex}" />
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="familia_observacao_${newIndex}">Observação</label>
-                        <textarea id="familia_observacao_${newIndex}" name="familia_observacao_${newIndex}" rows="2"></textarea>
-                    </div>
-                </div>
-                <button type="button" class="btn-remove" onclick="this.parentElement.remove()">Remover</button>
-            </div>
-        `;
-
-        container.insertAdjacentHTML('beforeend', html);
-    }
-
-    nextSection() {
-        if (this.currentSection < this.totalSections) {
-            this.hideSection(this.currentSection);
-            this.currentSection++;
-            this.showSection(this.currentSection);
-            this.updateProgress();
-            this.updateStepIndicators();
+async function searchCEP(cep) {
+    try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+        
+        if (!data.erro) {
+            document.getElementById('endereco').value = data.logradouro || '';
+            document.getElementById('bairro').value = data.bairro || '';
+            document.getElementById('cidade').value = data.localidade || '';
+            document.getElementById('estado').value = data.uf || '';
             
-            // Se chegou na última seção, atualizar o resumo
-            if (this.currentSection === this.totalSections) {
-                this.updateSummary();
+            document.getElementById('numero').focus();
+        }
+    } catch (error) {
+        console.log('Erro ao buscar CEP:', error);
+    }
+}
+
+function calculateTotalIncome() {
+    const salaryFields = ['mae_salario', 'pai_salario', 'outro_salario', 'valor_bpc'];
+    let total = 0;
+    
+    salaryFields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element && element.value) {
+            const value = parseFloat(element.value.replace(/[^\d,]/g, '').replace(',', '.'));
+            if (!isNaN(value)) {
+                total += value;
             }
         }
+    });
+    
+    const totalElement = document.getElementById('renda_familiar');
+    if (totalElement) {
+        totalElement.value = formatMoney((total * 100).toString());
     }
+}
 
-    prevSection() {
-        if (this.currentSection > 1) {
-            this.hideSection(this.currentSection);
-            this.currentSection--;
-            this.showSection(this.currentSection);
-            this.updateProgress();
-            this.updateStepIndicators();
+function showError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    const errorElement = document.getElementById(fieldId + '-error');
+    
+    if (field) {
+        field.classList.add('error');
+    }
+    
+    if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+    }
+}
+
+function hideError(fieldId) {
+    const field = document.getElementById(fieldId);
+    const errorElement = document.getElementById(fieldId + '-error');
+    
+    if (field) {
+        field.classList.remove('error');
+    }
+    
+    if (errorElement) {
+        errorElement.style.display = 'none';
+    }
+}
+
+function initializeValidation() {
+    const requiredFields = [
+        'paciente', 'data_nascimento', 'telefone1', 'cep', 
+        'endereco', 'numero', 'bairro', 'cidade', 'estado', 'mae_nome'
+    ];
+    
+    requiredFields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+            element.addEventListener('blur', function(e) {
+                if (!e.target.value.trim()) {
+                    showError(field, 'Este campo é obrigatório');
+                } else {
+                    hideError(field);
+                }
+            });
         }
-    }
+    });
+}
 
-    showSection(sectionNumber) {
-        const section = document.getElementById(`section-${sectionNumber}`);
-        if (section) {
-            section.classList.add('active');
-            // Scroll para o topo da seção
-            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    }
+function initializeFormLogic() {
+    const quimioRadios = document.querySelectorAll('input[name="fez_quimio"]');
+    quimioRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const fields = document.getElementById('quimio-fields');
+            if (fields) {
+                fields.style.display = this.value === 'sim' ? 'block' : 'none';
+            }
+        });
+    });
 
-    hideSection(sectionNumber) {
-        const section = document.getElementById(`section-${sectionNumber}`);
+    const radioRadios = document.querySelectorAll('input[name="fez_radio"]');
+    radioRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const fields = document.getElementById('radio-fields');
+            if (fields) {
+                fields.style.display = this.value === 'sim' ? 'block' : 'none';
+            }
+        });
+    });
+
+    const cirurgiaRadios = document.querySelectorAll('input[name="fez_cirurgia"]');
+    cirurgiaRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const fields = document.getElementById('cirurgia-fields');
+            if (fields) {
+                fields.style.display = this.value === 'sim' ? 'block' : 'none';
+            }
+        });
+    });
+
+    const medicamentoRadios = document.querySelectorAll('input[name="usa_medicamentos"]');
+    medicamentoRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const fields = document.getElementById('medicamentos-fields');
+            if (fields) {
+                fields.style.display = this.value === 'sim' ? 'block' : 'none';
+            }
+        });
+    });
+
+    const bpcRadios = document.querySelectorAll('input[name="tem_bpc"]');
+    bpcRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const fields = document.getElementById('bpc-fields');
+            if (fields) {
+                fields.style.display = this.value === 'sim' ? 'block' : 'none';
+            }
+        });
+    });
+
+    const escolaRadios = document.querySelectorAll('input[name="estuda"]');
+    escolaRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const fields = document.getElementById('escola-fields');
+            if (fields) {
+                fields.style.display = this.value === 'sim' ? 'block' : 'none';
+            }
+        });
+    });
+
+    const outroResponsavelCheckbox = document.getElementById('tem_outro_responsavel');
+    if (outroResponsavelCheckbox) {
+        outroResponsavelCheckbox.addEventListener('change', function() {
+            const fields = document.getElementById('outro-responsavel-fields');
+            if (fields) {
+                fields.style.display = this.checked ? 'block' : 'none';
+            }
+        });
+    }
+}
+
+let currentSection = 1;
+const totalSections = 7;
+
+function showSection(sectionNumber) {
+    for (let i = 1; i <= totalSections; i++) {
+        const section = document.getElementById(`section-${i}`);
         if (section) {
             section.classList.remove('active');
         }
     }
-
-    updateProgress() {
-        const progressBar = document.getElementById('form-progress');
-        const completionPercentage = document.getElementById('completion-percentage');
-        
-        if (progressBar && completionPercentage) {
-            const percentage = Math.round((this.currentSection / this.totalSections) * 100);
-            progressBar.style.width = `${percentage}%`;
-            completionPercentage.textContent = `${percentage}%`;
-        }
+    
+    const activeSection = document.getElementById(`section-${sectionNumber}`);
+    if (activeSection) {
+        activeSection.classList.add('active');
     }
+    
+    updateProgressIndicator(sectionNumber);
+    updateProgressBar(sectionNumber);
+    
+    currentSection = sectionNumber;
+}
 
-    updateStepIndicators() {
-        for (let i = 1; i <= this.totalSections; i++) {
-            const stepCircle = document.getElementById(`step-${i}`);
-            const stepText = stepCircle?.parentElement.querySelector('.step-text');
-            
-            if (stepCircle && stepText) {
-                if (i < this.currentSection) {
-                    // Seção completada
-                    stepCircle.classList.remove('active');
-                    stepCircle.classList.add('completed');
-                    stepText.classList.remove('active');
-                    stepText.classList.add('completed');
-                } else if (i === this.currentSection) {
-                    // Seção atual
-                    stepCircle.classList.add('active');
-                    stepCircle.classList.remove('completed');
-                    stepText.classList.add('active');
-                    stepText.classList.remove('completed');
-                } else {
-                    // Seção futura
-                    stepCircle.classList.remove('active', 'completed');
-                    stepText.classList.remove('active', 'completed');
-                }
+function updateProgressIndicator(sectionNumber) {
+    for (let i = 1; i <= totalSections; i++) {
+        const stepCircle = document.getElementById(`step-${i}`);
+        const stepText = stepCircle?.parentElement.querySelector('.step-text');
+        
+        if (stepCircle && stepText) {
+            if (i < sectionNumber) {
+                stepCircle.classList.add('completed');
+                stepCircle.classList.remove('active');
+                stepText.classList.add('completed');
+                stepText.classList.remove('active');
+            } else if (i === sectionNumber) {
+                stepCircle.classList.add('active');
+                stepCircle.classList.remove('completed');
+                stepText.classList.add('active');
+                stepText.classList.remove('completed');
+            } else {
+                stepCircle.classList.remove('active', 'completed');
+                stepText.classList.remove('active', 'completed');
             }
         }
     }
+}
 
-    updateSummary() {
-        // Atualizar o resumo na última seção
-        const summaryFields = {
-            'summary-paciente': document.getElementById('paciente')?.value || '-',
-            'summary-nascimento': document.getElementById('data_nascimento')?.value || '-',
-            'summary-cpf': document.getElementById('cpf')?.value || '-',
-            'summary-telefone': document.getElementById('telefone1')?.value || '-',
-            'summary-endereco': this.getFullAddress(),
-            'summary-responsavel': this.getMainResponsible()
-        };
+function updateProgressBar(sectionNumber) {
+    const percentage = Math.round((sectionNumber / totalSections) * 100);
+    const progressBar = document.getElementById('form-progress');
+    const percentageText = document.getElementById('completion-percentage');
+    
+    if (progressBar) {
+        progressBar.style.width = percentage + '%';
+    }
+    
+    if (percentageText) {
+        percentageText.textContent = percentage + '%';
+    }
+}
 
-        Object.entries(summaryFields).forEach(([elementId, value]) => {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.textContent = value;
+function initializeNavigation() {
+    for (let i = 1; i <= totalSections - 1; i++) {
+        const nextBtn = document.getElementById(`btn-next-${i}`);
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function() {
+                if (validateCurrentSection(i)) {
+                    showSection(i + 1);
+                }
+            });
+        }
+    }
+    
+    for (let i = 2; i <= totalSections; i++) {
+        const prevBtn = document.getElementById(`btn-prev-${i}`);
+        if (prevBtn) {
+            prevBtn.addEventListener('click', function() {
+                showSection(i - 1);
+            });
+        }
+    }
+}
+
+function validateCurrentSection(sectionNumber) {
+    let isValid = true;
+    
+    switch (sectionNumber) {
+        case 1:
+            if (!document.getElementById('paciente').value.trim()) {
+                showError('paciente', 'Nome do paciente é obrigatório');
+                isValid = false;
+            }
+            if (!document.getElementById('data_nascimento').value) {
+                showError('data_nascimento', 'Data de nascimento é obrigatória');
+                isValid = false;
+            }
+            break;
+            
+        case 2:
+            if (!document.getElementById('telefone1').value.trim()) {
+                showError('telefone1', 'Telefone principal é obrigatório');
+                isValid = false;
+            }
+            if (!document.getElementById('cep').value.trim()) {
+                showError('cep', 'CEP é obrigatório');
+                isValid = false;
+            }
+            if (!document.getElementById('endereco').value.trim()) {
+                showError('endereco', 'Endereço é obrigatório');
+                isValid = false;
+            }
+            break;
+            
+        case 3:
+            if (!document.getElementById('mae_nome').value.trim()) {
+                showError('mae_nome', 'Nome da mãe é obrigatório');
+                isValid = false;
+            }
+            break;
+    }
+    
+    return isValid;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeNavigation();
+    showSection(1);
+    
+    const form = document.getElementById('cadastro-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateAllSections()) {
+                showSuccessMessage();
             }
         });
     }
-
-    getFullAddress() {
-        const endereco = document.getElementById('endereco')?.value || '';
-        const numero = document.getElementById('numero')?.value || '';
-        const bairro = document.getElementById('bairro')?.value || '';
-        const cidade = document.getElementById('cidade')?.value || '';
-        const estado = document.getElementById('estado')?.value || '';
-
-        if (!endereco) return '-';
-
-        return `${endereco}, ${numero} - ${bairro}, ${cidade}/${estado}`;
-    }
-
-    getMainResponsible() {
-        const maeResponsavel = document.getElementById('mae_responsavel_principal')?.checked;
-        const paiResponsavel = document.getElementById('pai_responsavel_principal')?.checked;
-        const outroResponsavel = document.getElementById('outro_responsavel_principal')?.checked;
-
-        if (maeResponsavel) {
-            return document.getElementById('mae_nome')?.value || 'Mãe';
-        } else if (paiResponsavel) {
-            return document.getElementById('pai_nome')?.value || 'Pai';
-        } else if (outroResponsavel) {
-            return document.getElementById('outro_nome')?.value || 'Outro';
-        }
-
-        return 'Não informado';
-    }
-
-    handleSubmit(e) {
-        e.preventDefault();
-        
-        // Verificar se o checkbox de confirmação está marcado
-        const confirmarDados = document.getElementById('confirmar_dados');
-        if (!confirmarDados || !confirmarDados.checked) {
-            alert('Por favor, confirme que todas as informações estão corretas.');
-            return;
-        }
-
-        // Simular salvamento
-        this.showSuccessMessage();
-    }
-
-    showSuccessMessage() {
-        const successMessage = document.getElementById('success-message');
-        const form = document.getElementById('cadastro-form');
-        
-        if (successMessage && form) {
-            form.style.display = 'none';
-            successMessage.style.display = 'block';
-            
-            // Scroll para a mensagem
-            successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
-            // Opcional: redirecionar após alguns segundos
-            setTimeout(() => {
-                // window.location.href = 'pacientes.html';
-            }, 3000);
-        }
-    }
-}
-
-// Inicializar quando o DOM estiver carregado
-document.addEventListener('DOMContentLoaded', function() {
-    new FormNavigation();
 });
 
-//Menu Funcional
-document.addEventListener('click', function(event) {
-    const body = document.body;
-    const sidebar = document.getElementById('sidebar');
-
-    const isSidebarOpen = body.classList.contains('sidebar-open');
-    const clickedInsideSidebar = sidebar.contains(event.target);
-    const clickedMenuButton = event.target.closest('.menu-icon');
-
-    if (isSidebarOpen && !clickedInsideSidebar && !clickedMenuButton) {
-      body.classList.remove('sidebar-open');
+function validateAllSections() {
+    let isValid = true;
+    
+    for (let i = 1; i <= totalSections - 1; i++) {
+        if (!validateCurrentSection(i)) {
+            isValid = false;
+            showSection(i);
+            break;
+        }
     }
-  });
-
-function openSidebar() {
-  const body = document.body;
-
-  // Alterna a classe para abrir ou fechar
-  body.classList.toggle('sidebar-open');
+    
+    return isValid;
 }
-  
+
+function showSuccessMessage() {
+    const successMessage = document.getElementById('success-message');
+    if (successMessage) {
+        successMessage.style.display = 'block';
+        successMessage.scrollIntoView({ behavior: 'smooth' });
+        
+        setTimeout(() => {
+            successMessage.style.display = 'none';
+        }, 5000);
+    }
+}
