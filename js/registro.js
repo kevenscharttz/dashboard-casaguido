@@ -220,6 +220,188 @@ function initializeFormatting() {
         });
     }
 
+
+function validateBirthDate(birthDate) {
+    if (!birthDate) return { isValid: false, message: 'Data de nascimento é obrigatória' };
+    
+    const today = new Date();
+    const birth = new Date(birthDate);
+    
+
+    today.setHours(0, 0, 0, 0);
+    birth.setHours(0, 0, 0, 0);
+    
+
+    if (isNaN(birth.getTime())) {
+        return { isValid: false, message: 'Data inválida' };
+    }
+    
+
+    if (birth > today) {
+        return { isValid: false, message: 'Data de nascimento não pode ser no futuro' };
+    }
+    
+    
+    const maxAge = new Date();
+    maxAge.setFullYear(maxAge.getFullYear() - 150);
+    if (birth < maxAge) {
+        return { isValid: false, message: 'Data de nascimento muito antiga' };
+    }
+    
+    return { isValid: true, message: '' };
+}
+
+function calculateAge(birthDate) {
+    if (!birthDate) return '';
+    
+    const today = new Date();
+    const birth = new Date(birthDate);
+    
+
+    if (isNaN(birth.getTime())) return '';
+    
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
+    }
+    
+    if (age < 0) return '';
+    
+    if (age < 1) {
+        const months = today.getMonth() - birth.getMonth() + (12 * (today.getFullYear() - birth.getFullYear()));
+        if (months < 0) return '';
+        return months + (months === 1 ? ' mês' : ' meses');
+    }
+    
+    return age + (age === 1 ? ' ano' : ' anos');
+}
+
+function initializeBirthDateValidation() {
+    const birthDateElement = document.getElementById('data_nascimento');
+    if (birthDateElement) {
+        const today = new Date();
+        const todayString = today.toISOString().split('T')[0];
+        birthDateElement.setAttribute('max', todayString);
+        
+        birthDateElement.addEventListener('change', function(e) {
+            const validation = validateBirthDate(e.target.value);
+            
+            if (!validation.isValid) {
+                showError('data_nascimento', validation.message);
+                const ageElement = document.getElementById('idade');
+                if (ageElement) {
+                    ageElement.value = '';
+                }
+            } else {
+                hideError('data_nascimento');
+                const ageElement = document.getElementById('idade');
+                if (ageElement) {
+                    ageElement.value = calculateAge(e.target.value);
+                }
+            }
+        });
+        
+
+        birthDateElement.addEventListener('input', function(e) {
+            if (e.target.value) {
+                const validation = validateBirthDate(e.target.value);
+                if (!validation.isValid) {
+                    showError('data_nascimento', validation.message);
+                } else {
+                    hideError('data_nascimento');
+                }
+            }
+        });
+    }
+}
+
+
+function validateSection1() {
+    let isValid = true;
+    
+
+    const nomeElement = document.getElementById('paciente');
+    if (!nomeElement.value.trim()) {
+        showError('paciente', 'Nome do paciente é obrigatório');
+        isValid = false;
+    } else {
+        hideError('paciente');
+    }
+
+    const birthDateElement = document.getElementById('data_nascimento');
+    if (!birthDateElement.value) {
+        showError('data_nascimento', 'Data de nascimento é obrigatória');
+        isValid = false;
+    } else {
+        const validation = validateBirthDate(birthDateElement.value);
+        if (!validation.isValid) {
+            showError('data_nascimento', validation.message);
+            isValid = false;
+        } else {
+            hideError('data_nascimento');
+        }
+    }
+    
+    return isValid;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeValidation();
+    initializeFormatting();
+    initializeFormLogic();
+    initializeBirthDateValidation();
+    initializeNavigation();
+    showSection(1);
+    
+    const form = document.getElementById('cadastro-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateAllSections()) {
+                showSuccessMessage();
+            }
+        });
+    }
+});
+
+
+function validateCurrentSection(sectionNumber) {
+    let isValid = true;
+    
+    switch (sectionNumber) {
+        case 1:
+            isValid = validateSection1();
+            break;
+            
+        case 2:
+            if (!document.getElementById('telefone1').value.trim()) {
+                showError('telefone1', 'Telefone principal é obrigatório');
+                isValid = false;
+            }
+            if (!document.getElementById('cep').value.trim()) {
+                showError('cep', 'CEP é obrigatório');
+                isValid = false;
+            }
+            if (!document.getElementById('endereco').value.trim()) {
+                showError('endereco', 'Endereço é obrigatório');
+                isValid = false;
+            }
+            break;
+            
+        case 3:
+            if (!document.getElementById('mae_nome').value.trim()) {
+                showError('mae_nome', 'Nome da mãe é obrigatório');
+                isValid = false;
+            }
+            break;
+    }
+    
+    return isValid;
+}
+
     const numberOnlyFields = ['pessoas_casa', 'comodos', 'quartos'];
     numberOnlyFields.forEach(field => {
         const element = document.getElementById(field);
