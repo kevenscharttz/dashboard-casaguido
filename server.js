@@ -15,8 +15,8 @@ app.use(bodyParser.json());
 
 app.post('/paciente', async (req, res) => {
   const dados = req.body;
-  await db.insertPaciente(dados);                // tabela pacientes
-  await db.insertEnderecoPaciente(dados);        // tabela endereco_paciente
+  const id_end = await db.insertEnderecoPaciente(dados);        // tabela endereco_paciente
+  const id_pcte = await db.insertPaciente({...dados, id_end});                // tabela pacientes
   await db.insertResponsavel(dados);             // tabela responsaveis
   await db.insertQuimioterapia(dados);           // tabela quimioterapia
   await db.insertRadioterapia(dados);            // tabela radioterapia

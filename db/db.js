@@ -22,26 +22,10 @@ async function connect() {
     return pool.connect();
 }
 
-async function insertPaciente(paciente) {
-  const client = await connect();
-  const sql = `INSERT INTO paciente (nome_pcte, data_nasc_pcte, cpf_pcte, rg_pcte, 
-               cns_pcte, tel_pcte, cel_pcte) VALUES ($1, $2, $3, $4, $5, $6, $7);`;
-  const values = [
-    paciente.nome_pcte,
-    paciente.data_nasc_pcte,
-    paciente.cpf_pcte,
-    paciente.rg_pcte,
-    paciente.cns_pcte,
-    paciente.tel_pcte,
-    paciente.cel_pcte
-  ];
-  await client.query(sql, values);
-}
-
 async function insertEnderecoPaciente(endereco) {
   const client = await connect();
   const sql = `INSERT INTO end_pcte (rua_end, num_end, complemento_end, 
-               cidade_end, cep_end, uf_end, id_pcte) VALUES ($1, $2, $3, $4, $5, $6, $7);`;
+               cidade_end, cep_end, uf_end) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id_end;`;
   const values = [
     endereco.rua_end,
     endereco.num_end,
@@ -49,10 +33,27 @@ async function insertEnderecoPaciente(endereco) {
     endereco.cidade_end,
     endereco.cep_end,
     endereco.uf_end,
-    endereco.id_pcte
   ];
   await client.query(sql, values);
 }
+
+async function insertPaciente(paciente) {
+  const client = await connect();
+  const sql = `INSERT INTO paciente (nome_pcte, data_nasc_pcte, cpf_pcte, rg_pcte, 
+               cns_pcte, tel_pcte, cel_pcte) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id_pcte;`;
+  const values = [
+    paciente.nome_pcte,
+    paciente.data_nasc_pcte,  
+    paciente.cpf_pcte,
+    paciente.rg_pcte,
+    paciente.cns_pcte, 
+    paciente.tel_pcte,
+    paciente.cel_pcte
+  ];
+  await client.query(sql, values);
+}
+
+
 
 async function insertResponsavel(responsavel) {
   const client = await connect();
