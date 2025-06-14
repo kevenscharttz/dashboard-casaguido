@@ -1,746 +1,674 @@
-document.addEventListener('DOMContentLoaded', function() {
-    initializeValidation();
-    initializeFormatting();
-    initializeFormLogic();
-});
-
-function formatCPF(value) {
-    return value
-        .replace(/\D/g, '')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-        .replace(/(-\d{2})\d+?$/, '$1');
-}
-
-function formatPhone(value) {
-    return value
-        .replace(/\D/g, '')
-        .replace(/(\d{2})(\d)/, '($1) $2')
-        .replace(/(\d{4})(\d)/, '$1-$2')
-        .replace(/(\d{4})-(\d)(\d{4})/, '$1$2-$3')
-        .replace(/(-\d{4})\d+?$/, '$1');
-}
-
-function formatCEP(value) {
-    return value
-        .replace(/\D/g, '')
-        .replace(/(\d{5})(\d)/, '$1-$2')
-        .replace(/(-\d{3})\d+?$/, '$1');
-}
-
-function formatCartaoSUS(value) {
-    return value
-        .replace(/\D/g, '')
-        .replace(/(\d{3})(\d)/, '$1 $2')
-        .replace(/(\d{4})(\d)/, '$1 $2')
-        .replace(/(\d{4})(\d)/, '$1 $2')
-        .replace(/(\d{4})\d+?$/, '$1');
-}
-
-function formatMoney(value) {
-    value = value.replace(/\D/g, '');
-    value = (parseInt(value) / 100).toFixed(2);
-    return 'R$ ' + value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-}
-
-function validateCPF(cpf) {
-    cpf = cpf.replace(/\D/g, '');
-    
-    if (cpf.length !== 11) return false;
-    if (/^(\d)\1{10}$/.test(cpf)) return false;
-    
-    let sum = 0;
-    let remainder;
-    
-    for (let i = 1; i <= 9; i++) {
-        sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+// Sistema de Validações para o Formulário de Registro GUIDO
+class FormValidator {
+    constructor() {
+        this.errors = {};
+        this.init();
     }
-    remainder = (sum * 10) % 11;
-    if (remainder === 10 || remainder === 11) remainder = 0;
-    if (remainder !== parseInt(cpf.substring(9, 10))) return false;
-    
-    sum = 0;
-    for (let i = 1; i <= 10; i++) {
-        sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+
+    init() {
+        this.setupEventListeners();
+        this.setupRealTimeValidation();
     }
-    remainder = (sum * 10) % 11;
-    if (remainder === 10 || remainder === 11) remainder = 0;
-    if (remainder !== parseInt(cpf.substring(10, 11))) return false;
-    
-    return true;
-}
 
-function validateCartaoSUS(cartao) {
-    cartao = cartao.replace(/\D/g, '');
-    return cartao.length === 15;
-}
+    setupEventListeners() {
+        // Validação em tempo real
+        document.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('blur', () => this.validateField(field));
+            field.addEventListener('input', () => this.clearFieldError(field));
+        });
 
-function validatePhone(phone) {
-    phone = phone.replace(/\D/g, '');
-    return phone.length === 10 || phone.length === 11;
-}
+        // Validação de CPF em tempo real
+        document.querySelectorAll('input[name*="cpf"]').forEach(field => {
+            field.addEventListener('input', (e) => this.formatCPF(e.target));
+        });
 
-function validateCEP(cep) {
-    cep = cep.replace(/\D/g, '');
-    return cep.length === 8;
-}
+        // Validação de telefone em tempo real
+        document.querySelectorAll('input[type="tel"]').forEach(field => {
+            field.addEventListener('input', (e) => this.formatPhone(e.target));
+        });
 
-function validateEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
-function validateAge(birthDate) {
-    const today = new Date();
-    const birth = new Date(birthDate);
-    const age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        return age - 1;
-    }
-    return age;
-}
-
-function calculateAge(birthDate) {
-    if (!birthDate) return '';
-    
-    const today = new Date();
-    const birth = new Date(birthDate);
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        age--;
-    }
-    
-    if (age < 1) {
-        const months = today.getMonth() - birth.getMonth() + (12 * (today.getFullYear() - birth.getFullYear()));
-        return months + (months === 1 ? ' mês' : ' meses');
-    }
-    
-    return age + (age === 1 ? ' ano' : ' anos');
-}
-
-function initializeFormatting() {
-    const cpfFields = ['cpf', 'mae_cpf', 'pai_cpf', 'outro_cpf'];
-    cpfFields.forEach(field => {
-        const element = document.getElementById(field);
-        if (element) {
-            element.addEventListener('input', function(e) {
-                e.target.value = formatCPF(e.target.value);
-                
-                const errorElement = document.getElementById(field + '-error');
-                if (errorElement) {
-                    if (e.target.value && !validateCPF(e.target.value)) {
-                        showError(field, 'CPF inválido');
-                    } else {
-                        hideError(field);
-                    }
-                }
-            });
+        // Validação de CEP em tempo real
+        const cepField = document.getElementById('cep');
+        if (cepField) {
+            cepField.addEventListener('input', (e) => this.formatCEP(e.target));
+            cepField.addEventListener('blur', () => this.validateCEP(cepField.value));
         }
-    });
 
-    const phoneFields = ['telefone1', 'telefone2', 'mae_telefone', 'pai_telefone', 'outro_telefone'];
-    phoneFields.forEach(field => {
-        const element = document.getElementById(field);
-        if (element) {
-            element.addEventListener('input', function(e) {
-                e.target.value = formatPhone(e.target.value);
-                
-                const errorElement = document.getElementById(field + '-error');
-                if (errorElement && e.target.value) {
-                    if (!validatePhone(e.target.value)) {
-                        showError(field, 'Telefone inválido');
-                    } else {
-                        hideError(field);
-                    }
-                }
-            });
+        // Validação de Cartão SUS em tempo real
+        const cartaoSusField = document.getElementById('cartao_sus');
+        if (cartaoSusField) {
+            cartaoSusField.addEventListener('input', (e) => this.formatCartaoSUS(e.target));
         }
-    });
 
-    const cepElement = document.getElementById('cep');
-    if (cepElement) {
-        cepElement.addEventListener('input', function(e) {
-            e.target.value = formatCEP(e.target.value);
-            
-            if (e.target.value && !validateCEP(e.target.value)) {
-                showError('cep', 'CEP inválido');
-            } else {
-                hideError('cep');
-                if (validateCEP(e.target.value)) {
-                    searchCEP(e.target.value.replace(/\D/g, ''));
-                }
-            }
+        // Cálculo automático de idade
+        const dataNascimento = document.getElementById('data_nascimento');
+        if (dataNascimento) {
+            dataNascimento.addEventListener('change', () => this.calculateAge());
+        }
+
+        // Validação de data de nascimento
+        if (dataNascimento) {
+            dataNascimento.addEventListener('blur', () => this.validateBirthDate(dataNascimento));
+        }
+
+        // Mostrar/ocultar campos condicionais
+        this.setupConditionalFields();
+    }
+
+    setupRealTimeValidation() {
+        // Validação específica para campos obrigatórios
+        document.querySelectorAll('input[required], select[required]').forEach(field => {
+            field.addEventListener('blur', () => this.validateRequired(field));
         });
     }
 
-    const cartaoSusElement = document.getElementById('cartao_sus');
-    if (cartaoSusElement) {
-        cartaoSusElement.addEventListener('input', function(e) {
-            e.target.value = formatCartaoSUS(e.target.value);
-            
-            if (e.target.value && !validateCartaoSUS(e.target.value)) {
-                showError('cartao_sus', 'Número de cartão SUS inválido');
-            } else {
-                hideError('cartao_sus');
-            }
+    setupConditionalFields() {
+        // Campos de quimioterapia
+        document.querySelectorAll('input[name="fez_quimio"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const quimioFields = document.getElementById('quimio-fields');
+                if (radio.value === 'sim' && radio.checked) {
+                    quimioFields.style.display = 'block';
+                } else if (radio.value === 'nao' && radio.checked) {
+                    quimioFields.style.display = 'none';
+                }
+            });
         });
-    }
 
-    const salaryFields = ['mae_salario', 'pai_salario', 'outro_salario', 'valor_bpc', 'renda_familiar'];
-    salaryFields.forEach(field => {
-        const element = document.getElementById(field);
-        if (element) {
-            element.addEventListener('input', function(e) {
-                e.target.value = formatMoney(e.target.value);
-                calculateTotalIncome();
+        // Campos de radioterapia
+        document.querySelectorAll('input[name="fez_radio"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const radioFields = document.getElementById('radio-fields');
+                if (radio.value === 'sim' && radio.checked) {
+                    radioFields.style.display = 'block';
+                } else if (radio.value === 'nao' && radio.checked) {
+                    radioFields.style.display = 'none';
+                }
+            });
+        });
+
+        // Campos de cirurgia
+        document.querySelectorAll('input[name="fez_cirurgia"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const cirurgiaFields = document.getElementById('cirurgia-fields');
+                if (radio.value === 'sim' && radio.checked) {
+                    cirurgiaFields.style.display = 'block';
+                } else if (radio.value === 'nao' && radio.checked) {
+                    cirurgiaFields.style.display = 'none';
+                }
+            });
+        });
+
+        // Campos de medicamentos
+        document.querySelectorAll('input[name="usa_medicamentos"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const medicamentosFields = document.getElementById('medicamentos-fields');
+                if (radio.value === 'sim' && radio.checked) {
+                    medicamentosFields.style.display = 'block';
+                } else if (radio.value === 'nao' && radio.checked) {
+                    medicamentosFields.style.display = 'none';
+                }
+            });
+        });
+
+        // Campos de BPC
+        document.querySelectorAll('input[name="tem_bpc"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const bpcFields = document.getElementById('bpc-fields');
+                if (radio.value === 'sim' && radio.checked) {
+                    bpcFields.style.display = 'block';
+                } else if (radio.value === 'nao' && radio.checked) {
+                    bpcFields.style.display = 'none';
+                }
+            });
+        });
+
+        // Campos de estudo
+        document.querySelectorAll('input[name="estuda"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const escolaFields = document.getElementById('escola-fields');
+                if (radio.value === 'sim' && radio.checked) {
+                    escolaFields.style.display = 'block';
+                } else if (radio.value === 'nao' && radio.checked) {
+                    escolaFields.style.display = 'none';
+                }
+            });
+        });
+
+        // Campos de outro responsável
+        const outroResponsavel = document.getElementById('tem_outro_responsavel');
+        if (outroResponsavel) {
+            outroResponsavel.addEventListener('change', () => {
+                const outroFields = document.getElementById('outro-responsavel-fields');
+                if (outroResponsavel.checked) {
+                    outroFields.style.display = 'block';
+                } else {
+                    outroFields.style.display = 'none';
+                }
             });
         }
-    });
+    }
 
-    const birthDateElement = document.getElementById('data_nascimento');
-    if (birthDateElement) {
-        birthDateElement.addEventListener('change', function(e) {
-            const ageElement = document.getElementById('idade');
-            if (ageElement) {
-                ageElement.value = calculateAge(e.target.value);
-            }
+    // Validação de campo individual
+    validateField(field) {
+        const fieldName = field.name || field.id;
+        const value = field.value.trim();
+
+        // Limpar erro anterior
+        this.clearFieldError(field);
+
+        // Validações específicas por tipo de campo
+        switch (fieldName) {
+            case 'paciente':
+            case 'mae_nome':
+                return this.validateFullName(field);
             
-            const today = new Date();
-            const birthDate = new Date(e.target.value);
-            if (birthDate > today) {
-                showError('data_nascimento', 'Data de nascimento não pode ser futura');
-            } else {
-                hideError('data_nascimento');
-            }
-        });
+            case 'data_nascimento':
+                return this.validateBirthDate(field);
+            
+            case 'cpf':
+            case 'mae_cpf':
+            case 'pai_cpf':
+            case 'outro_cpf':
+                return this.validateCPF(field);
+            
+            case 'cartao_sus':
+                return this.validateCartaoSUS(field);
+            
+            case 'telefone1':
+            case 'telefone2':
+            case 'mae_telefone':
+            case 'pai_telefone':
+            case 'outro_telefone':
+                return this.validatePhone(field);
+            
+            case 'cep':
+                return this.validateCEP(field.value);
+            
+            case 'email':
+                return this.validateEmail(field);
+            
+            default:
+                if (field.hasAttribute('required')) {
+                    return this.validateRequired(field);
+                }
+                return true;
+        }
     }
 
+    // Validação de nome completo
+    validateFullName(field) {
+        const value = field.value.trim();
+        const fieldName = field.name || field.id;
 
-function validateBirthDate(birthDate) {
-    if (!birthDate) return { isValid: false, message: 'Data de nascimento é obrigatória' };
-    
-    const today = new Date();
-    const birth = new Date(birthDate);
-    
+        if (!value) {
+            this.showFieldError(field, 'Este campo é obrigatório');
+            return false;
+        }
 
-    today.setHours(0, 0, 0, 0);
-    birth.setHours(0, 0, 0, 0);
-    
+        if (value.length < 3) {
+            this.showFieldError(field, 'Nome deve ter pelo menos 3 caracteres');
+            return false;
+        }
 
-    if (isNaN(birth.getTime())) {
-        return { isValid: false, message: 'Data inválida' };
+        if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(value)) {
+            this.showFieldError(field, 'Nome deve conter apenas letras');
+            return false;
+        }
+
+        const words = value.split(' ').filter(word => word.length > 0);
+        if (fieldName === 'paciente' && words.length < 2) {
+            this.showFieldError(field, 'Informe o nome completo');
+            return false;
+        }
+
+        return true;
     }
-    
 
-    if (birth > today) {
-        return { isValid: false, message: 'Data de nascimento não pode ser no futuro' };
-    }
-    
-    
-    const maxAge = new Date();
-    maxAge.setFullYear(maxAge.getFullYear() - 150);
-    if (birth < maxAge) {
-        return { isValid: false, message: 'Data de nascimento muito antiga' };
-    }
-    
-    return { isValid: true, message: '' };
-}
+    // Validação de data de nascimento
+    validateBirthDate(field) {
+        const value = field.value;
 
-function calculateAge(birthDate) {
-    if (!birthDate) return '';
-    
-    const today = new Date();
-    const birth = new Date(birthDate);
-    
+        if (!value) {
+            this.showFieldError(field, 'Data de nascimento é obrigatória');
+            return false;
+        }
 
-    if (isNaN(birth.getTime())) return '';
-    
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        age--;
-    }
-    
-    if (age < 0) return '';
-    
-    if (age < 1) {
-        const months = today.getMonth() - birth.getMonth() + (12 * (today.getFullYear() - birth.getFullYear()));
-        if (months < 0) return '';
-        return months + (months === 1 ? ' mês' : ' meses');
-    }
-    
-    return age + (age === 1 ? ' ano' : ' anos');
-}
-
-function initializeBirthDateValidation() {
-    const birthDateElement = document.getElementById('data_nascimento');
-    if (birthDateElement) {
+        const birthDate = new Date(value);
         const today = new Date();
-        const todayString = today.toISOString().split('T')[0];
-        birthDateElement.setAttribute('max', todayString);
-        
-        birthDateElement.addEventListener('change', function(e) {
-            const validation = validateBirthDate(e.target.value);
-            
-            if (!validation.isValid) {
-                showError('data_nascimento', validation.message);
-                const ageElement = document.getElementById('idade');
-                if (ageElement) {
-                    ageElement.value = '';
-                }
-            } else {
-                hideError('data_nascimento');
-                const ageElement = document.getElementById('idade');
-                if (ageElement) {
-                    ageElement.value = calculateAge(e.target.value);
-                }
-            }
-        });
-        
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
 
-        birthDateElement.addEventListener('input', function(e) {
-            if (e.target.value) {
-                const validation = validateBirthDate(e.target.value);
-                if (!validation.isValid) {
-                    showError('data_nascimento', validation.message);
-                } else {
-                    hideError('data_nascimento');
-                }
-            }
-        });
-    }
-}
+        if (birthDate > today) {
+            this.showFieldError(field, 'Data de nascimento não pode ser futura');
+            return false;
+        }
 
+        if (age > 150 || (age === 150 && monthDiff > 0)) {
+            this.showFieldError(field, 'Data de nascimento inválida');
+            return false;
+        }
 
-function validateSection1() {
-    let isValid = true;
-    
-
-    const nomeElement = document.getElementById('paciente');
-    if (!nomeElement.value.trim()) {
-        showError('paciente', 'Nome do paciente é obrigatório');
-        isValid = false;
-    } else {
-        hideError('paciente');
+        return true;
     }
 
-    const birthDateElement = document.getElementById('data_nascimento');
-    if (!birthDateElement.value) {
-        showError('data_nascimento', 'Data de nascimento é obrigatória');
-        isValid = false;
-    } else {
-        const validation = validateBirthDate(birthDateElement.value);
-        if (!validation.isValid) {
-            showError('data_nascimento', validation.message);
+    // Validação de CPF
+    validateCPF(field) {
+        const value = field.value.replace(/\D/g, '');
+
+        if (!value) {
+            // CPF não é obrigatório para todos os campos
+            return true;
+        }
+
+        if (value.length !== 11) {
+            this.showFieldError(field, 'CPF deve ter 11 dígitos');
+            return false;
+        }
+
+        // Verificar se todos os dígitos são iguais
+        if (/^(\d)\1{10}$/.test(value)) {
+            this.showFieldError(field, 'CPF inválido');
+            return false;
+        }
+
+        // Validação do algoritmo do CPF
+        if (!this.isValidCPF(value)) {
+            this.showFieldError(field, 'CPF inválido');
+            return false;
+        }
+
+        return true;
+    }
+
+    // Algoritmo de validação do CPF
+    isValidCPF(cpf) {
+        let sum = 0;
+        let remainder;
+
+        // Primeiro dígito verificador
+        for (let i = 1; i <= 9; i++) {
+            sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+        }
+        remainder = (sum * 10) % 11;
+        if (remainder === 10 || remainder === 11) remainder = 0;
+        if (remainder !== parseInt(cpf.substring(9, 10))) return false;
+
+        // Segundo dígito verificador
+        sum = 0;
+        for (let i = 1; i <= 10; i++) {
+            sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+        }
+        remainder = (sum * 10) % 11;
+        if (remainder === 10 || remainder === 11) remainder = 0;
+        if (remainder !== parseInt(cpf.substring(10, 11))) return false;
+
+        return true;
+    }
+
+    // Validação de Cartão SUS
+    validateCartaoSUS(field) {
+        const value = field.value.replace(/\D/g, '');
+
+        if (!value) {
+            return true; // Cartão SUS não é obrigatório
+        }
+
+        if (value.length !== 15) {
+            this.showFieldError(field, 'Cartão SUS deve ter 15 dígitos');
+            return false;
+        }
+
+        return true;
+    }
+
+    // Validação de telefone
+    validatePhone(field) {
+        const value = field.value.replace(/\D/g, '');
+        const isRequired = field.hasAttribute('required');
+
+        if (!value && isRequired) {
+            this.showFieldError(field, 'Telefone é obrigatório');
+            return false;
+        }
+
+        if (value && (value.length < 10 || value.length > 11)) {
+            this.showFieldError(field, 'Telefone deve ter 10 ou 11 dígitos');
+            return false;
+        }
+
+        return true;
+    }
+
+    // Validação de CEP
+    async validateCEP(cep) {
+        const cepField = document.getElementById('cep');
+        const cleanCep = cep.replace(/\D/g, '');
+
+        if (!cleanCep) {
+            this.showFieldError(cepField, 'CEP é obrigatório');
+            return false;
+        }
+
+        if (cleanCep.length !== 8) {
+            this.showFieldError(cepField, 'CEP deve ter 8 dígitos');
+            return false;
+        }
+
+        try {
+            const response = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
+            const data = await response.json();
+
+            if (data.erro) {
+                this.showFieldError(cepField, 'CEP não encontrado');
+                return false;
+            }
+
+            // Preencher campos automaticamente
+            this.fillAddressFields(data);
+            return true;
+        } catch (error) {
+            console.error('Erro ao validar CEP:', error);
+            return true; // Não bloquear se houver erro na API
+        }
+    }
+
+    // Preencher campos de endereço automaticamente
+    fillAddressFields(data) {
+        const enderecoField = document.getElementById('endereco');
+        const bairroField = document.getElementById('bairro');
+        const cidadeField = document.getElementById('cidade');
+        const estadoField = document.getElementById('estado');
+
+        if (enderecoField && data.logradouro) {
+            enderecoField.value = data.logradouro;
+        }
+        if (bairroField && data.bairro) {
+            bairroField.value = data.bairro;
+        }
+        if (cidadeField && data.localidade) {
+            cidadeField.value = data.localidade;
+        }
+        if (estadoField && data.uf) {
+            estadoField.value = data.uf;
+        }
+    }
+
+    // Validação de email
+    validateEmail(field) {
+        const value = field.value.trim();
+
+        if (!value && field.hasAttribute('required')) {
+            this.showFieldError(field, 'Email é obrigatório');
+            return false;
+        }
+
+        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+            this.showFieldError(field, 'Email inválido');
+            return false;
+        }
+
+        return true;
+    }
+
+    // Validação de campo obrigatório
+    validateRequired(field) {
+        const value = field.value.trim();
+
+        if (!value) {
+            const label = field.previousElementSibling?.textContent || 'Este campo';
+            this.showFieldError(field, `${label} é obrigatório`);
+            return false;
+        }
+
+        return true;
+    }
+
+    // Validação de seção
+    validateSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        if (!section) return true;
+
+        let isValid = true;
+        const fields = section.querySelectorAll('input, select, textarea');
+
+        fields.forEach(field => {
+            if (!this.validateField(field)) {
+                isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+
+    // Validação completa do formulário
+    validateForm() {
+        let isValid = true;
+        const allFields = document.querySelectorAll('#cadastro-form input, #cadastro-form select, #cadastro-form textarea');
+
+        allFields.forEach(field => {
+            if (!this.validateField(field)) {
+                isValid = false;
+            }
+        });
+
+        // Validações específicas adicionais
+        if (!this.validateResponsiblePerson()) {
             isValid = false;
-        } else {
-            hideError('data_nascimento');
         }
-    }
-    
-    return isValid;
-}
 
-document.addEventListener('DOMContentLoaded', function() {
-    initializeValidation();
-    initializeFormatting();
-    initializeFormLogic();
-    initializeBirthDateValidation();
-    initializeNavigation();
-    showSection(1);
-    
-    const form = document.getElementById('cadastro-form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (validateAllSections()) {
-                showSuccessMessage();
-            }
-        });
-    }
-});
-
-
-function validateCurrentSection(sectionNumber) {
-    let isValid = true;
-    
-    switch (sectionNumber) {
-        case 1:
-            isValid = validateSection1();
-            break;
-            
-        case 2:
-            if (!document.getElementById('telefone1').value.trim()) {
-                showError('telefone1', 'Telefone principal é obrigatório');
-                isValid = false;
-            }
-            if (!document.getElementById('cep').value.trim()) {
-                showError('cep', 'CEP é obrigatório');
-                isValid = false;
-            }
-            if (!document.getElementById('endereco').value.trim()) {
-                showError('endereco', 'Endereço é obrigatório');
-                isValid = false;
-            }
-            break;
-            
-        case 3:
-            if (!document.getElementById('mae_nome').value.trim()) {
-                showError('mae_nome', 'Nome da mãe é obrigatório');
-                isValid = false;
-            }
-            break;
-    }
-    
-    return isValid;
-}
-
-    const numberOnlyFields = ['pessoas_casa', 'comodos', 'quartos'];
-    numberOnlyFields.forEach(field => {
-        const element = document.getElementById(field);
-        if (element) {
-            element.addEventListener('input', function(e) {
-                e.target.value = e.target.value.replace(/\D/g, '');
-            });
+        if (!this.validateConfirmation()) {
+            isValid = false;
         }
-    });
 
-    const nameFields = ['paciente', 'mae_nome', 'pai_nome', 'outro_nome'];
-    nameFields.forEach(field => {
-        const element = document.getElementById(field);
-        if (element) {
-            element.addEventListener('input', function(e) {
-                e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
-            });
+        return isValid;
+    }
+
+    // Validar se pelo menos um responsável foi marcado como principal
+    validateResponsiblePerson() {
+        const maeResponsavel = document.getElementById('mae_responsavel_principal');
+        const paiResponsavel = document.getElementById('pai_responsavel_principal');
+        const outroResponsavel = document.getElementById('outro_responsavel_principal');
+
+        const hasResponsible = (maeResponsavel && maeResponsavel.checked) ||
+                             (paiResponsavel && paiResponsavel.checked) ||
+                             (outroResponsavel && outroResponsavel.checked);
+
+        if (!hasResponsible) {
+            alert('É necessário marcar pelo menos um responsável como principal.');
+            return false;
         }
-    });
-}
 
-async function searchCEP(cep) {
-    try {
-        const response = await fetch(https://viacep.com.br/ws/${cep}/json/);
-        const data = await response.json();
+        return true;
+    }
+
+    // Validar confirmação final
+    validateConfirmation() {
+        const confirmarDados = document.getElementById('confirmar_dados');
         
-        if (!data.erro) {
-            document.getElementById('endereco').value = data.logradouro || '';
-            document.getElementById('bairro').value = data.bairro || '';
-            document.getElementById('cidade').value = data.localidade || '';
-            document.getElementById('estado').value = data.uf || '';
-            
-            document.getElementById('numero').focus();
+        if (!confirmarDados || !confirmarDados.checked) {
+            this.showFieldError(confirmarDados, 'É necessário confirmar os dados');
+            return false;
         }
-    } catch (error) {
-        console.log('Erro ao buscar CEP:', error);
-    }
-}
 
-function calculateTotalIncome() {
-    const salaryFields = ['mae_salario', 'pai_salario', 'outro_salario', 'valor_bpc'];
-    let total = 0;
-    
-    salaryFields.forEach(field => {
-        const element = document.getElementById(field);
-        if (element && element.value) {
-            const value = parseFloat(element.value.replace(/[^\d,]/g, '').replace(',', '.'));
-            if (!isNaN(value)) {
-                total += value;
-            }
+        return true;
+    }
+
+    // Mostrar erro no campo
+    showFieldError(field, message) {
+        const errorElement = document.getElementById(`${field.id}-error`) || 
+                           document.getElementById(`${field.name}-error`);
+        
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
         }
-    });
-    
-    const totalElement = document.getElementById('renda_familiar');
-    if (totalElement) {
-        totalElement.value = formatMoney((total * 100).toString());
-    }
-}
 
-function showError(fieldId, message) {
-    const field = document.getElementById(fieldId);
-    const errorElement = document.getElementById(fieldId + '-error');
-    
-    if (field) {
         field.classList.add('error');
+        this.errors[field.id || field.name] = message;
     }
-    
-    if (errorElement) {
-        errorElement.textContent = message;
-        errorElement.style.display = 'block';
-    }
-}
 
-function hideError(fieldId) {
-    const field = document.getElementById(fieldId);
-    const errorElement = document.getElementById(fieldId + '-error');
-    
-    if (field) {
-        field.classList.remove('error');
-    }
-    
-    if (errorElement) {
-        errorElement.style.display = 'none';
-    }
-}
-
-function initializeValidation() {
-    const requiredFields = [
-        'paciente', 'data_nascimento', 'telefone1', 'cep', 
-        'endereco', 'numero', 'bairro', 'cidade', 'estado', 'mae_nome'
-    ];
-    
-    requiredFields.forEach(field => {
-        const element = document.getElementById(field);
-        if (element) {
-            element.addEventListener('blur', function(e) {
-                if (!e.target.value.trim()) {
-                    showError(field, 'Este campo é obrigatório');
-                } else {
-                    hideError(field);
-                }
-            });
-        }
-    });
-}
-
-function initializeFormLogic() {
-    const quimioRadios = document.querySelectorAll('input[name="fez_quimio"]');
-    quimioRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            const fields = document.getElementById('quimio-fields');
-            if (fields) {
-                fields.style.display = this.value === 'sim' ? 'block' : 'none';
-            }
-        });
-    });
-
-    const radioRadios = document.querySelectorAll('input[name="fez_radio"]');
-    radioRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            const fields = document.getElementById('radio-fields');
-            if (fields) {
-                fields.style.display = this.value === 'sim' ? 'block' : 'none';
-            }
-        });
-    });
-
-    const cirurgiaRadios = document.querySelectorAll('input[name="fez_cirurgia"]');
-    cirurgiaRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            const fields = document.getElementById('cirurgia-fields');
-            if (fields) {
-                fields.style.display = this.value === 'sim' ? 'block' : 'none';
-            }
-        });
-    });
-
-    const medicamentoRadios = document.querySelectorAll('input[name="usa_medicamentos"]');
-    medicamentoRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            const fields = document.getElementById('medicamentos-fields');
-            if (fields) {
-                fields.style.display = this.value === 'sim' ? 'block' : 'none';
-            }
-        });
-    });
-
-    const bpcRadios = document.querySelectorAll('input[name="tem_bpc"]');
-    bpcRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            const fields = document.getElementById('bpc-fields');
-            if (fields) {
-                fields.style.display = this.value === 'sim' ? 'block' : 'none';
-            }
-        });
-    });
-
-    const escolaRadios = document.querySelectorAll('input[name="estuda"]');
-    escolaRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            const fields = document.getElementById('escola-fields');
-            if (fields) {
-                fields.style.display = this.value === 'sim' ? 'block' : 'none';
-            }
-        });
-    });
-
-    const outroResponsavelCheckbox = document.getElementById('tem_outro_responsavel');
-    if (outroResponsavelCheckbox) {
-        outroResponsavelCheckbox.addEventListener('change', function() {
-            const fields = document.getElementById('outro-responsavel-fields');
-            if (fields) {
-                fields.style.display = this.checked ? 'block' : 'none';
-            }
-        });
-    }
-}
-
-let currentSection = 1;
-const totalSections = 7;
-
-function showSection(sectionNumber) {
-    for (let i = 1; i <= totalSections; i++) {
-        const section = document.getElementById(section-${i});
-        if (section) {
-            section.classList.remove('active');
-        }
-    }
-    
-    const activeSection = document.getElementById(section-${sectionNumber});
-    if (activeSection) {
-        activeSection.classList.add('active');
-    }
-    
-    updateProgressIndicator(sectionNumber);
-    updateProgressBar(sectionNumber);
-    
-    currentSection = sectionNumber;
-}
-
-function updateProgressIndicator(sectionNumber) {
-    for (let i = 1; i <= totalSections; i++) {
-        const stepCircle = document.getElementById(step-${i});
-        const stepText = stepCircle?.parentElement.querySelector('.step-text');
+    // Limpar erro do campo
+    clearFieldError(field) {
+        const errorElement = document.getElementById(`${field.id}-error`) || 
+                           document.getElementById(`${field.name}-error`);
         
-        if (stepCircle && stepText) {
-            if (i < sectionNumber) {
-                stepCircle.classList.add('completed');
-                stepCircle.classList.remove('active');
-                stepText.classList.add('completed');
-                stepText.classList.remove('active');
-            } else if (i === sectionNumber) {
-                stepCircle.classList.add('active');
-                stepCircle.classList.remove('completed');
-                stepText.classList.add('active');
-                stepText.classList.remove('completed');
-            } else {
-                stepCircle.classList.remove('active', 'completed');
-                stepText.classList.remove('active', 'completed');
-            }
+        if (errorElement) {
+            errorElement.style.display = 'none';
         }
-    }
-}
 
-function updateProgressBar(sectionNumber) {
-    const percentage = Math.round((sectionNumber / totalSections) * 100);
-    const progressBar = document.getElementById('form-progress');
-    const percentageText = document.getElementById('completion-percentage');
-    
-    if (progressBar) {
-        progressBar.style.width = percentage + '%';
+        field.classList.remove('error');
+        delete this.errors[field.id || field.name];
     }
-    
-    if (percentageText) {
-        percentageText.textContent = percentage + '%';
-    }
-}
 
-function initializeNavigation() {
-    for (let i = 1; i <= totalSections - 1; i++) {
-        const nextBtn = document.getElementById(btn-next-${i});
-        if (nextBtn) {
-            nextBtn.addEventListener('click', function() {
-                if (validateCurrentSection(i)) {
-                    showSection(i + 1);
-                }
-            });
+    // Formatação de CPF
+    formatCPF(field) {
+        let value = field.value.replace(/\D/g, '');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        field.value = value;
+    }
+
+    // Formatação de telefone
+    formatPhone(field) {
+        let value = field.value.replace(/\D/g, '');
+        if (value.length <= 10) {
+            value = value.replace(/(\d{2})(\d)/, '($1) $2');
+            value = value.replace(/(\d{4})(\d)/, '$1-$2');
+        } else {
+            value = value.replace(/(\d{2})(\d)/, '($1) $2');
+            value = value.replace(/(\d{5})(\d)/, '$1-$2');
         }
+        field.value = value;
     }
-    
-    for (let i = 2; i <= totalSections; i++) {
-        const prevBtn = document.getElementById(btn-prev-${i});
-        if (prevBtn) {
-            prevBtn.addEventListener('click', function() {
-                showSection(i - 1);
-            });
+
+    // Formatação de CEP
+    formatCEP(field) {
+        let value = field.value.replace(/\D/g, '');
+        value = value.replace(/(\d{5})(\d)/, '$1-$2');
+        field.value = value;
+    }
+
+    // Formatação de Cartão SUS
+    formatCartaoSUS(field) {
+        let value = field.value.replace(/\D/g, '');
+        value = value.replace(/(\d{3})(\d)/, '$1 $2');
+        value = value.replace(/(\d{4})(\d)/, '$1 $2');
+        value = value.replace(/(\d{4})(\d)/, '$1 $2');
+        field.value = value;
+    }
+
+    // Cálculo automático de idade
+    calculateAge() {
+        const birthDateField = document.getElementById('data_nascimento');
+        const ageField = document.getElementById('idade');
+
+        if (!birthDateField.value || !ageField) return;
+
+        const birthDate = new Date(birthDateField.value);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
         }
+
+        ageField.value = age >= 0 ? `${age} anos` : '';
+    }
+
+    // Verificar se há erros
+    hasErrors() {
+        return Object.keys(this.errors).length > 0;
+    }
+
+    // Obter lista de erros
+    getErrors() {
+        return this.errors;
+    }
+
+    // Limpar todos os erros
+    clearAllErrors() {
+        this.errors = {};
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.style.display = 'none';
+        });
+        document.querySelectorAll('.error').forEach(el => {
+            el.classList.remove('error');
+        });
     }
 }
 
-function validateCurrentSection(sectionNumber) {
-    let isValid = true;
-    
-    switch (sectionNumber) {
-        case 1:
-            if (!document.getElementById('paciente').value.trim()) {
-                showError('paciente', 'Nome do paciente é obrigatório');
-                isValid = false;
-            }
-            if (!document.getElementById('data_nascimento').value) {
-                showError('data_nascimento', 'Data de nascimento é obrigatória');
-                isValid = false;
-            }
-            break;
-            
-        case 2:
-            if (!document.getElementById('telefone1').value.trim()) {
-                showError('telefone1', 'Telefone principal é obrigatório');
-                isValid = false;
-            }
-            if (!document.getElementById('cep').value.trim()) {
-                showError('cep', 'CEP é obrigatório');
-                isValid = false;
-            }
-            if (!document.getElementById('endereco').value.trim()) {
-                showError('endereco', 'Endereço é obrigatório');
-                isValid = false;
-            }
-            break;
-            
-        case 3:
-            if (!document.getElementById('mae_nome').value.trim()) {
-                showError('mae_nome', 'Nome da mãe é obrigatório');
-                isValid = false;
-            }
-            break;
-    }
-    
-    return isValid;
-}
-
+// Inicializar o sistema de validações quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
-    initializeNavigation();
-    showSection(1);
+    window.formValidator = new FormValidator();
     
+    // Integrar com o sistema de navegação entre seções
+    setupSectionNavigation();
+    
+    // Integrar com o envio do formulário
+    setupFormSubmission();
+});
+
+// Configurar navegação entre seções com validação
+function setupSectionNavigation() {
+    // Botões "Próximo"
+    document.querySelectorAll('[id^="btn-next-"]').forEach(button => {
+        button.addEventListener('click', function() {
+            const sectionNumber = this.id.split('-')[2];
+            const currentSection = `section-${sectionNumber}`;
+            
+            if (window.formValidator.validateSection(currentSection)) {
+                // Navegar para próxima seção
+                navigateToSection(parseInt(sectionNumber) + 1);
+            } else {
+                // Focar no primeiro campo com erro
+                const firstError = document.querySelector(`#${currentSection} .error`);
+                if (firstError) {
+                    firstError.focus();
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+    });
+}
+
+// Configurar envio do formulário com validação
+function setupFormSubmission() {
     const form = document.getElementById('cadastro-form');
     if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            if (validateAllSections()) {
-                showSuccessMessage();
+            if (window.formValidator.validateForm()) {
+                // Formulário válido, enviar dados
+                submitForm();
+            } else {
+                // Mostrar erros e focar no primeiro campo com erro
+                const firstError = document.querySelector('.error');
+                if (firstError) {
+                    firstError.focus();
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                
+                alert('Por favor, corrija os erros antes de enviar o formulário.');
             }
         });
     }
-});
-
-function validateAllSections() {
-    let isValid = true;
-    
-    for (let i = 1; i <= totalSections - 1; i++) {
-        if (!validateCurrentSection(i)) {
-            isValid = false;
-            showSection(i);
-            break;
-        }
-    }
-    
-    return isValid;
 }
 
-function showSuccessMessage() {
-    const successMessage = document.getElementById('success-message');
-    if (successMessage) {
-        successMessage.style.display = 'block';
-        successMessage.scrollIntoView({ behavior: 'smooth' });
-        
-        setTimeout(() => {
-            successMessage.style.display = 'none';
-        }, 5000);
-    }
+// Função para navegar entre seções (deve ser implementada no seu arquivo principal)
+function navigateToSection(sectionNumber) {
+    // Esta função deve ser implementada no seu arquivo principal de registro.js
+    console.log(`Navegando para seção ${sectionNumber}`);
 }
+
+// Função para enviar o formulário (deve ser implementada no seu arquivo principal)
+function submitForm() {
+    // Esta função deve ser implementada no seu arquivo principal de registro.js
+    console.log('Enviando formulário...');
+}
+
+// Exportar para uso global
+window.FormValidator = FormValidator;
