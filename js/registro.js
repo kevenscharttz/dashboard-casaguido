@@ -575,32 +575,79 @@ function updateProgressBar(sectionNumber) {
 }
 
 function initializeNavigation() {
-    // Configura os botões "Próximo"
+    console.log('Inicializando navegação...');
+    
+    // Configura os botões "Próximo" para todas as seções
     for (let i = 1; i <= totalSections - 1; i++) {
         const nextBtn = document.getElementById(`btn-next-${i}`);
+        console.log(`Procurando botão btn-next-${i}:`, nextBtn);
+        
         if (nextBtn) {
-            nextBtn.addEventListener('click', function() {
+            // Remove event listeners anteriores
+            nextBtn.removeEventListener('click', nextBtn._clickHandler);
+            
+            // Cria novo handler
+            nextBtn._clickHandler = function(e) {
+                e.preventDefault();
+                console.log(`Botão próximo clicado - seção ${i}`);
+                
                 if (validateCurrentSection(i)) {
+                    console.log(`Validação da seção ${i} passou, avançando para seção ${i + 1}`);
                     showSection(i + 1);
+                } else {
+                    console.log(`Validação da seção ${i} falhou`);
                 }
-            });
+            };
+            
+            nextBtn.addEventListener('click', nextBtn._clickHandler);
+            console.log(`Event listener adicionado para btn-next-${i}`);
         }
     }
     
-    // Configura os botões "Anterior"
+    // Configura os botões "Anterior" para todas as seções
     for (let i = 2; i <= totalSections; i++) {
         const prevBtn = document.getElementById(`btn-prev-${i}`);
+        console.log(`Procurando botão btn-prev-${i}:`, prevBtn);
+        
         if (prevBtn) {
-            prevBtn.addEventListener('click', function() {
+            // Remove event listeners anteriores
+            prevBtn.removeEventListener('click', prevBtn._clickHandler);
+            
+            // Cria novo handler
+            prevBtn._clickHandler = function(e) {
+                e.preventDefault();
+                console.log(`Botão anterior clicado - seção ${i}, voltando para seção ${i - 1}`);
                 showSection(i - 1);
-            });
+            };
+            
+            prevBtn.addEventListener('click', prevBtn._clickHandler);
+            console.log(`Event listener adicionado para btn-prev-${i}`);
         }
+    }
+    
+    // Configuração especial do botão de envio na última seção
+    const submitBtn = document.getElementById(`btn-submit-${totalSections}`);
+    if (submitBtn) {
+        submitBtn.removeEventListener('click', submitBtn._clickHandler);
+        
+        submitBtn._clickHandler = function(e) {
+            e.preventDefault();
+            console.log('Botão de envio clicado');
+            
+            if (validateAllSections()) {
+                submitForm();
+            }
+        };
+        
+        submitBtn.addEventListener('click', submitBtn._clickHandler);
+        console.log('Event listener adicionado para botão de envio');
     }
 }
 
 // ==================== VALIDAÇÃO DE SEÇÕES ====================
 
 function validateCurrentSection(sectionNumber) {
+    console.log(`Validando seção ${sectionNumber}`);
     let isValid = true;
     
     switch (sectionNumber) {
@@ -617,15 +664,31 @@ function validateCurrentSection(sectionNumber) {
             break;
             
         case 4:
+            // Seção de histórico de saúde - validação básica
+            isValid = validateSection4();
+            break;
+            
         case 5:
+            // Seção de situação socioeconômica - validação básica
+            isValid = validateSection5();
+            break;
+            
         case 6:
-            // Seções sem validação específica (por enquanto)
+            // Seção de informações adicionais - sem validação obrigatória
+            isValid = true;
+            break;
+            
+        case 7:
+            // Última seção - validação completa
+            isValid = validateAllSections();
             break;
             
         default:
             console.warn(`Validação para seção ${sectionNumber} não implementada`);
+            isValid = true; // Permite avançar por padrão
     }
     
+    console.log(`Resultado da validação da seção ${sectionNumber}:`, isValid);
     return isValid;
 }
 
@@ -634,7 +697,7 @@ function validateSection1() {
     
     // Valida nome do paciente
     const nomeElement = document.getElementById('paciente');
-    if (!nomeElement.value.trim()) {
+    if (!nomeElement || !nomeElement.value.trim()) {
         showError('paciente', 'Nome do paciente é obrigatório');
         isValid = false;
     } else {
@@ -643,7 +706,7 @@ function validateSection1() {
     
     // Valida data de nascimento
     const birthDateElement = document.getElementById('data_nascimento');
-    if (!birthDateElement.value) {
+    if (!birthDateElement || !birthDateElement.value) {
         showError('data_nascimento', 'Data de nascimento é obrigatória');
         isValid = false;
     } else {
@@ -664,7 +727,7 @@ function validateSection2() {
     
     // Valida telefone principal
     const telefone1 = document.getElementById('telefone1');
-    if (!telefone1.value.trim()) {
+    if (!telefone1 || !telefone1.value.trim()) {
         showError('telefone1', 'Telefone principal é obrigatório');
         isValid = false;
     } else if (!validatePhone(telefone1.value)) {
@@ -676,7 +739,7 @@ function validateSection2() {
     
     // Valida CEP
     const cep = document.getElementById('cep');
-    if (!cep.value.trim()) {
+    if (!cep || !cep.value.trim()) {
         showError('cep', 'CEP é obrigatório');
         isValid = false;
     } else if (!validateCEP(cep.value)) {
@@ -688,7 +751,7 @@ function validateSection2() {
     
     // Valida endereço
     const endereco = document.getElementById('endereco');
-    if (!endereco.value.trim()) {
+    if (!endereco || !endereco.value.trim()) {
         showError('endereco', 'Endereço é obrigatório');
         isValid = false;
     } else {
@@ -697,7 +760,7 @@ function validateSection2() {
     
     // Valida número
     const numero = document.getElementById('numero');
-    if (!numero.value.trim()) {
+    if (!numero || !numero.value.trim()) {
         showError('numero', 'Número é obrigatório');
         isValid = false;
     } else {
@@ -706,7 +769,7 @@ function validateSection2() {
     
     // Valida bairro
     const bairro = document.getElementById('bairro');
-    if (!bairro.value.trim()) {
+    if (!bairro || !bairro.value.trim()) {
         showError('bairro', 'Bairro é obrigatório');
         isValid = false;
     } else {
@@ -715,7 +778,7 @@ function validateSection2() {
     
     // Valida cidade
     const cidade = document.getElementById('cidade');
-    if (!cidade.value.trim()) {
+    if (!cidade || !cidade.value.trim()) {
         showError('cidade', 'Cidade é obrigatória');
         isValid = false;
     } else {
@@ -724,7 +787,7 @@ function validateSection2() {
     
     // Valida estado
     const estado = document.getElementById('estado');
-    if (!estado.value) {
+    if (!estado || !estado.value) {
         showError('estado', 'Estado é obrigatório');
         isValid = false;
     } else {
@@ -739,7 +802,7 @@ function validateSection3() {
     
     // Valida nome da mãe
     const maeNome = document.getElementById('mae_nome');
-    if (!maeNome.value.trim()) {
+    if (!maeNome || !maeNome.value.trim()) {
         showError('mae_nome', 'Nome da mãe é obrigatório');
         isValid = false;
     } else {
@@ -748,251 +811,11 @@ function validateSection3() {
     
     // Valida CPF da mãe se preenchido
     const maeCpf = document.getElementById('mae_cpf');
-    if (maeCpf.value && !validateCPF(maeCpf.value)) {
+    if (maeCpf && maeCpf.value && !validateCPF(maeCpf.value)) {
         showError('mae_cpf', 'CPF inválido');
         isValid = false;
-    } else {
+    } else if (maeCpf) {
         hideError('mae_cpf');
     }
     
-    return isValid;
-}
-
-function validateAllSections() {
-    let isValid = true;
-    
-    for (let i = 1; i <= totalSections; i++) {
-        if (!validateCurrentSection(i)) {
-            isValid = false;
-            showSection(i);
-            break;
-        }
-    }
-    
-    return isValid;
-}
-
-// ==================== MANIPULAÇÃO DE FORMULÁRIO ====================
-
-function setupFormSubmission() {
-    const form = document.getElementById('cadastro-form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (validateAllSections()) {
-                submitForm();
-            }
-        });
-    }
-}
-
-async function submitForm() {
-    try {
-        // Mostra loader ou estado de carregamento
-        showLoadingState(true);
-        
-        // Coleta os dados do formulário
-        const formData = collectFormData();
-        
-        // Envia os dados (simulado aqui)
-        const response = await simulateFormSubmission(formData);
-        
-        if (response.success) {
-            showSuccessMessage();
-            // Redireciona ou limpa o formulário após sucesso
-            setTimeout(() => {
-                window.location.href = 'pacientes.html';
-            }, 3000);
-        } else {
-            showSubmissionError(response.message);
-        }
-    } catch (error) {
-        console.error('Erro ao enviar formulário:', error);
-        showSubmissionError('Erro ao enviar formulário. Por favor, tente novamente.');
-    } finally {
-        showLoadingState(false);
-    }
-}
-
-function collectFormData() {
-    const form = document.getElementById('cadastro-form');
-    if (!form) return {};
-    
-    const formData = {};
-    const elements = form.elements;
-    
-    for (let i = 0; i < elements.length; i++) {
-        const element = elements[i];
-        if (element.name && element.type !== 'button' && element.type !== 'submit') {
-            if (element.type === 'checkbox' || element.type === 'radio') {
-                if (element.checked) {
-                    formData[element.name] = element.value;
-                }
-            } else {
-                formData[element.name] = element.value;
-            }
-        }
-    }
-    
-    return formData;
-}
-
-async function simulateFormSubmission(formData) {
-    // Simula um atraso de rede
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Simula uma resposta bem-sucedida
-    return {
-        success: true,
-        message: 'Cadastro realizado com sucesso!',
-        data: formData
-    };
-}
-
-// ==================== FUNÇÕES AUXILIARES ====================
-
-async function searchCEP(cep) {
-    try {
-        showLoadingState(true, 'Buscando CEP...');
-        
-        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const data = await response.json();
-        
-        if (!data.erro) {
-            document.getElementById('endereco').value = data.logradouro || '';
-            document.getElementById('bairro').value = data.bairro || '';
-            document.getElementById('cidade').value = data.localidade || '';
-            document.getElementById('estado').value = data.uf || '';
-            
-            document.getElementById('numero').focus();
-        } else {
-            showError('cep', 'CEP não encontrado');
-        }
-    } catch (error) {
-        console.error('Erro ao buscar CEP:', error);
-        showError('cep', 'Erro ao buscar CEP. Por favor, preencha manualmente.');
-    } finally {
-        showLoadingState(false);
-    }
-}
-
-function calculateTotalIncome() {
-    const salaryFields = ['mae_salario', 'pai_salario', 'outro_salario', 'valor_bpc'];
-    let total = 0;
-    
-    salaryFields.forEach(field => {
-        const element = document.getElementById(field);
-        if (element && element.value) {
-            // Remove R$, pontos e converte vírgula para ponto decimal
-            const value = parseFloat(element.value
-                .replace(/[^\d,]/g, '')
-                .replace(',', '.'));
-            
-            if (!isNaN(value)) {
-                total += value;
-            }
-        }
-    });
-    
-    const totalElement = document.getElementById('renda_familiar');
-    if (totalElement) {
-        totalElement.value = formatMoney((total * 100).toString());
-    }
-}
-
-function showError(fieldId, message) {
-    const field = document.getElementById(fieldId);
-    const errorElement = document.getElementById(fieldId + '-error');
-    
-    if (field) {
-        field.classList.add('error');
-        field.focus();
-    }
-    
-    if (errorElement) {
-        errorElement.textContent = message;
-        errorElement.style.display = 'block';
-    }
-}
-
-function hideError(fieldId) {
-    const field = document.getElementById(fieldId);
-    const errorElement = document.getElementById(fieldId + '-error');
-    
-    if (field) field.classList.remove('error');
-    if (errorElement) errorElement.style.display = 'none';
-}
-
-function showSuccessMessage() {
-    const successMessage = document.createElement('div');
-    successMessage.id = 'success-message';
-    successMessage.className = 'success-message';
-    successMessage.innerHTML = `
-        <span class="material-icons-outlined">check_circle</span>
-        <p>Cadastro realizado com sucesso!</p>
-    `;
-    
-    document.body.appendChild(successMessage);
-    
-    setTimeout(() => {
-        successMessage.classList.add('show');
-    }, 10);
-    
-    setTimeout(() => {
-        successMessage.classList.remove('show');
-        setTimeout(() => {
-            document.body.removeChild(successMessage);
-        }, 300);
-    }, 5000);
-}
-
-function showSubmissionError(message) {
-    const errorMessage = document.createElement('div');
-    errorMessage.id = 'error-message';
-    errorMessage.className = 'error-message';
-    errorMessage.innerHTML = `
-        <span class="material-icons-outlined">error</span>
-        <p>${message}</p>
-    `;
-    
-    document.body.appendChild(errorMessage);
-    
-    setTimeout(() => {
-        errorMessage.classList.add('show');
-    }, 10);
-    
-    setTimeout(() => {
-        errorMessage.classList.remove('show');
-        setTimeout(() => {
-            document.body.removeChild(errorMessage);
-        }, 300);
-    }, 5000);
-}
-
-function showLoadingState(show, message = 'Processando...') {
-    const loader = document.getElementById('form-loader');
-    const loaderMessage = document.getElementById('loader-message');
-    
-    if (loader) {
-        loader.style.display = show ? 'flex' : 'none';
-    }
-    
-    if (loaderMessage) {
-        loaderMessage.textContent = message;
-    }
-}
-
-function showGlobalError() {
-    const errorContainer = document.createElement('div');
-    errorContainer.id = 'global-error';
-    errorContainer.className = 'global-error';
-    errorContainer.innerHTML = `
-        <h2>Ocorreu um erro</h2>
-        <p>Não foi possível carregar o formulário. Por favor, recarregue a página.</p>
-        <button onclick="window.location.reload()">Recarregar</button>
-    `;
-    
-    document.body.innerHTML = '';
-    document.body.appendChild(errorContainer);
-}
+    return
