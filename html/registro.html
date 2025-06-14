@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>More actions
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -9,16 +9,13 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
   </head>
   <body>
-<<<<<<< HEAD
-    
-=======
     <div class="grid-container">
       <header class="header">
         <button class="menu-icon" onclick="openSidebar()" aria-label="Abrir menu">
           <span class="material-icons-outlined">menu</span>
         </button>
         <div class="header-left">
-          <img src="../img/logo-nova.png" alt="Casa Guido">
+          <img src="/img/logo-nova.png" alt="Casa Guido">
         </div>
         <nav class="header-right">
           <button aria-label="Notificações">
@@ -32,7 +29,7 @@
           </a>
         </nav>
       </header>
-      
+
       <aside id="sidebar">
         <header class="sidebar-title">
           <button class="material-icons-outlined" onclick="closeSidebar()" aria-label="Fechar menu">close</button>
@@ -40,7 +37,7 @@
         <nav class="sidebar-list">
           <ul>
             <li class="sidebar-list-item">
-              <a href="../index.html">
+              <a href="/dashboard.html">
                 <span class="material-icons-outlined">dashboard</span> Início
               </a>
             </li>
@@ -67,16 +64,64 @@
           </ul>
         </nav>
       </aside>
-      
+
       <main class="main-container">
       <h1>FICHA DE IDENTIFICAÇÃO</h1>
->>>>>>> 9629229c2ab298cd97ae161e9f90ce5fa04b77c3
 
-      <form id="cadastro-form" action="/paciente" method="post">
+      <!-- Progress bar -->
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress" id="form-progress" style="width: 6%"></div>
+        </div>
+        <div class="progress-labels">
+          <span>Início</span>
+          <span>Completado: <span id="completion-percentage">6%</span></span>
+        </div>
+      </div>
+
+      <!-- Step indicators -->
+      <div class="step-indicator">
+        <div class="step">
+          <div class="step-circle active" id="step-1">1</div>
+          <div class="step-text active">Dados do Paciente</div>
+        </div>
+        <div class="step">
+          <div class="step-circle" id="step-2">2</div>
+          <div class="step-text">Contato e Endereço</div>
+        </div>
+        <div class="step">
+          <div class="step-circle" id="step-3">3</div>
+          <div class="step-text">Dados dos Familiares</div>
+        </div>
+        <div class="step">
+          <div class="step-circle" id="step-4">4</div>
+          <div class="step-text">Histórico de Saúde</div>
+        </div>
+        <div class="step">
+          <div class="step-circle" id="step-5">5</div>
+          <div class="step-text">Histórico Familiar</div>
+        </div>
+        <div class="step">
+          <div class="step-circle" id="step-6">6</div>
+          <div class="step-text">Situação Socioeconômica</div>
+        </div>
+        <div class="step">
+          <div class="step-circle" id="step-7">7</div>
+          <div class="step-text">Finalizar</div>
+        </div>
+      </div>
+
+      <!-- Success message -->
+      <div class="success-message" id="success-message">
+        <h3>Cadastro salvo com sucesso!</h3>
+        <p>Os dados foram registrados no sistema.</p>
+      </div>
+
+      <form id="cadastro-form">
         <!-- Seção 1: Dados do Paciente -->
         <div class="form-section active" id="section-1">
           <div class="section-title">Dados do Paciente</div>
-          
+
           <div class="form-card">
             <div class="form-row">
               <div class="form-group full-width">
@@ -89,7 +134,12 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="data_nascimento" class="required">Data de Nascimento</label>
-                <input type="date" id="data_nascimento" name="data_nascimento" required/>
+                <input
+                  type="date"
+                  id="data_nascimento"
+                  name="data_nascimento"
+                  required
+                />
                 <div class="error-message" id="data_nascimento-error">Data de nascimento é obrigatória</div>
               </div>
               <div class="form-group">
@@ -163,7 +213,7 @@
         <!-- Antiga Seção 8!!!!!!!!!!!!!! Nao sei se vai afetar o js
            <div class="form-section" id="section-8"> -->
           <div class="section-title">Radioterapia</div>
-          
+
           <div class="form-card">
             <div class="form-row">
               <div class="form-group">
@@ -203,7 +253,7 @@
           <!-- Antiga Seção 9!!!!!!!!!!!!!! Nao sei se vai afetar o js
           <div class="form-section" id="section-9"> -->
             <div class="section-title">Cirurgia</div>
-            
+
             <div class="form-card">
               <div class="form-row">
                 <div class="form-group">
@@ -220,7 +270,7 @@
                   </div>
                 </div>
               </div>
-  
+
               <div id="cirurgia-fields" style="display: none;">
                 <div id="cirurgia-list">
                   <div class="cirurgia-item">
@@ -239,7 +289,7 @@
                 <button type="button" class="btn-add" id="add-cirurgia">+ Adicionar Outra Cirurgia</button>
               </div>
             </div>
-  
+
             <div class="button-row">
               <button type="button" class="btn-secondary" id="btn-prev-1">Anterior</button>
               <button type="button" class="btn-primary" id="btn-next-1">Próximo</button>
@@ -249,7 +299,7 @@
         <!-- Seção 2: Contato e Endereço -->
         <div class="form-section" id="section-2">
           <div class="section-title">Contato e Endereço</div>
-          
+
           <div class="form-card">
             <div class="form-row">
               <div class="form-group">
@@ -359,7 +409,7 @@
         <!-- Seção 3: Dados dos Familiares-->
         <div class="form-section" id="section-3">
           <div class="section-title">Dados da Mãe</div>
-          
+
           <div class="form-card">
             <div class="form-row">
               <div class="checkbox-item">
@@ -450,7 +500,7 @@
         <!-- Antiga Seção 4!!!!!!!!!!!!!! Nao sei se vai afetar o js
         <div class="form-section" id="section-4">-->
           <div class="section-title">Dados do Pai</div>
-          
+
           <div class="form-card">
             <div class="form-row">
               <div class="checkbox-item">
@@ -540,7 +590,7 @@
         <!-- Antiga Seção 5!!!!!!!!!!!!!! Nao sei se vai afetar o js
         <div class="form-section" id="section-5">-->
           <div class="section-title">Outro Responsável</div>
-          
+
           <div class="form-card">
             <div class="form-row">
               <div class="checkbox-item">
@@ -648,7 +698,7 @@
         <!-- Seção 4: Histórico de Saúde -->
         <div class="form-section" id="section-4">
           <div class="section-title">Histórico de Saúde do Paciente</div>
-          
+
           <div class="form-card">
             <div class="subsection-title">Condições de Saúde</div>
             <div class="checkbox-grid">
@@ -837,7 +887,7 @@
         <!-- Seção 5: Histórico Familiar -->
         <div class="form-section" id="section-5">
           <div class="section-title">Histórico Familiar de Saúde</div>
-          
+
           <div class="form-card">
             <div class="subsection-title">Condições de Saúde na Família</div>
             <div class="checkbox-grid">
@@ -940,7 +990,7 @@
         <!-- Seção 6: Situação Socioeconômica -->
         <div class="form-section" id="section-6">
           <div class="section-title">Situação Socioeconômica</div>
-          
+
           <div class="form-card">
             <div class="form-row">
               <div class="form-group">
@@ -1066,12 +1116,12 @@
         <!-- Seção 7: Finalizar -->
         <div class="form-section" id="section-7">
           <div class="section-title">Finalizar Cadastro</div>
-          
+
           <div class="form-card">
             <div class="summary-section">
               <h3>Resumo dos Dados</h3>
               <p>Revise as informações antes de finalizar o cadastro.</p>
-              
+
               <div class="summary-item">
                 <strong>Paciente:</strong> <span id="summary-paciente">-</span>
               </div>
@@ -1108,7 +1158,7 @@
       </form>
     </main>
     </div>
-    <script src="../js/GetInput.js"></script>
+
     <script src="../js/registro.js"></script>
-  </body>
+  </body>More actions
 </html>
