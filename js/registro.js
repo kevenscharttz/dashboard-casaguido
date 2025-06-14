@@ -425,7 +425,7 @@ function validateCurrentSection(sectionNumber) {
 
 async function searchCEP(cep) {
     try {
-        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const response = await fetch(https://viacep.com.br/ws/${cep}/json/);
         const data = await response.json();
         
         if (!data.erro) {
@@ -585,13 +585,13 @@ const totalSections = 7;
 
 function showSection(sectionNumber) {
     for (let i = 1; i <= totalSections; i++) {
-        const section = document.getElementById(`section-${i}`);
+        const section = document.getElementById(section-${i});
         if (section) {
             section.classList.remove('active');
         }
     }
     
-    const activeSection = document.getElementById(`section-${sectionNumber}`);
+    const activeSection = document.getElementById(section-${sectionNumber});
     if (activeSection) {
         activeSection.classList.add('active');
     }
@@ -604,7 +604,7 @@ function showSection(sectionNumber) {
 
 function updateProgressIndicator(sectionNumber) {
     for (let i = 1; i <= totalSections; i++) {
-        const stepCircle = document.getElementById(`step-${i}`);
+        const stepCircle = document.getElementById(step-${i});
         const stepText = stepCircle?.parentElement.querySelector('.step-text');
         
         if (stepCircle && stepText) {
@@ -642,7 +642,7 @@ function updateProgressBar(sectionNumber) {
 
 function initializeNavigation() {
     for (let i = 1; i <= totalSections - 1; i++) {
-        const nextBtn = document.getElementById(`btn-next-${i}`);
+        const nextBtn = document.getElementById(btn-next-${i});
         if (nextBtn) {
             nextBtn.addEventListener('click', function() {
                 if (validateCurrentSection(i)) {
@@ -653,7 +653,7 @@ function initializeNavigation() {
     }
     
     for (let i = 2; i <= totalSections; i++) {
-        const prevBtn = document.getElementById(`btn-prev-${i}`);
+        const prevBtn = document.getElementById(btn-prev-${i});
         if (prevBtn) {
             prevBtn.addEventListener('click', function() {
                 showSection(i - 1);
