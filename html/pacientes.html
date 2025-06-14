@@ -15,7 +15,7 @@
                 <span class="material-icons-outlined">menu</span>
             </button>
             <div class="header-left">
-                <img src="/img/logo-nova.png" alt="Casa Guido">
+                <img src="../img/logo-nova.png" alt="Casa Guido">
             </div>
             <nav class="header-right">
                 <button aria-label="Notificações">
@@ -37,7 +37,7 @@
             <nav class="sidebar-list">
                 <ul>
                     <li class="sidebar-list-item">
-                        <a href="../dashboard.html">
+                        <a href="../index.html">
                             <span class="material-icons-outlined">dashboard</span> Início
                         </a>
                     </li>
@@ -173,10 +173,6 @@
                     <header class="card-header">
                         <h2 class="card-title">Lista de Pacientes</h2>
                         <div class="card-options">
-                            <button class="btn-outline" id="exportData">
-                                <span class="material-icons-outlined">download</span>
-                                Exportar
-                            </button>
                         </div>
                     </header>
                     
@@ -191,7 +187,6 @@
                                         <th>Diagnóstico</th>
                                         <th>Status</th>
                                         <th>Último atendimento</th>
-                                        <th>Próximo tratamento</th>
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
@@ -212,12 +207,6 @@
                                         <td><span class="status status-active">Em tratamento</span></td>
                                         <td><time datetime="2025-05-15">15/05/2025</time></td>
                                         <td>
-                                            <div class="next-treatment">
-                                                <time class="date" datetime="2025-05-22">22/05/2025</time>
-                                                <span class="treatment-type">Quimioterapia</span>
-                                            </div>
-                                        </td>
-                                        <td>
                                             <div class="actions">
                                                 <button class="action-btn" title="Ver prontuário">
                                                     <span class="material-icons-outlined">visibility</span>
@@ -225,8 +214,8 @@
                                                 <button class="action-btn" title="Editar dados">
                                                     <span class="material-icons-outlined">edit</span>
                                                 </button>
-                                                <button class="action-btn" title="Agendar consulta">
-                                                    <span class="material-icons-outlined">event</span>
+                                                <button class="action-btn" title="Exportar PDF">
+                                                    <span class="material-icons-outlined">picture_as_pdf</span>
                                                 </button>
                                             </div>
                                         </td>
@@ -247,12 +236,6 @@
                                         <td><span class="status status-warning">Em acompanhamento</span></td>
                                         <td><time datetime="2025-05-10">10/05/2025</time></td>
                                         <td>
-                                            <div class="next-treatment">
-                                                <time class="date" datetime="2025-05-25">25/05/2025</time>
-                                                <span class="treatment-type">Consulta de acompanhamento</span>
-                                            </div>
-                                        </td>
-                                        <td>
                                             <div class="actions">
                                                 <button class="action-btn" title="Ver prontuário">
                                                     <span class="material-icons-outlined">visibility</span>
@@ -260,8 +243,8 @@
                                                 <button class="action-btn" title="Editar dados">
                                                     <span class="material-icons-outlined">edit</span>
                                                 </button>
-                                                <button class="action-btn" title="Agendar consulta">
-                                                    <span class="material-icons-outlined">event</span>
+                                                <button class="action-btn" title="Exportar PDF">
+                                                    <span class="material-icons-outlined">picture_as_pdf</span>
                                                 </button>
                                             </div>
                                         </td>
@@ -282,12 +265,6 @@
                                         <td><span class="status status-urgent">Acompanhamento urgente</span></td>
                                         <td><time datetime="2025-05-18">18/05/2025</time></td>
                                         <td>
-                                            <div class="next-treatment">
-                                                <time class="date urgent" datetime="2025-05-29">HOJE</time>
-                                                <span class="treatment-type">Avaliação pós-cirúrgica</span>
-                                            </div>
-                                        </td>
-                                        <td>
                                             <div class="actions">
                                                 <button class="action-btn" title="Ver prontuário">
                                                     <span class="material-icons-outlined">visibility</span>
@@ -295,8 +272,8 @@
                                                 <button class="action-btn" title="Editar dados">
                                                     <span class="material-icons-outlined">edit</span>
                                                 </button>
-                                                <button class="action-btn" title="Agendar consulta">
-                                                    <span class="material-icons-outlined">event</span>
+                                                <button class="action-btn" title="Exportar PDF">
+                                                    <span class="material-icons-outlined">picture_as_pdf</span>
                                                 </button>
                                             </div>
                                         </td>
@@ -317,12 +294,6 @@
                                         <td><span class="status status-active">Em tratamento</span></td>
                                         <td><time datetime="2025-05-12">12/05/2025</time></td>
                                         <td>
-                                            <div class="next-treatment">
-                                                <time class="date" datetime="2025-05-24">24/05/2025</time>
-                                                <span class="treatment-type">Quimioterapia</span>
-                                            </div>
-                                        </td>
-                                        <td>
                                             <div class="actions">
                                                 <button class="action-btn" title="Ver prontuário">
                                                     <span class="material-icons-outlined">visibility</span>
@@ -330,8 +301,8 @@
                                                 <button class="action-btn" title="Editar dados">
                                                     <span class="material-icons-outlined">edit</span>
                                                 </button>
-                                                <button class="action-btn" title="Agendar consulta">
-                                                    <span class="material-icons-outlined">event</span>
+                                                <button class="action-btn" title="Exportar PDF">
+                                                    <span class="material-icons-outlined">picture_as_pdf</span>
                                                 </button>
                                             </div>
                                         </td>
@@ -352,12 +323,6 @@
                                         <td><span class="status status-success">Alta</span></td>
                                         <td><time datetime="2025-04-05">05/04/2025</time></td>
                                         <td>
-                                            <div class="next-treatment">
-                                                <time class="date" datetime="2025-08-05">05/08/2025</time>
-                                                <span class="treatment-type">Revisão trimestral</span>
-                                            </div>
-                                        </td>
-                                        <td>
                                             <div class="actions">
                                                 <button class="action-btn" title="Ver prontuário">
                                                     <span class="material-icons-outlined">visibility</span>
@@ -365,8 +330,8 @@
                                                 <button class="action-btn" title="Editar dados">
                                                     <span class="material-icons-outlined">edit</span>
                                                 </button>
-                                                <button class="action-btn" title="Agendar consulta">
-                                                    <span class="material-icons-outlined">event</span>
+                                                <button class="action-btn" title="Exportar PDF">
+                                                    <span class="material-icons-outlined">picture_as_pdf</span>
                                                 </button>
                                             </div>
                                         </td>
