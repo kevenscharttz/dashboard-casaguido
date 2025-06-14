@@ -626,7 +626,7 @@ function initializeNavigation() {
     }
     
     // Configuração especial do botão de envio na última seção
-    const submitBtn = document.getElementById(`btn-submit-${totalSections}`);
+    const submitBtn = document.getElementById(`btn-submit`);
     if (submitBtn) {
         submitBtn.removeEventListener('click', submitBtn._clickHandler);
         
