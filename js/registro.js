@@ -926,3 +926,17 @@ function showSuccessMessage() {
         }, 5000);
     }
 }
+
+function goToStep(stepNumber) {
+  // Oculta todas as seções
+  document.querySelectorAll('.form-section').forEach(section => {
+    section.classList.remove('active');
+  });
+  
+  // Mostra a seção desejada
+  document.getElementById(`section-${stepNumber}`).classList.add('active');
+  
+  // Atualiza os indicadores visuais
+  updateStepIndicators(stepNumber);
+  updateProgress();
+}
