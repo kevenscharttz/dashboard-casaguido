@@ -117,6 +117,23 @@ function validateAge(birthDate) {
     return age;
 }
 
+function validateAgeRange(birthDate) {
+    const age = validateAge(birthDate);
+    
+    if (age > 20) {
+        return {
+            valid: false,
+            message: "Não é possível cadastrar pessoas com mais de 20 anos"
+        };
+    }
+    
+    return {
+        valid: true,
+        message: ""
+    };
+}
+
+// Mantém a função calculateAge como está
 function calculateAge(birthDate) {
     if (!birthDate) return '';
     
