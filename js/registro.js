@@ -4,18 +4,19 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeFormLogic();
     initializeBirthDateValidation();
     initializeNavigation();
+    initializeResponsavelPrincipal(); // <-- ADICIONE ESTA LINHA
     showSection(1);
-    
+
     const form = document.getElementById('cadastro-form');
     if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             if (validateAllSections()) {
                 showSuccessMessage();
             }
         });
-    }
+    } 
 });
 
 // Funções de formatação
@@ -444,6 +445,31 @@ function initializeFormLogic() {
     initializeAddButtons();
 }
 
+// Permitir apenas um responsável principal selecionado
+function initializeResponsavelPrincipal() {
+    const checkboxes = [
+        document.getElementById('mae_responsavel_principal'),
+        document.getElementById('pai_responsavel_principal'),
+        document.getElementById('outro_responsavel_principal')
+    ].filter(Boolean);
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                checkboxes.forEach(cb => {
+                    if (cb !== this) cb.checked = false;´
+                });
+            }
+        });
+    });
+}
+
+// Chame a função ao carregar a página
+document.addEventListener('DOMContentLoaded', function() {
+    // ...existing code...
+    initializeResponsavelPrincipal();
+});
+
 function initializeAddButtons() {
     const addButtons = [
         { id: 'add-quimio', listId: 'quimio-list', className: 'quimio-item', template: createQuimioTemplate },
@@ -712,4 +738,26 @@ function goToStep(stepNumber) {
     
     updateProgressIndicator(stepNumber);
     updateProgressBar(stepNumber);
+}
+
+function validateCurrentSection(sectionNumber) {
+    // Defina os campos obrigatórios de cada seção
+    const requiredFieldsBySection = {
+        1: ['paciente', 'data_nascimento'],
+        2: ['telefone1'],
+    };
+
+    let isValid = true;
+    const fields = requiredFieldsBySection[sectionNumber] || [];
+    fields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element && !element.value.trim()) {
+            showError(field, 'Este campo é obrigatório');
+            isValid = false;
+        } else {
+            hideError(field);
+        }
+    });
+
+    return isValid;
 }
