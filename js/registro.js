@@ -475,13 +475,17 @@ function initializeAddButtons() {
 function createQuimioTemplate(count) {
     return `
         <div class="form-row">
-            <div class="form-group">
-                <label for="quimio_data_${count}">Data</label>
-                <input type="date" id="quimio_data_${count}" name="quimio_data_${count}" />
+            <div class="form-group full-width">
+              <label for="quimio_profissional_${count}">Profissional</label>
+              <input type="text" id="quimio_profissional_${count}" name="quimio_profissional_${count}" />
             </div>
             <div class="form-group full-width">
                 <label for="quimio_local_${count}">Local</label>
                 <input type="text" id="quimio_local_${count}" name="quimio_local_${count}" />
+            </div>
+            <div class="form-group">
+                <label for="quimio_data_${count}">Data</label>
+                <input type="date" id="quimio_data_${count}" name="quimio_data_${count}" />
             </div>
         </div>
     `;
@@ -490,13 +494,17 @@ function createQuimioTemplate(count) {
 function createRadioTemplate(count) {
     return `
         <div class="form-row">
-            <div class="form-group">
-                <label for="radio_data_${count}">Data</label>
-                <input type="date" id="radio_data_${count}" name="radio_data_${count}" />
+            <div class="form-group full-width">
+              <label for="radio_profissional_${count}">Profissional</label>
+              <input type="text" id="radio_profissional_${count}" name="radio_profissional_${count}" />
             </div>
             <div class="form-group full-width">
                 <label for="radio_local_${count}">Local</label>
                 <input type="text" id="radio_local_${count}" name="radio_local_${count}" />
+            </div>
+            <div class="form-group">
+                <label for="radio_data_${count}">Data</label>
+                <input type="date" id="radio_data_${count}" name="radio_data_${count}" />
             </div>
         </div>
     `;
@@ -505,6 +513,10 @@ function createRadioTemplate(count) {
 function createCirurgiaTemplate(count) {
     return `
         <div class="form-row">
+            <div class="form-group full-width">
+              <label for="cirurgia_profissional_${count}">Profissional</label>
+              <input type="text" id="cirurgia_profissional_${count}" name="cirurgia_profissional_${count}" />
+            </div>
             <div class="form-group">
                 <label for="cirurgia_data_${count}">Data</label>
                 <input type="date" id="cirurgia_data_${count}" name="cirurgia_data_${count}" />
