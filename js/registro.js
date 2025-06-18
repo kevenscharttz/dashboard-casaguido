@@ -457,7 +457,7 @@ function initializeResponsavelPrincipal() {
         checkbox.addEventListener('change', function() {
             if (this.checked) {
                 checkboxes.forEach(cb => {
-                    if (cb !== this) cb.checked = false;´
+                    if (cb !== this) cb.checked = false;
                 });
             }
         });
