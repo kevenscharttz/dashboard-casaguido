@@ -116,20 +116,45 @@ function validateAge(birthDate) {
         calculatedAge = age - 1;
     }
     
-    // Validação de idade máxima
+    // Validação: não permite cadastro de pessoas acima de 20 anos
     if (calculatedAge > 20) {
-        return {
-            age: calculatedAge,
-            valid: false,
-            message: "Não é possível cadastrar pessoas com mais de 20 anos"
-        };
+        throw new Error("Não é possível cadastrar pessoas com mais de 20 anos");
     }
     
-    return {
-        age: calculatedAge,
-        valid: true,
-        message: ""
-    };
+    return calculatedAge;
+}
+
+function calculateAge(birthDate) {
+    if (!birthDate) return '';
+    
+    const today = new Date();
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
+    }
+    
+    if (age < 1) {
+        const months = today.getMonth() - birth.getMonth() + (12 * (today.getFullYear() - birth.getFullYear()));
+        return months + (months === 1 ? ' mês' : ' meses');
+    }
+    
+    return age + (age === 1 ? ' ano' : ' anos');
+}
+
+// Exemplo de uso com tratamento de erro:
+function cadastrarPessoa(nome, dataNascimento) {
+    try {
+        const idade = validateAge(dataNascimento);
+        console.log(`Cadastrando ${nome}, ${idade} anos`);
+        // Aqui vai o resto da lógica de cadastro
+        return true;
+    } catch (error) {
+        alert(error.message);
+        return false;
+    }
 }
 
 function initializeFormatting() {
