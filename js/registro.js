@@ -115,27 +115,33 @@ function validateBirthDate(birthDate) {
     const today = new Date();
     const birth = new Date(birthDate);
     
+    // Garante que estamos comparando apenas datas (ignorando horas)
     today.setHours(0, 0, 0, 0);
     birth.setHours(0, 0, 0, 0);
     
+    // Verifica se a data é válida
     if (isNaN(birth.getTime())) {
         return { isValid: false, message: 'Data inválida' };
     }
     
+    // Verifica se a data é no futuro
     if (birth > today) {
         return { isValid: false, message: 'Data de nascimento não pode ser no futuro' };
     }
     
+    // Verifica se a data é muito antiga (mais de 150 anos)
     const maxAge = new Date();
     maxAge.setFullYear(maxAge.getFullYear() - 150);
     if (birth < maxAge) {
         return { isValid: false, message: 'Data de nascimento muito antiga' };
     }
     
+    // Verifica se a idade é maior que 20 anos
     const age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
     const dayDiff = today.getDate() - birth.getDate();
     
+    // Ajusta a idade se o aniversário ainda não ocorreu este ano
     const adjustedAge = (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) ? age - 1 : age;
     
     if (adjustedAge > 20) {
@@ -157,6 +163,7 @@ function calculateAge(birthDate) {
     const monthDiff = today.getMonth() - birth.getMonth();
     const dayDiff = today.getDate() - birth.getDate();
     
+    // Ajusta a idade se o aniversário ainda não ocorreu este ano
     if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
         age--;
     }
