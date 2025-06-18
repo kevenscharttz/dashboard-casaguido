@@ -677,69 +677,6 @@ function initializeNavigation() {
     }
 }
 
-function validateCurrentSection(sectionNumber) {
-    let isValid = true;
-    
-    switch (sectionNumber) {
-        case 1:
-            if (!document.getElementById('paciente').value.trim()) {
-                showError('paciente', 'Nome do paciente é obrigatório');
-                isValid = false;
-            } else {
-                hideError('paciente');
-            }
-            
-            const birthDateElement = document.getElementById('data_nascimento');
-            if (!birthDateElement.value) {
-                showError('data_nascimento', 'Data de nascimento é obrigatória');
-                isValid = false;
-            } else {
-                const validation = validateBirthDate(birthDateElement.value);
-                if (!validation.isValid) {
-                    showError('data_nascimento', validation.message);
-                    isValid = false;
-                } else {
-                    hideError('data_nascimento');
-                }
-            }
-            break;
-            
-        case 2:
-            if (!document.getElementById('telefone1').value.trim()) {
-                showError('telefone1', 'Telefone principal é obrigatório');
-                isValid = false;
-            } else {
-                hideError('telefone1');
-            }
-            
-            if (!document.getElementById('cep').value.trim()) {
-                showError('cep', 'CEP é obrigatório');
-                isValid = false;
-            } else {
-                hideError('cep');
-            }
-            
-            if (!document.getElementById('endereco').value.trim()) {
-                showError('endereco', 'Endereço é obrigatório');
-                isValid = false;
-            } else {
-                hideError('endereco');
-            }
-            break;
-            
-        case 3:
-            if (!document.getElementById('mae_nome').value.trim()) {
-                showError('mae_nome', 'Nome da mãe é obrigatório');
-                isValid = false;
-            } else {
-                hideError('mae_nome');
-            }
-            break;
-    }
-    
-    return isValid;
-}
-
 function validateAllSections() {
     let isValid = true;
     
