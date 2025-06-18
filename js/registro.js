@@ -111,17 +111,10 @@ function validateAge(birthDate) {
     const age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
     
-    let calculatedAge = age;
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        calculatedAge = age - 1;
+        return age - 1;
     }
-    
-    // Validação: não permite cadastro de pessoas acima de 20 anos
-    if (calculatedAge > 20) {
-        throw new Error("Não é possível cadastrar pessoas com mais de 20 anos");
-    }
-    
-    return calculatedAge;
+    return age;
 }
 
 function calculateAge(birthDate) {
@@ -142,19 +135,6 @@ function calculateAge(birthDate) {
     }
     
     return age + (age === 1 ? ' ano' : ' anos');
-}
-
-// Exemplo de uso com tratamento de erro:
-function cadastrarPessoa(nome, dataNascimento) {
-    try {
-        const idade = validateAge(dataNascimento);
-        console.log(`Cadastrando ${nome}, ${idade} anos`);
-        // Aqui vai o resto da lógica de cadastro
-        return true;
-    } catch (error) {
-        alert(error.message);
-        return false;
-    }
 }
 
 function initializeFormatting() {
@@ -275,11 +255,23 @@ function validateBirthDate(birthDate) {
         return { isValid: false, message: 'Data de nascimento não pode ser no futuro' };
     }
     
-    
+
     const maxAge = new Date();
     maxAge.setFullYear(maxAge.getFullYear() - 150);
     if (birth < maxAge) {
         return { isValid: false, message: 'Data de nascimento muito antiga' };
+    }
+    
+
+    const age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    const dayDiff = today.getDate() - birth.getDate();
+    
+
+    const adjustedAge = (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) ? age - 1 : age;
+    
+    if (adjustedAge > 20) {
+        return { isValid: false, message: 'Pacientes acima de 20 anos não são permitidos' };
     }
     
     return { isValid: true, message: '' };
