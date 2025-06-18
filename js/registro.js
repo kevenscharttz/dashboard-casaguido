@@ -111,47 +111,25 @@ function validateAge(birthDate) {
     const age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
     
+    let calculatedAge = age;
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        return age - 1;
+        calculatedAge = age - 1;
     }
-    return age;
-}
-
-function validateAgeRange(birthDate) {
-    const age = validateAge(birthDate);
     
-    if (age > 20) {
+    // Validação de idade máxima
+    if (calculatedAge > 20) {
         return {
+            age: calculatedAge,
             valid: false,
             message: "Não é possível cadastrar pessoas com mais de 20 anos"
         };
     }
     
     return {
+        age: calculatedAge,
         valid: true,
         message: ""
     };
-}
-
-// Mantém a função calculateAge como está
-function calculateAge(birthDate) {
-    if (!birthDate) return '';
-    
-    const today = new Date();
-    const birth = new Date(birthDate);
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        age--;
-    }
-    
-    if (age < 1) {
-        const months = today.getMonth() - birth.getMonth() + (12 * (today.getFullYear() - birth.getFullYear()));
-        return months + (months === 1 ? ' mês' : ' meses');
-    }
-    
-    return age + (age === 1 ? ' ano' : ' anos');
 }
 
 function initializeFormatting() {
