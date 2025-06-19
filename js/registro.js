@@ -627,6 +627,10 @@ function createDiagnosticoTemplate(count) {
     return `
         <div class="form-row">
             <div class="form-group">
+                <label for="nome_${count}">Nome</label>
+                <input type="text" id="nome_${count}" name="nome_${count}" />
+            </div>
+            <div class="form-group">
                 <label for="cid_${count}">CID</label>
                 <input type="text" id="cid_${count}" name="cid_${count}" />
             </div>
