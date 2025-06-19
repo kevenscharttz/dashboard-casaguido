@@ -1,10 +1,13 @@
+// SUBSTITUA a função DOMContentLoaded existente por esta:
+
 document.addEventListener('DOMContentLoaded', function() {
     initializeValidation();
     initializeFormatting();
     initializeFormLogic();
     initializeBirthDateValidation();
     initializeNavigation();
-    initializeResponsavelPrincipal(); // <-- ADICIONE ESTA LINHA
+    initializeResponsavelPrincipal();
+    initializeSidebar(); // <-- ESTA LINHA É NOVA
     showSection(1);
 
     const form = document.getElementById('cadastro-form');
@@ -392,9 +395,8 @@ function hideError(fieldId) {
 function initializeValidation() {
     const requiredFields = [
         'paciente', 'data_nascimento', 'telefone1', 'cep', 
-        'endereco', 'numero', 'bairro', 'cidade', 'estado', 'mae_nome'
+        'endereco', 'numero', 'bairro', 'cidade', 'estado'
     ];
-    
     requiredFields.forEach(field => {
         const element = document.getElementById(field);
         if (element) {
@@ -447,12 +449,50 @@ function initializeFormLogic() {
 
 // Permitir apenas um responsável principal selecionado
 function initializeResponsavelPrincipal() {
-    const checkboxes = [
-        document.getElementById('mae_responsavel_principal'),
-        document.getElementById('pai_responsavel_principal'),
-        document.getElementById('outro_responsavel_principal')
-    ].filter(Boolean);
+    const maeCheckbox = document.getElementById('mae_responsavel_principal');
+    const paiCheckbox = document.getElementById('pai_responsavel_principal');
+    const outroCheckbox = document.getElementById('outro_responsavel_principal');
+    const maeNome = document.getElementById('mae_nome');
+    const paiNome = document.getElementById('pai_nome');
+    const outroNome = document.getElementById('outro_nome');
 
+    function validateResponsavelField(checkbox, input, fieldId, msg) {
+        if (checkbox && input) {
+            if (checkbox.checked && !input.value.trim()) {
+                showError(fieldId, msg);
+            } else {
+                hideError(fieldId);
+            }
+        }
+    }
+
+    // Helper para atualizar obrigatoriedade
+    function updateRequired() {
+        if (maeCheckbox && maeNome) {
+            if (maeCheckbox.checked) {
+                maeNome.setAttribute('required', 'required');
+            } else {
+                maeNome.removeAttribute('required');
+            }
+        }
+        if (paiCheckbox && paiNome) {
+            if (paiCheckbox.checked) {
+                paiNome.setAttribute('required', 'required');
+            } else {
+                paiNome.removeAttribute('required');
+            }
+        }
+        if (outroCheckbox && outroNome) {
+            if (outroCheckbox.checked) {
+                outroNome.setAttribute('required', 'required');
+            } else {
+                outroNome.removeAttribute('required');
+            }
+        }
+    }
+
+    // Permitir apenas um selecionado
+    const checkboxes = [maeCheckbox, paiCheckbox, outroCheckbox].filter(Boolean);
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             if (this.checked) {
@@ -460,15 +500,43 @@ function initializeResponsavelPrincipal() {
                     if (cb !== this) cb.checked = false;
                 });
             }
+            updateRequired();
+            // Validação dinâmica ao marcar/desmarcar
+            validateResponsavelField(maeCheckbox, maeNome, 'mae_nome', 'Por favor, informe o nome da mãe (responsável principal)');
+            validateResponsavelField(paiCheckbox, paiNome, 'pai_nome', 'Por favor, informe o nome do pai (responsável principal)');
+            validateResponsavelField(outroCheckbox, outroNome, 'outro_nome', 'Por favor, informe o nome do outro responsável (responsável principal)');
         });
     });
-}
 
-// Chame a função ao carregar a página
-document.addEventListener('DOMContentLoaded', function() {
-    // ...existing code...
-    initializeResponsavelPrincipal();
-});
+    // Atualizar obrigatoriedade ao carregar
+    updateRequired();
+
+    // Validação customizada ao sair do campo
+    if (maeNome && maeCheckbox) {
+        maeNome.addEventListener('blur', function() {
+            validateResponsavelField(maeCheckbox, maeNome, 'mae_nome', 'Por favor, informe o nome da mãe (responsável principal)');
+        });
+        maeNome.addEventListener('input', function() {
+            validateResponsavelField(maeCheckbox, maeNome, 'mae_nome', 'Por favor, informe o nome da mãe (responsável principal)');
+        });
+    }
+    if (paiNome && paiCheckbox) {
+        paiNome.addEventListener('blur', function() {
+            validateResponsavelField(paiCheckbox, paiNome, 'pai_nome', 'Por favor, informe o nome do pai (responsável principal)');
+        });
+        paiNome.addEventListener('input', function() {
+            validateResponsavelField(paiCheckbox, paiNome, 'pai_nome', 'Por favor, informe o nome do pai (responsável principal)');
+        });
+    }
+    if (outroNome && outroCheckbox) {
+        outroNome.addEventListener('blur', function() {
+            validateResponsavelField(outroCheckbox, outroNome, 'outro_nome', 'Por favor, informe o nome do outro responsável (responsável principal)');
+        });
+        outroNome.addEventListener('input', function() {
+            validateResponsavelField(outroCheckbox, outroNome, 'outro_nome', 'Por favor, informe o nome do outro responsável (responsável principal)');
+        });
+    }
+}
 
 function initializeAddButtons() {
     const addButtons = [
@@ -745,6 +813,7 @@ function validateCurrentSection(sectionNumber) {
     const requiredFieldsBySection = {
         1: ['paciente', 'data_nascimento'],
         2: ['telefone1'],
+        3: [] // Validação customizada para responsável principal
     };
 
     let isValid = true;
@@ -759,5 +828,101 @@ function validateCurrentSection(sectionNumber) {
         }
     });
 
+    // Validação customizada para responsável principal na seção 3
+    if (sectionNumber === 3) {
+        // Limpa todos os erros antes
+        hideError('mae_nome');
+        hideError('pai_nome');
+        hideError('outro_nome');
+        const maeCheckbox = document.getElementById('mae_responsavel_principal');
+        const paiCheckbox = document.getElementById('pai_responsavel_principal');
+        const outroCheckbox = document.getElementById('outro_responsavel_principal');
+        const maeNome = document.getElementById('mae_nome');
+        const paiNome = document.getElementById('pai_nome');
+        const outroNome = document.getElementById('outro_nome');
+        if (maeCheckbox && maeCheckbox.checked) {
+            if (maeNome && !maeNome.value.trim()) {
+                showError('mae_nome', 'Por favor, informe o nome da mãe (responsável principal)');
+                isValid = false;
+            }
+        }
+        if (paiCheckbox && paiCheckbox.checked) {
+            if (paiNome && !paiNome.value.trim()) {
+                showError('pai_nome', 'Por favor, informe o nome do pai (responsável principal)');
+                isValid = false;
+            }
+        }
+        if (outroCheckbox && outroCheckbox.checked) {
+            if (outroNome && !outroNome.value.trim()) {
+                showError('outro_nome', 'Por favor, informe o nome do outro responsável (responsável principal)');
+                isValid = false;
+            }
+        }
+    }
     return isValid;
+}
+
+// ADICIONE ESTE CÓDIGO NO FINAL DO SEU ARQUIVO registro.js
+
+// Função para controlar o sidebar
+function initializeSidebar() {
+    const body = document.body;
+    const sidebar = document.getElementById('sidebar');
+    const menuButton = document.querySelector('.menu-icon');
+    let isSidebarOpen = false;
+
+    // Função para abrir/fechar sidebar
+    function toggleSidebar() {
+        isSidebarOpen = !isSidebarOpen;
+        body.classList.toggle('sidebar-open', isSidebarOpen);
+        
+        if (menuButton) {
+            menuButton.setAttribute('aria-expanded', isSidebarOpen);
+        }
+    }
+
+    // Event listener para o botão do menu
+    if (menuButton) {
+        menuButton.addEventListener('click', function(event) {
+            event.stopPropagation();
+            toggleSidebar();
+        });
+
+        menuButton.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggleSidebar();
+            }
+        });
+    }
+
+    // Fechar sidebar ao clicar fora
+    document.addEventListener('click', function(event) {
+        if (!sidebar) return;
+        
+        const clickedInsideSidebar = sidebar.contains(event.target);
+        const clickedMenuButton = event.target.closest('.menu-icon');
+
+        if (isSidebarOpen && !clickedInsideSidebar && !clickedMenuButton) {
+            isSidebarOpen = false;
+            body.classList.remove('sidebar-open');
+            
+            if (menuButton) {
+                menuButton.setAttribute('aria-expanded', 'false');
+            }
+        }
+    });
+
+    // Fechar sidebar com tecla ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && isSidebarOpen) {
+            isSidebarOpen = false;
+            body.classList.remove('sidebar-open');
+            
+            if (menuButton) {
+                menuButton.setAttribute('aria-expanded', 'false');
+                menuButton.focus();
+            }
+        }
+    });
 }
