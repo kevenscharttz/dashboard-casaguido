@@ -185,6 +185,7 @@ body {
 .main-container {
   grid-area: main;
   padding: 30px;
+  margin-top: 38px;
   overflow-y: auto;
   background-color: var(--background-light);
 }
@@ -193,13 +194,14 @@ body {
   margin-bottom: 30px;
   padding-bottom: 15px;
   border-bottom: 2px solid var(--border-light);
+  text-align: center;
 }
 
 .main-title h2 {
   color: var(--text-dark);
   font-size: 28px;
   font-weight: 600;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .main-title p {
