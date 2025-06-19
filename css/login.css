@@ -120,20 +120,6 @@ body {
   margin-bottom: 32px;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.logo-text {
-  font-size: 32px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
 .welcome-title {
   font-size: 24px;
   font-weight: 600;
@@ -458,10 +444,6 @@ body {
     padding: 32px 24px;
   }
   
-  .logo-text {
-    font-size: 28px;
-  }
-  
   .welcome-title {
     font-size: 22px;
   }
@@ -481,10 +463,6 @@ body {
 @media screen and (max-width: 480px) {
   .login-card {
     padding: 24px 20px;
-  }
-  
-  .logo-text {
-    font-size: 24px;
   }
   
   .welcome-title {
@@ -525,18 +503,5 @@ a:focus {
   .login-card {
     background: var(--white);
     border: 2px solid var(--text-dark);
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-  
-  .logo-heart {
-    animation: none;
   }
 }
