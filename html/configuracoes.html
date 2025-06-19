@@ -13,55 +13,52 @@
 <body>
     <div class="grid-container">
         <header class="header">
-            <div class="menu-icon" onclick="openSidebar()">
+            <button class="menu-icon" onclick="openSidebar()" aria-label="Abrir menu">
                 <span class="material-icons-outlined">menu</span>
-            </div>
+            </button>
             <div class="header-left">
-                <div class="logo-colored">
-                    <span style="color: red;">G</span><span style="color: #ffd700;">U</span><span style="color: blue;">I</span><span style="color: green;">D</span>O
-                </div>
+                <img src="../img/logo-nova.png" alt="Casa Guido">
             </div>
-            <div class="header-right">
+            <nav class="header-right">
                 <a href="login.html" title="Sair">
                     <span class="material-icons-outlined">logout</span>
                 </a>
-            </div>
+            </nav>
         </header>
         
         <aside id="sidebar">
-            <div class="sidebar-title">
-                <div class="sidebar-brand">
-                    <img src="../img/logo-nova.png" alt="logo casa guido">
-                </div>
-                <span class="material-icons-outlined" onclick="closeSidebar()">close</span>
-            </div>
-            <ul class="sidebar-list">
-                <li class="sidebar-list-item">
-                    <a href="../index.html">
-                        <span class="material-icons-outlined">dashboard</span> Início
-                    </a>
-                </li>
-                <li class="sidebar-list-item">
-                    <a href="registro.html">
-                        <span class="material-icons-outlined">person_add</span> Registro
-                    </a>
-                </li>
-                <li class="sidebar-list-item">
-                    <a href="pacientes.html">
-                        <span class="material-icons-outlined">people</span> Pacientes
-                    </a>
-                </li>
-                <li class="sidebar-list-item active">
-                    <a href="configuracoes.html">
-                        <span class="material-icons-outlined">settings</span> Configurações
-                    </a>
-                </li>
-                <li class="sidebar-list-item">
-                    <a href="login.html">
-                        <span class="material-icons-outlined">logout</span> Sair
-                    </a>
-                </li>
-            </ul>
+            <header class="sidebar-title">
+                <button class="material-icons-outlined" onclick="closeSidebar()" aria-label="Fechar menu">close</button>
+            </header>
+            <nav class="sidebar-list">
+                <ul>
+                    <li class="sidebar-list-item">
+                        <a href="../index.html">
+                            <span class="material-icons-outlined">dashboard</span> Início
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item">
+                        <a href="registro.html">
+                            <span class="material-icons-outlined">person_add</span> Registro
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item">
+                        <a href="pacientes.html">
+                            <span class="material-icons-outlined">people</span> Pacientes
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item active">
+                        <a href="configuracoes.html">
+                            <span class="material-icons-outlined">settings</span> Configurações
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item">
+                        <a href="login.html">
+                            <span class="material-icons-outlined">logout</span> Sair
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </aside>
         
         <main class="main-container">
