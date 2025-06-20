@@ -608,8 +608,8 @@ function createCirurgiaTemplate(count) {
     return `
         <div class="form-row">
             <div class="form-group full-width">
-                <label for="cirurgia_profissional_${count}">Profissional</label>
-                <input type="text" id="cirurgia_profissional_${count}" name="cirurgia_profissional_${count}" />
+              <label for="cirurgia_profissional_${count}">Profissional</label>
+              <input type="text" id="cirurgia_profissional_${count}" name="cirurgia_profissional_${count}" />
             </div>
             <div class="form-group">
                 <label for="cirurgia_data_${count}">Data</label>
@@ -618,11 +618,6 @@ function createCirurgiaTemplate(count) {
             <div class="form-group full-width">
                 <label for="cirurgia_tipo_${count}">Tipo</label>
                 <input type="text" id="cirurgia_tipo_${count}" name="cirurgia_tipo_${count}" />
-            </div>
-            <div class="form-group" style="align-self: flex-end;">
-                <button type="button" class="delete-item-btn" title="Excluir item">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
         </div>
     `;
