@@ -169,6 +169,68 @@
               </div>
             </div>
           </div>
+          <div class="section-title">Escolaridade</div>
+          <div class="form-card">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Frequenta Instituição de Ensino?</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="estuda_sim" name="estuda" value="sim">
+                  <label for="estuda_sim">Sim</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="estuda_nao" name="estuda" value="nao">
+                  <label for="estuda_nao">Não</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="escola-fields" style="display: none;">
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="instituicao_ensino">Nome da Instituição de Ensino</label>
+                <input type="text" id="instituicao_ensino" name="instituicao_ensino" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="municipio_ensino">Munícipio</label>
+                <input type="text" id="municipio_ensino" name="municipio_ensino" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="escolaridade_paciente">Escolaridade</label>
+                <select id="escolaridade_paciente" name="escolaridade_paciente">
+                  <option value="">Selecione</option>
+                  <option value="creche">Creche</option>
+                  <option value="pre_escola">Pré-escola</option>
+                  <option value="fundamental_anos_iniciais">Ensino Fundamental - Anos Iniciais</option>
+                  <option value="fundamental_anos_finais">Ensino Fundamental - Anos Finais</option>
+                  <option value="medio">Ensino Médio</option>
+                  <option value="tecnico">Ensino Técnico</option>
+                  <option value="superior">Ensino Superior</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Tipo de Instituição</label>
+                <div class="radio-group">
+                  <div class="radio-item">
+                    <input type="radio" id="publica" name="tipo_instituicao" value="publica">
+                    <label for="publica">Pública</label>
+                  </div>
+                  <div class="radio-item">
+                    <input type="radio" id="privada" name="tipo_instituicao" value="privada">
+                    <label for="privada">Privada</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
 
            <!-- Antiga Seção 7!!!!!!!!!!!!!! Nao sei se vai afetar o js
            <div class="form-section" id="section-7"> -->
@@ -433,7 +495,7 @@
             <div class="form-row">
               <div class="form-group full-width">
                 <label for="mae_nome" class="required">Nome Completo da Mãe</label>
-                <input type="text" id="mae_nome" name="mae_nome" required value="mae"/>
+                <input type="text" id="mae_nome" name="mae_nome" required />
                 <div class="error-message" id="mae_nome-error">Por favor, informe o nome da mãe</div>
               </div>
             </div>
@@ -484,7 +546,7 @@
 
             <div class="form-row">
               <div class="form-group">
-                <label for="mae_ocupacao">Situação Profissional</label>
+                <label for="mae_ocupacao">Ocupação</label>
                 <input type="text" id="mae_ocupacao" name="mae_ocupacao" />
               </div>
               <div class="form-group">
@@ -516,7 +578,7 @@
           <div class="form-card">
             <div class="form-row">
               <div class="checkbox-item">
-                <input type="checkbox" id="pai_responsavel_principal" name="pai_responsavel_principal" value="pai">
+                <input type="checkbox" id="pai_responsavel_principal" name="pai_responsavel_principal" value="1">
                 <label for="pai_responsavel_principal">Responsável Principal</label>
               </div>
             </div>
@@ -574,7 +636,7 @@
 
             <div class="form-row">
               <div class="form-group">
-                <label for="pai_ocupacao">Situação Profissional</label>
+                <label for="pai_ocupacao">Ocupação</label>
                 <input type="text" id="pai_ocupacao" name="pai_ocupacao" />
               </div>
               <div class="form-group">
@@ -606,7 +668,7 @@
           <div class="form-card">
             <div class="form-row">
               <div class="checkbox-item">
-                <input type="checkbox" id="tem_outro_responsavel" name="tem_outro_responsavel">
+                <input type="checkbox" id="tem_outro_responsavel" name="tem_outro_responsavel" value="1">
                 <label for="tem_outro_responsavel">Possui Outro Responsável</label>
               </div>
             </div>
@@ -679,7 +741,7 @@
 
               <div class="form-row">
                 <div class="form-group">
-                  <label for="outro_ocupacao">Situação Profissional</label>
+                  <label for="outro_ocupacao">Ocupação</label>
                   <input type="text" id="outro_ocupacao" name="outro_ocupacao" />
                 </div>
                 <div class="form-group">
@@ -1045,60 +1107,6 @@
 
             <div class="form-row">
               <div class="form-group">
-                <label>Frequenta Instituição de Ensino?</label>
-                <div class="radio-group">
-                  <div class="radio-item">
-                    <input type="radio" id="estuda_sim" name="estuda" value="sim">
-                    <label for="estuda_sim">Sim</label>
-                  </div>
-                  <div class="radio-item">
-                    <input type="radio" id="estuda_nao" name="estuda" value="nao">
-                    <label for="estuda_nao">Não</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div id="escola-fields" style="display: none;">
-              <div class="form-row">
-                <div class="form-group full-width">
-                  <label for="instituicao_ensino">Nome da Instituição de Ensino</label>
-                  <input type="text" id="instituicao_ensino" name="instituicao_ensino" />
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="escolaridade_paciente">Escolaridade</label>
-                  <select id="escolaridade_paciente" name="escolaridade_paciente">
-                    <option value="">Selecione</option>
-                    <option value="creche">Creche</option>
-                    <option value="pre_escola">Pré-escola</option>
-                    <option value="fundamental_anos_iniciais">Ensino Fundamental - Anos Iniciais</option>
-                    <option value="fundamental_anos_finais">Ensino Fundamental - Anos Finais</option>
-                    <option value="medio">Ensino Médio</option>
-                    <option value="tecnico">Ensino Técnico</option>
-                    <option value="superior">Ensino Superior</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label>Tipo de Instituição</label>
-                  <div class="radio-group">
-                    <div class="radio-item">
-                      <input type="radio" id="publica" name="tipo_instituicao" value="publica">
-                      <label for="publica">Pública</label>
-                    </div>
-                    <div class="radio-item">
-                      <input type="radio" id="privada" name="tipo_instituicao" value="privada">
-                      <label for="privada">Privada</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
                 <label for="situacao_habitacional">Situação Habitacional</label>
                 <select id="situacao_habitacional" name="situacao_habitacional">
                   <option value="">Selecione</option>
@@ -1121,8 +1129,13 @@
                 <input type="number" id="comodos" name="comodos" min="1" />
               </div>
               <div class="form-group">
-                <label for="quartos">Número de Quartos</label>
-                <input type="number" id="quartos" name="quartos" min="1" />
+                <label for="material-habitacao">Material</label>
+                <select id="material-habitacao" name="material-habitacao">
+                  <option value="">Selecione</option>
+                  <option value="madeira">Madeira</option>
+                  <option value="alvenaria">Alvenaria</option>
+                  <option value="outro">Outro</option>
+                </select>
               </div>
             </div>
           </div>
