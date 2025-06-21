@@ -587,18 +587,20 @@ function createQuimioTemplate(count) {
 
 function createRadioTemplate(count) {
     return `
-        <div class="form-row">
-            <div class="form-group full-width">
-              <label for="radio_profissional_${count}">Nome do profissiona</label>
-              <input type="text" id="radio_profissional_${count}" name="radio_profissional_${count}" />
-            </div>
-            <div class="form-group full-width">
-                <label for="radio_local_${count}">Local</label>
-                <input type="text" id="radio_local_${count}" name="radio_local_${count}" />
-            </div>
-            <div class="form-group">
-                <label for="radio_data_${count}">Data</label>
-                <input type="date" id="radio_data_${count}" name="radio_data_${count}" />
+        <div class="radio-item-form">
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label for="radio_local_${count}">Nome do profissional</label>
+                    <input type="text" id="radio_profissional_${count}" name="radio_local_${count}" />
+                </div>
+                <div class="form-group full-width">
+                    <label for="radio_local_${count}">Local</label>
+                    <input type="text" id="radio_local_${count}" name="radio_local_${count}" />
+                </div>
+                <div class="form-group">
+                    <label for="radio_data_${count}">Data</label>
+                    <input type="date" id="radio_data_${count}" name="radio_data_${count}" />
+                </div>
             </div>
         </div>
     `;
