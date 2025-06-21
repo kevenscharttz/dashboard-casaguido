@@ -671,6 +671,10 @@ function createDiagnosticoFamiliaTemplate(count) {
     return `
         <div class="form-row">
             <div class="form-group">
+                <label for="familia_${count}">Nome</label>
+                <input type="text" id="familia_${count}" name="familia_${count}" />
+            </div>
+            <div class="form-group">
                 <label for="familia_cid_${count}">CID</label>
                 <input type="text" id="familia_cid_${count}" name="familia_cid_${count}" />
             </div>
