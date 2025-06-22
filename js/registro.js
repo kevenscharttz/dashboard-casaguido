@@ -965,4 +965,83 @@ function initializeSidebar() {
             }
         }
     });
+
+function updateSummary() {
+    document.getElementById('summary-paciente').textContent = 
+        document.getElementById('paciente').value || '-';
+    
+    document.getElementById('summary-nascimento').textContent = 
+        formatDate(document.getElementById('data_nascimento').value) || '-';
+    
+    document.getElementById('summary-cpf').textContent = 
+        document.getElementById('cpf').value || '-';
+    
+    document.getElementById('summary-telefone').textContent = 
+        document.getElementById('telefone1').value || '-';
+    
+    // Endereço
+    const endereco = document.getElementById('endereco').value;
+    const numero = document.getElementById('numero').value;
+    const complemento = document.getElementById('complemento').value;
+    const bairro = document.getElementById('bairro').value;
+    const cidade = document.getElementById('cidade').value;
+    const estado = document.getElementById('estado').value;
+    
+    let enderecoCompleto = '';
+    if (endereco) enderecoCompleto += endereco;
+    if (numero) enderecoCompleto += ', ' + numero;
+    if (complemento) enderecoCompleto += ' - ' + complemento;
+    if (bairro) enderecoCompleto += ' - ' + bairro;
+    if (cidade) enderecoCompleto += ', ' + cidade;
+    if (estado) enderecoCompleto += '/' + estado;
+    
+    document.getElementById('summary-endereco').textContent = 
+        enderecoCompleto || '-';
+
+    let responsavel = '-';
+    if (document.getElementById('mae_responsavel_principal').checked) {
+        responsavel = document.getElementById('mae_nome').value + ' (Mãe)';
+    } else if (document.getElementById('pai_responsavel_principal').checked) {
+        responsavel = document.getElementById('pai_nome').value + ' (Pai)';
+    } else if (document.getElementById('outro_responsavel_principal').checked) {
+        const nome = document.getElementById('outro_nome').value;
+        const parentesco = document.getElementById('outro_parentesco').value;
+        responsavel = nome + (parentesco ? ' (' + parentesco + ')' : ' (Responsável)');
+    }
+    document.getElementById('summary-responsavel').textContent = responsavel;
+}
+
+// Função auxiliar para formatar data
+function formatDate(dateString) {
+    if (!dateString) return '';
+    
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '';
+    
+    return date.toLocaleDateString('pt-BR');
+}
+
+function showSection(sectionNumber) {
+    for (let i = 1; i <= totalSections; i++) {
+        const section = document.getElementById(`section-${i}`);
+        if (section) {
+            section.classList.remove('active');
+        }
+    }
+    
+    const activeSection = document.getElementById(`section-${sectionNumber}`);
+    if (activeSection) {
+        activeSection.classList.add('active');
+        
+        // Atualiza o resumo quando chegar na última seção
+        if (sectionNumber === totalSections) {
+            updateSummary();
+        }
+    }
+    
+    updateProgressIndicator(sectionNumber);
+    updateProgressBar(sectionNumber);
+    
+    currentSection = sectionNumber;
+}
 }
