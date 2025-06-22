@@ -1050,4 +1050,100 @@ function showSection(sectionNumber) {
     
     currentSection = sectionNumber;
 }
+
+function initializeAddButtons() {
+    const addButtons = [
+        { id: 'add-quimio', listId: 'quimio-list', className: 'quimio-item', template: createQuimioTemplate },
+        { id: 'add-radio', listId: 'radio-list', className: 'radio-item-form', template: createRadioTemplate},
+        { id: 'add-cirurgia', listId: 'cirurgia-list', className: 'cirurgia-item', template: createCirurgiaTemplate },
+        { id: 'add-diagnostico', listId: 'diagnosticos-list', className: 'diagnostico-item', template: createDiagnosticoTemplate },
+        { id: 'add-medicamento', listId: 'medicamentos-list', className: 'medicamento-item', template: createMedicamentoTemplate },
+        { id: 'add-diagnostico-familia', listId: 'diagnosticos-familia-list', className: 'diagnostico-familia-item', template: createDiagnosticoFamiliaTemplate }
+    ];
+
+    addButtons.forEach(buttonConfig => {
+        const button = document.getElementById(buttonConfig.id);
+        if (button) {
+            button.addEventListener('click', function() {
+                const list = document.getElementById(buttonConfig.listId);
+                if (!list) return;
+                
+                const count = list.querySelectorAll(`.${buttonConfig.className}`).length + 1;
+                const newItem = document.createElement('div');
+                newItem.className = buttonConfig.className;
+                newItem.innerHTML = buttonConfig.template(count);
+                list.appendChild(newItem);
+            });
+        }
+    });
+
+    // Inicializar event listeners para botões de remoção
+    initializeRemoveButtons();
+}
+
+// Função para inicializar botões de remoção usando event delegation
+function initializeRemoveButtons() {
+    // Event delegation para todos os botões de remoção
+    document.addEventListener('click', function(e) {
+        // Quimioterapia
+        if (e.target.classList.contains('btn-quimio-remove')) {
+            e.preventDefault();
+            e.stopPropagation();
+            const item = e.target.closest('.quimio-item');
+            if (item && confirm('Tem certeza que deseja remover este item de quimioterapia?')) {
+                item.remove();
+            }
+        }
+        
+        // Radioterapia
+        if (e.target.classList.contains('btn-radio-remove')) {
+            e.preventDefault();
+            e.stopPropagation();
+            const item = e.target.closest('.radio-item-form');
+            if (item && confirm('Tem certeza que deseja remover este item de radioterapia?')) {
+                item.remove();
+            }
+        }
+        
+        // Cirurgia
+        if (e.target.classList.contains('btn-cirurgia-remove')) {
+            e.preventDefault();
+            e.stopPropagation();
+            const item = e.target.closest('.cirurgia-item');
+            if (item && confirm('Tem certeza que deseja remover este item de cirurgia?')) {
+                item.remove();
+            }
+        }
+        
+        // Diagnósticos
+        if (e.target.classList.contains('btn-diag-remove')) {
+            e.preventDefault();
+            e.stopPropagation();
+            const item = e.target.closest('.diagnostico-item');
+            if (item && confirm('Tem certeza que deseja remover este diagnóstico?')) {
+                item.remove();
+            }
+        }
+        
+        // Medicamentos
+        if (e.target.classList.contains('btn-medicamento-remove')) {
+            e.preventDefault();
+            e.stopPropagation();
+            const item = e.target.closest('.medicamento-item');
+            if (item && confirm('Tem certeza que deseja remover este medicamento?')) {
+                item.remove();
+            }
+        }
+        
+        // Diagnósticos da família
+        if (e.target.classList.contains('btn-familia-remove')) {
+            e.preventDefault();
+            e.stopPropagation();
+            const item = e.target.closest('.diagnostico-familia-item');
+            if (item && confirm('Tem certeza que deseja remover este diagnóstico familiar?')) {
+                item.remove();
+            }
+        }
+    });
+}
 }
