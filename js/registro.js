@@ -571,11 +571,11 @@ function createQuimioTemplate(count) {
         <div class="form-row">
         <button type="button" class="btn-quimio-remove" style="position: absolute; top: 10px; right: 10px;">X</button>
             <div class="form-group full-width">
-              <label for="quimio_profissional_${count}">Nome do profissiona</label>
+              <label for="quimio_profissional_${count}">Nome do profissional</label>
               <input type="text" id="quimio_profissional_${count}" name="quimio_profissional_${count}" />
             </div>
             <div class="form-group full-width">
-                      <label for="radio_crm_${count}">Nome do profissiona</label>
+                      <label for="radio_crm_${count}">CRM</label>
                       <input type="text" id="radio_crm_${count}" name="radio_crm_${count}" />
                     </div>
             <div class="form-group full-width">
