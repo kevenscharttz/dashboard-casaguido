@@ -631,6 +631,10 @@ function createCirurgiaTemplate(count) {
                 <label for="cirurgia_tipo_${count}">Tipo</label>
                 <input type="text" id="cirurgia_tipo_${count}" name="cirurgia_tipo_${count}" />
             </div>
+            <div class="form-group full-width">
+                <label for="cirurgia_local_${count}">Local</label>
+                <input type="text" id="cirurgia_local_${count}" name="cirurgia_local_${count}" />
+            </div>
         </div>
     `;
 }
