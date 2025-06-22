@@ -612,9 +612,13 @@ function createCirurgiaTemplate(count) {
               <input type="text" id="cirurgia_profissional_${count}" name="cirurgia_profissional_${count}" />
             </div>
             <div class="form-group">
-                <label for="cirurgia_data_${count}">Data</label>
-                <input type="date" id="cirurgia_data_${count}" name="cirurgia_data_${count}" />
-            </div>
+                          <label for="cirurgia_inicio_${count}">Data de início</label>
+                          <input type="date" id="cirurgia_inicio_${count}" name="cirurgia_inicio_${count}" />
+                      </div>
+                      <div class="form-group">
+                          <label for="cirurgia_final_${count}">Data de finalização</label>
+                          <input type="date" id="cirurgia_final_${count}" name="cirurgia_final_${count}" />
+                      </div>
             <div class="form-group full-width">
                 <label for="cirurgia_tipo_${count}">Tipo</label>
                 <input type="text" id="cirurgia_tipo_${count}" name="cirurgia_tipo_${count}" />
