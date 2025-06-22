@@ -569,6 +569,7 @@ function initializeAddButtons() {
 function createQuimioTemplate(count) {
     return `
         <div class="form-row">
+        <button type="button" class="btn-quimio-remove" style="position: absolute; top: 10px; right: 10px;">X</button>
             <div class="form-group full-width">
               <label for="quimio_profissional_${count}">Nome do profissiona</label>
               <input type="text" id="quimio_profissional_${count}" name="quimio_profissional_${count}" />
@@ -596,6 +597,7 @@ function createQuimioTemplate(count) {
 function createRadioTemplate(count) {
     return `
             <div class="form-row">
+            <button type="button" class="btn-radio-remove" style="position: absolute; top: 10px; right: 10px;">X</button>
                 <div class="form-group full-width">
                     <label for="radio_profissional_${count}">Nome do profissional</label>
                     <input type="text" id="radio_profissional_${count}" name="radio_profissional_${count}" />
@@ -624,6 +626,7 @@ function createCirurgiaTemplate(count) {
     return `
         <div class="form-row">
             <div class="form-group full-width">
+            <button type="button" class="btn-cirurgia-remove" style="position: absolute; top: 10px; right: 10px;">X</button>
               <label for="cirurgia_profissional_${count}">Nome do profissional</label>
               <input type="text" id="cirurgia_profissional_${count}" name="cirurgia_profissional_${count}" />
             </div>
@@ -654,6 +657,7 @@ function createCirurgiaTemplate(count) {
 function createDiagnosticoTemplate(count) {
     return `
         <div class="form-row">
+        <button type="button" class="btn-diag-remove" style="position: absolute; top: 10px; right: 10px;">X</button>
             <div class="form-group">
                 <label for="nome_${count}">Nome</label>
                 <input type="text" id="nome_${count}" name="nome_${count}" />
@@ -679,6 +683,7 @@ function createDiagnosticoTemplate(count) {
 function createMedicamentoTemplate(count) {
     return `
         <div class="form-row">
+        <button type="button" class="btn-medicamento-remove" style="position: absolute; top: 10px; right: 10px;">X</button>
             <div class="form-group">
                 <label for="medicamento_nome_${count}">Nome do Medicamento</label>
                 <input type="text" id="medicamento_nome_${count}" name="medicamento_nome_${count}" />
@@ -702,6 +707,7 @@ function createMedicamentoTemplate(count) {
 function createDiagnosticoFamiliaTemplate(count) {
     return `
         <div class="form-row">
+        <button type="button" class="btn-familia-remove" style="position: absolute; top: 10px; right: 10px;">X</button>
             <div class="form-group">
                 <label for="familia_${count}">Nome</label>
                 <input type="text" id="familia_${count}" name="familia_${count}" />
