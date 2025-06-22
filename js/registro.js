@@ -597,9 +597,13 @@ function createRadioTemplate(count) {
                     <input type="text" id="radio_local_${count}" name="radio_local_${count}" />
                 </div>
                 <div class="form-group">
-                    <label for="radio_data_${count}">Data</label>
-                    <input type="date" id="radio_data_${count}" name="radio_data_${count}" />
-                </div>
+                      <label for="radio_inicio_${count}">Data de Início</label>
+                      <input type="date" id="radio_inicio_${count}" name="radio_inicio_${count}" />
+                    </div>
+                    <div class="form-group">
+                      <label for="radio_fim_${count}">Data de Finalização</label>
+                      <input type="date" id="radio_fim_${count}" name="radio_fim_${count}" />
+                    </div>
             </div>
     `;
 }
