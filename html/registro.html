@@ -258,7 +258,7 @@
                 <div class="quimio-item">
                   <div class="form-row">
                     <div class="form-group full-width">
-                      <label for="radio_profissional_1">Nome do profissiona</label>
+                      <label for="radio_profissional_1">Nome do profissional</label>
                       <input type="text" id="radio_profissional_1" name="radio_profissional_1" />
                     </div>
                     <div class="form-group full-width">
@@ -310,7 +310,7 @@
                 <div class="radio-item-form">
                   <div class="form-row">
                     <div class="form-group full-width">
-                      <label for="radio_profissional_1">Nome do profissiona</label>
+                      <label for="radio_profissional_1">Nome do profissional</label>
                       <input type="text" id="radio_profissional_1" name="radio_profissional_1" />
                     </div>
                     <div class="form-group full-width">
@@ -425,21 +425,19 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="cep" class="required">CEP</label>
-                <input type="text" id="cep" name="cep" maxlength="9" placeholder="00000-000" required />
-                <div class="error-message" id="cep-error">CEP inválido</div>
+                <input type="text" id="cep" name="cep" maxlength="9" placeholder="00000-000" />
+                <div  id="cep-error">CEP inválido</div>
               </div>
               <div class="form-group full-width">
-                <label for="endereco" class="required">Endereço</label>
-                <input type="text" id="endereco" name="endereco" required />
-                <div class="error-message" id="endereco-error">Endereço é obrigatório</div>
+                <label for="endereco">Endereço</label>
+                <input type="text" id="endereco" name="endereco" />
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group">
                 <label for="numero" class="required">Número</label>
-                <input type="text" id="numero" name="numero" required />
-                <div class="error-message" id="numero-error">Número é obrigatório</div>
+                <input type="text" id="numero" name="numero" />
               </div>
               <div class="form-group">
                 <label for="complemento">Complemento</label>
@@ -449,17 +447,16 @@
 
             <div class="form-row">
               <div class="form-group">
-                <label for="bairro" class="required">Bairro</label>
-                <input type="text" id="bairro" name="bairro" required />
-                <div class="error-message" id="bairro-error">Bairro é obrigatório</div>
+                <label for="bairro">Bairro</label>
+                <input type="text" id="bairro" name="bairro" />
               </div>
               <div class="form-group">
-                <label for="cidade" class="required">Cidade</label>
-                <input type="text" id="cidade" name="cidade" required />
-                <div class="error-message" id="cidade-error">Cidade é obrigatória</div>
+                <label for="cidade">Cidade</label>
+                <input type="text" id="cidade" name="cidade"/>
+      
               </div>
               <div class="form-group">
-                <label for="estado" class="required">Estado</label>
+                <label for="estado">Estado</label>
                 <select id="estado" name="estado" required>
                   <option value="">Selecione</option>
                   <option value="AC">Acre</option>
@@ -490,7 +487,6 @@
                   <option value="SE">Sergipe</option>
                   <option value="TO">Tocantins</option>
                 </select>
-                <div class="error-message" id="estado-error">Estado é obrigatório</div>
               </div>
             </div>
 
