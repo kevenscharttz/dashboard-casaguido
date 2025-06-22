@@ -394,8 +394,8 @@ function hideError(fieldId) {
 
 function initializeValidation() {
     const requiredFields = [
-        'paciente', 'data_nascimento', 'telefone1', 'cep', 
-        'endereco', 'numero', 'bairro', 'cidade', 'estado'
+        'paciente', 'data_nascimento', 'telefone1',
+        'cpf'
     ];
     requiredFields.forEach(field => {
         const element = document.getElementById(field);
