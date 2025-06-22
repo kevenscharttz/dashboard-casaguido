@@ -852,7 +852,7 @@ textarea:focus {
   box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
 }
 
-/* Loading states */
+
 .btn-primary:disabled,
 .btn-success:disabled {
   opacity: 0.6;
@@ -863,4 +863,37 @@ textarea:focus {
 .btn-primary:disabled:hover,
 .btn-success:disabled:hover {
   transform: none;
+}
+
+.radio-item-form {
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius-small);
+  padding: 20px;
+  margin-bottom: 15px;
+  background-color: var(--background-light);
+}
+
+
+#radio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+
+#add-radio {
+  margin-top: 15px;
+  background-color: var(--secondary-blue);
+  color: var(--primary-blue);
+  border: 1px solid var(--primary-blue-light);
+  padding: 10px 20px;
+  border-radius: var(--border-radius-small);
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+#add-radio:hover {
+  background-color: var(--primary-blue);
+  color: var(--white);
 }

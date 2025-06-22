@@ -541,7 +541,7 @@ function initializeResponsavelPrincipal() {
 function initializeAddButtons() {
     const addButtons = [
         { id: 'add-quimio', listId: 'quimio-list', className: 'quimio-item', template: createQuimioTemplate },
-        { id: 'add-radio', listId: 'radio-list', className: 'radio-item', template: createRadioTemplate },
+        { id: 'add-radio', listId: 'radio-list', className: 'radio-item-form', template: createRadioTemplate},
         { id: 'add-cirurgia', listId: 'cirurgia-list', className: 'cirurgia-item', template: createCirurgiaTemplate },
         { id: 'add-diagnostico', listId: 'diagnosticos-list', className: 'diagnostico-item', template: createDiagnosticoTemplate },
         { id: 'add-medicamento', listId: 'medicamentos-list', className: 'medicamento-item', template: createMedicamentoTemplate },
@@ -590,8 +590,8 @@ function createRadioTemplate(count) {
         <div class="radio-item-form">
             <div class="form-row">
                 <div class="form-group full-width">
-                    <label for="radio_local_${count}">Nome do profissional</label>
-                    <input type="text" id="radio_profissional_${count}" name="radio_local_${count}" />
+                    <label for="radio_profissional_${count}">Nome do profissional</label>
+                    <input type="text" id="radio_profissional_${count}" name="radio_profissional_${count}" />
                 </div>
                 <div class="form-group full-width">
                     <label for="radio_local_${count}">Local</label>
