@@ -608,7 +608,7 @@ function createCirurgiaTemplate(count) {
     return `
         <div class="form-row">
             <div class="form-group full-width">
-              <label for="cirurgia_profissional_${count}">Nome do profissiona</label>
+              <label for="cirurgia_profissional_${count}">Nome do profissional</label>
               <input type="text" id="cirurgia_profissional_${count}" name="cirurgia_profissional_${count}" />
             </div>
             <div class="form-group">
