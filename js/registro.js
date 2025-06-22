@@ -587,7 +587,6 @@ function createQuimioTemplate(count) {
 
 function createRadioTemplate(count) {
     return `
-        <div class="radio-item-form">
             <div class="form-row">
                 <div class="form-group full-width">
                     <label for="radio_profissional_${count}">Nome do profissional</label>
@@ -602,7 +601,6 @@ function createRadioTemplate(count) {
                     <input type="date" id="radio_data_${count}" name="radio_data_${count}" />
                 </div>
             </div>
-        </div>
     `;
 }
 
