@@ -113,10 +113,13 @@
                     <div id="search-help" class="sr-only">Digite o nome, prontuário ou diagnóstico do paciente</div>
                 </div>
                 <div class="action-buttons">
-                    <button class="btn-filter" id="filterBtn">
+                    <select class="btn-filter" id="filterBtn">
                         <span class="material-icons-outlined">filter_list</span>
                         Filtros
-                    </button>
+                        <option value="quimioterapia">quimioterapias</option>
+                        <option value="radioterapia">radioterapias</option>
+                        <option value="cirurgia">cirurgias</option>
+                    </select>
                     <a href="registro.html" class="btn-primary">
                         <span class="material-icons-outlined">add</span>
                         Novo Paciente
