@@ -574,6 +574,10 @@ function createQuimioTemplate(count) {
               <input type="text" id="quimio_profissional_${count}" name="quimio_profissional_${count}" />
             </div>
             <div class="form-group full-width">
+                      <label for="radio_crm_${count}">Nome do profissiona</label>
+                      <input type="text" id="radio_crm_${count}" name="radio_crm_${count}" />
+                    </div>
+            <div class="form-group full-width">
                 <label for="quimio_local_${count}">Local</label>
                 <input type="text" id="quimio_local_${count}" name="quimio_local_${count}" />
             </div>
@@ -597,6 +601,10 @@ function createRadioTemplate(count) {
                     <input type="text" id="radio_profissional_${count}" name="radio_profissional_${count}" />
                 </div>
                 <div class="form-group full-width">
+                      <label for="radio_crm_${count}">CRM</label>
+                      <input type="text" id="radio_crm_${count}" name="radio_crm_${count}" />
+                    </div>
+                <div class="form-group full-width">
                     <label for="radio_local_${count}">Local</label>
                     <input type="text" id="radio_local_${count}" name="radio_local_${count}" />
                 </div>
@@ -619,6 +627,10 @@ function createCirurgiaTemplate(count) {
               <label for="cirurgia_profissional_${count}">Nome do profissional</label>
               <input type="text" id="cirurgia_profissional_${count}" name="cirurgia_profissional_${count}" />
             </div>
+            <div class="form-group full-width">
+                        <label for="cirurgia_crm_${count}">CRM</label>
+                        <input type="text" id="cirurgia_crm_${count}" name="cirurgia_crm_${count}" />
+                      </div>
             <div class="form-group">
                           <label for="cirurgia_inicio_${count}">Data de início</label>
                           <input type="date" id="cirurgia_inicio_${count}" name="cirurgia_inicio_${count}" />
