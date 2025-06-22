@@ -691,6 +691,10 @@ function createMedicamentoTemplate(count) {
                 <label for="medicamento_frequencia_${count}">Frequência</label>
                 <input type="text" id="medicamento_frequencia_${count}" name="medicamento_frequencia_${count}" />
             </div>
+            <div class="form-group full-width">
+                <label for="medicamento_observacao_${count}">Observação</label>
+                <textarea id="medicamento_observacao_${count}" name="medicamento_observacao_${count}" rows="2"></textarea>
+            </div>
         </div>
     `;
 }
