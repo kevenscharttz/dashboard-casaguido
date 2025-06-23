@@ -657,7 +657,6 @@ function createCirurgiaTemplate(count) {
 function createDiagnosticoTemplate(count) {
     return `
         <div class="form-row">
-        <button type="button" class="btn-diag-remove-${count}">X</button>
             <div class="form-group">
                 <label for="nome_${count}">Nome</label>
                 <input type="text" id="nome_${count}" name="nome_${count}" />
