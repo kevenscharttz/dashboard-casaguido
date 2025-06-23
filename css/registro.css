@@ -523,7 +523,13 @@ select {
 .btn-secondary,
 .btn-success,
 .btn-remove,
-.btn-add {
+.btn-add,
+.btn-quimio-1,
+.btn-medicamentos-remove-1,
+.btn-quimio-remove-1,
+.btn-radio-remove-1,
+.btn-cirurgia-remove-1,
+.btn-familia-remove-1 {
   padding: 12px 24px;
   border-radius: var(--border-radius-small);
   font-size: 14px;
@@ -536,6 +542,7 @@ select {
   align-items: center;
   justify-content: center;
   min-width: 120px;
+  margin-right: 8px;
 }
 
 .btn-primary {
@@ -569,7 +576,7 @@ select {
   transform: translateY(-1px);
 }
 
-.btn-add, .btn-remove {
+.btn-add {
   background-color: var(--secondary-blue);
   color: var(--primary-blue);
   border: 1px solid var(--primary-blue-light);
@@ -584,18 +591,38 @@ select {
   color: var(--white);
 }
 
-.btn-remove {
-  background-color: var(--secondary-blue);
-  color: var(--primary-blue);
-  border: 1px solid var(--primary-blue-light);
+.btn-quimio-1, 
+.btn-medicamentos-remove-1,
+.btn-quimio-remove-1,
+.btn-radio-remove-1,
+.btn-cirurgia-remove-1,
+.btn-familia-remove-1 {
+  background-color: rgb(255, 131, 131);
+  color: rgb(216, 37, 37);
+  border: 1px solid  rgb(216, 37, 37);
   margin-top: 15px;
   min-width: auto;
   padding: 10px 20px;
   font-size: 13px;
 }
 
-.btn-remove:hover {
-  background-color: var(--primary-blue);
+.btn-quimio-1:focus,
+.btn-medicamentos-remove-1:focus,
+.btn-quimio-remove-1:focus, 
+.btn-radio-remove-1:focus,
+.btn-cirurgia-remove-1:focus,
+.btn-familia-remove-1:focus {
+  outline: 2px solid red;
+  outline-offset: 2px;
+}
+
+.btn-quimio-1:hover, 
+.btn-medicamento-remove:hover,
+.btn-quimio-remove-1:hover,
+.btn-radio-remove-1:hover,
+.btn-cirurgia-remove-1:hover,
+.btn-familia-remove-1:hover {
+  background-color: red;
   color: var(--white);
 }
 
