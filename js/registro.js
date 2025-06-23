@@ -569,7 +569,6 @@ function initializeAddButtons() {
 function createQuimioTemplate(count) {
     return `
         <div class="form-row">
-        <button type="button" class="btn-quimio-remove-${count}">X</button>
             <div class="form-group full-width">
               <label for="quimio_profissional_${count}">Nome do profissional</label>
               <input type="text" id="quimio_profissional_${count}" name="quimio_profissional_${count}" />
@@ -597,7 +596,6 @@ function createQuimioTemplate(count) {
 function createRadioTemplate(count) {
     return `
             <div class="form-row">
-            <button type="button" class="btn-radio-remove-${count}">X</button>
                 <div class="form-group full-width">
                     <label for="radio_profissional_${count}">Nome do profissional</label>
                     <input type="text" id="radio_profissional_${count}" name="radio_profissional_${count}" />
@@ -626,7 +624,6 @@ function createCirurgiaTemplate(count) {
     return `
         <div class="form-row">
             <div class="form-group full-width">
-            <button type="button" class="btn-cirurgia-remove-${count}">X</button>
               <label for="cirurgia_profissional_${count}">Nome do profissional</label>
               <input type="text" id="cirurgia_profissional_${count}" name="cirurgia_profissional_${count}" />
             </div>
@@ -682,7 +679,6 @@ function createDiagnosticoTemplate(count) {
 function createMedicamentoTemplate(count) {
     return `
         <div class="form-row">
-        <button type="button" class="btn-medicamento-remove-${count}">X</button>
             <div class="form-group">
                 <label for="medicamento_nome_${count}">Nome do Medicamento</label>
                 <input type="text" id="medicamento_nome_${count}" name="medicamento_nome_${count}" />
@@ -706,7 +702,6 @@ function createMedicamentoTemplate(count) {
 function createDiagnosticoFamiliaTemplate(count) {
     return `
         <div class="form-row">
-        <button type="button" class="btn-familia-remove-${count}">X</button>
             <div class="form-group">
                 <label for="familia_${count}">Nome</label>
                 <input type="text" id="familia_${count}" name="familia_${count}" />
