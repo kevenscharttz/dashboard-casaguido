@@ -361,7 +361,7 @@ function calculateTotalIncome() {
     
     const totalElement = document.getElementById('renda_familiar');
     if (totalElement) {
-        totalElement.value = formatMoney((total * 100).toString());
+        totalElement.value = formatMoney((total).toString());
     }
 }
 
