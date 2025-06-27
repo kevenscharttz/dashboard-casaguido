@@ -18,21 +18,21 @@ app.post('/paciente', async (req, res) => {
   const id_end = await db.insertEnderecoPaciente(dados);        // tabela endereco_paciente
   const id_pcte = await db.insertPaciente({...dados, id_end});                // tabela pacientes
   const id_esc = await db.insertEscolaridade(dados); // tabela escolaridade
-  const id_inst = await db.inst_ensino({...dados, id_esc}); // tabela instituicao_ensino
-  const id_quimio = await db.insertQuimioterapia({...dados, id_pcte});           // tabela quimioterapia
-  const id_radio = await db.insertRadioterapia({...dados, id_pcte});            // tabela radioterapia
-  const id_cirurgia = await db.insertCirurgia({...dados, id_pcte});             // tabela cirurgia
+  await db.inst_ensino({...dados, id_esc}); // tabela instituicao_ensino
+  await db.insertQuimioterapia({...dados, id_pcte});           // tabela quimioterapia
+  await db.insertRadioterapia({...dados, id_pcte});            // tabela radioterapia
+  await db.insertCirurgia({...dados, id_pcte});             // tabela cirurgia
   const id_est_civil = await db.insertEstadoCivil(dados); // tabela estado_civil
   const id_resp = await db.insertResponsavel({...dados,  id_esc, id_est_civil, id_pcte, id_end});  // tabela responsavel  
-  const id_pcte_diag = await db.insertHistoricoSaude({...dados, id_pcte});          // tabela historico saude paciente
+  await db.insertHistoricoSaude({...dados, id_pcte});          // tabela historico saude paciente
   const id_unidade = await db.insertUbsReferencia(dados);           // tabela ubs_referencia
   const id_cras = await db.insertCrasReferencia(dados);          // tabela cras_referencia
   await db.locaisHist({id_unidade, id_cras}); // tabela locais historico
-  const id_resp_diag = await db.insertHistoricoSaudeResponsavel({...dados, id_resp}); // tabela responsavel_diagnostico
-  const id_socio_eco = await db.insertSituacaoSocioEconomica({...dados, id_inst_ensino, id_pcte});  // tabela socio_economica
-  const id_adq_casa = await db.insertAdquirirCasa(dados)          // tabela Tipo da aquisição da casa
+  await db.insertHistoricoSaudeResponsavel({...dados, id_resp}); // tabela responsavel_diagnostico
+  await db.insertSituacaoSocioEconomica({...dados, id_inst_ensino, id_pcte});  // tabela socio_economica
+  const id_adq_casa = await db.insertAdquirirCasa(dados);         // tabela Tipo da aquisição da casa
   const id_caract = await db.insertCaracteristicasCasa(dados); // tabela Características da casa
-  const id_sit_hab = await db.insertSituacaoHabitacional({dados, id_caract, id_pcte, id_adq_casa}); // tabela Situação habitacional
+  await db.insertSituacaoHabitacional({dados, id_caract, id_pcte, id_adq_casa}); // tabela Situação habitacional
   res.sendStatus(201);
 });
 

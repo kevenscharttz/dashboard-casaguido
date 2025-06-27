@@ -320,7 +320,7 @@ async function insertCaracteristicasCasa(caract) {
   await client.query(sql, values);
 }
 
-async function insertSitucaoHabit(situacaoHibat, id_pcte, id_adq_casa, id_caract) {
+async function insertSituacaoHabitacional(situacaoHibat, id_pcte, id_adq_casa, id_caract) {
   const client = await connect();
   const sql = `INSERT INTO sit_habit_san (id_pcte, id_adq_casa, id_caract, 
                num_comodos, num_pessoas_casa) 
@@ -341,5 +341,5 @@ module.exports = { insertEnderecoPaciente,
                    insertEstadoCivil, insertResponsavel, insertHistoricoSaude,
                    insertUbsReferencia, insertCrasReferencia, locaisHist,
                    insertHistoricoSaudeResponsavel, insertSituacaoSocioEconomica,
-                   insertAdquirirCasa, insertCaracteristicasCasa, insertSitucaoHabit};
+                   insertAdquirirCasa, insertCaracteristicasCasa, insertSituacaoHabitacional};
 connect();
