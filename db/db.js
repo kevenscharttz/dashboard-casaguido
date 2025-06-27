@@ -37,6 +37,7 @@ async function insertEnderecoPaciente(endereco) {
     endereco.ponto_referencia
   ];
   await client.query(sql, values);
+  return id_end;
 }
 
 async function insertPaciente(paciente, id_end) {
@@ -57,6 +58,7 @@ async function insertPaciente(paciente, id_end) {
     id_end
   ];
   await client.query(sql, values);
+  return id_pcte;
 }
 
 async function insertEscolaridade(escolaridade) {
@@ -74,6 +76,7 @@ async function insertEscolaridade(escolaridade) {
   if (escolaridade.outro_escolaridade) {
     await client.query(sql, [escolaridade.outro_escolaridade]);
   }
+  return id_esc;
 }
 
 async function inst_ensino(instituicao, id_esc) {
@@ -87,6 +90,7 @@ async function inst_ensino(instituicao, id_esc) {
     instituicao.municipio_ensino
   ];
   await client.query(sql, values);
+  return id_inst_ens;
 }
 
 async function insertQuimioterapia(quimio, id_pcte) {
@@ -148,6 +152,7 @@ async function insertEstadoCivil(id_est_civil) {
   if (id_est_civil.outro_estado_civil) {
     await client.query(sql, [id_est_civil.outro_estado_civil]);
   }
+  return id_est_civil;
 }
 
 async function insertResponsavel(responsavel, id_esc, id_est_civil, id_pcte, id_end) {
@@ -155,8 +160,11 @@ async function insertResponsavel(responsavel, id_esc, id_est_civil, id_pcte, id_
   const sql = `INSERT INTO responsavel 
     (resp_principal, nome_resp, cpf_resp, rg_resp, data_nasc_resp, natur_resp, tel_cel_responsavel,
     situacao_resp, obs_resp, renda_resp, id_esc, id_est_civil, id_pcte, id_end, parent_resp) 
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`;
-  if (responsavel.mae_nome) {
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) returning id_responsavel;`;
+  
+    let id_responsavel = null;
+  
+    if (responsavel.mae_nome) {
     await client.query(sql, [
       responsavel.mae_responsavel_principal,
       responsavel.mae_nome,
@@ -174,6 +182,7 @@ async function insertResponsavel(responsavel, id_esc, id_est_civil, id_pcte, id_
       id_end,
       responsavel.mae_parentesco || null
     ]);
+    id_responsavel = result.id_responsavel;
   }
   
   if (responsavel.pai_nome) {
@@ -194,6 +203,7 @@ async function insertResponsavel(responsavel, id_esc, id_est_civil, id_pcte, id_
       id_end,
       responsavel.pai_parentesco || null
     ]);
+    id_responsavel = result.id_responsavel;
   }
   
   if (responsavel.outro_nome) {
@@ -214,7 +224,9 @@ async function insertResponsavel(responsavel, id_esc, id_est_civil, id_pcte, id_
       id_end,
       responsavel.outro_parentesco || null
     ]);
+    id_responsavel = result.id_responsavel;
   }
+  return id_responsavel;
 }
 
 async function insertHistoricoSaude(historico, id_pcte) {
@@ -234,30 +246,33 @@ async function insertHistoricoSaude(historico, id_pcte) {
     historico.medicamento_observacao_1
   ];
   await client.query(sql, values);
+  return id_pcte_diag;
 }
 
 async function insertUbsReferencia(ubs) {
   const client = await connect();
   const sql = `INSERT INTO ubs_ref (municipio_ubs_ref, bairro_ubs_ref, 
-               obs_ubs_ref) VALUES ($1, $2, $3) RETURNING id_unidade;`;
+               obs_ubs_ref) VALUES ($1, $2, $3)  RETURNING id_unidade;`;
   const values = [
     ubs.ubs_municipio,
     ubs.ubs_bairro,
     ubs.ubs_observacao
   ];
   await client.query(sql, values);
+  return id_unidade;
 }
 
 async function insertCrasReferencia(cras) {
   const client = await connect();
   const sql = `INSERT INTO cras_ref (municipio_cras_ref, bairro_cras_ref, obs_cras_ref)
-               VALUES ($1, $2, $3);`;
+               VALUES ($1, $2, $3) RETURNING id_cras;`;
   const values = [
     cras.cras_municipio,
     cras.cras_bairro,
     cras.cras_observacao,
   ];
   await client.query(sql, values);
+  return id_cras;
 }
 
 async function locaisHist(id_unidade, id_cras) {
@@ -285,6 +300,7 @@ async function insertHistoricoSaudeResponsavel(diagnostico, id_resp) {
     id_resp
   ];
   await client.query(sql, values);
+  return id_pcte_diag;
 }
 
 async function insertSituacaoSocioEconomica(situacaoEcon, id_inst_ensino, id_pcte) {
@@ -308,6 +324,7 @@ async function insertAdquirirCasa(adquiricao) {
     adquiricao.situacao_habitacional
   ];
   await client.query(sql, values);
+  return id_adq_casa;
 }
 
 async function insertCaracteristicasCasa(caract) {
@@ -318,6 +335,7 @@ async function insertCaracteristicasCasa(caract) {
     caract.material-habitacao
   ];
   await client.query(sql, values);
+  return id_caract;
 }
 
 async function insertSituacaoHabitacional(situacaoHibat, id_pcte, id_adq_casa, id_caract) {
