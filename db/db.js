@@ -53,7 +53,7 @@ async function insertPaciente(paciente, id_end) {
     paciente.rg,
     paciente.telefone1,
     paciente.telefone2,
-    contato_emergencia,
+    paciente.contato_emergencia,
     id_end
   ];
   await client.query(sql, values);
@@ -61,25 +61,25 @@ async function insertPaciente(paciente, id_end) {
 
 async function insertEscolaridade(escolaridade) {
   const client = await connect();
-  const sql = `INSERT INTO escolaridade (desc_esc) VALUES ($1) RETURNING id_escolaridade`;
+  const sql = `INSERT INTO escolaridade (desc_esc) VALUES ($1) RETURNING id_esc`;
   if (escolaridade.escolaridade_paciente) {
-    const res = await client.query(sql, [escolaridade.escolaridade_paciente]);
+    await client.query(sql, [escolaridade.escolaridade_paciente]);
   }
   if (escolaridade.mae_escolaridade) {
-    const res = await client.query(sql, [escolaridade.mae_escolaridade]);
+    await client.query(sql, [escolaridade.mae_escolaridade]);
   }
   if (escolaridade.pai_escolaridade) {
-    const res = await client.query(sql, [escolaridade.pai_escolaridade]);
+    await client.query(sql, [escolaridade.pai_escolaridade]);
   }
   if (escolaridade.outro_escolaridade) {
-    const res = await client.query(sql, [escolaridade.outro_escolaridade]);
+    await client.query(sql, [escolaridade.outro_escolaridade]);
   }
 }
 
-async function id_inst_ensino(instituicao, id_esc) {
+async function inst_ensino(instituicao, id_esc) {
   const client = await connect();
   const sql = `INSERT INTO inst_ensino (id_esc, nome_inst, tipo_inst, municipio_inst) 
-               VALUES ($1, $2, $3, $4) RETURNING id_inst_ensino`;
+               VALUES ($1, $2, $3, $4) RETURNING id_inst_ens`;
   const values = [
     id_esc,
     instituicao.instituicao_ensino,
@@ -97,23 +97,23 @@ async function insertQuimioterapia(quimio, id_pcte) {
     quimio.quimio_profissional_1,
     quimio.quimio_crm_1,
     quimio.quimio_local_1,
-    quimio.quimio_inicio_1,
-    quimio.quimio_fim_1,
+    quimio.quimio_inicio_1 || null,
+    quimio.quimio_fim_1 || null,
     id_pcte
   ]
   await client.query(sql, values);
 }
 
-async function insertradioterapia(radio, id_pcte) {
+async function insertRadioterapia(radio, id_pcte) {
   const client = await connect();
   const sql = `INSERT INTO pcte_radio (nome_prof_radio, crm_prof_radio, local_radio, 
-               data_ini, data_ultima_sessao, id_pcte) VALUES ($1, $2, $3, $4, $5);`;
+               data_ini, data_ultima_sessao, id_pcte) VALUES ($1, $2, $3, $4, $5, $6);`;
   const values = [
-    quimio.radio_profissional_1,
-    quimio.radio_crm_1,
-    quimio.radio_local_1,
-    quimio.radio_inicio_1,
-    quimio.radio_fim_1,
+    radio.radio_profissional_1,
+    radio.radio_crm_1,
+    radio.radio_local_1,
+    radio.radio_inicio_1 || null,
+    radio.radio_fim_1 || null,
     id_pcte
   ];
   await client.query(sql, values);
@@ -126,8 +126,8 @@ async function insertCirurgia(cirurgia, id_pcte) {
   const values = [
     cirurgia.cirurgia_profissional_1,
     cirurgia.cirurgia_crm_1,
-    cirurgia.cirurgia_inicio_1,
-    cirurgia.cirurgia_final_1,
+    cirurgia.cirurgia_inicio_1 || null,
+    cirurgia.cirurgia_final_1 || null,
     cirurgia.cirurgia_tipo_1,
     cirurgia.cirurgia_local_1,
     id_pcte
@@ -155,7 +155,7 @@ async function insertResponsavel(responsavel, id_esc, id_est_civil, id_pcte, id_
   const sql = `INSERT INTO responsavel 
     (resp_principal, nome_resp, cpf_resp, rg_resp, data_nasc_resp, natur_resp, tel_cel_responsavel,
     situacao_resp, obs_resp, renda_resp, id_esc, id_est_civil, id_pcte, id_end, parent_resp) 
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`;
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`;
   if (responsavel.mae_nome) {
     await client.query(sql, [
       responsavel.mae_responsavel_principal,
@@ -171,7 +171,8 @@ async function insertResponsavel(responsavel, id_esc, id_est_civil, id_pcte, id_
       id_esc,
       id_est_civil,
       id_pcte,
-      id_end
+      id_end,
+      responsavel.mae_parentesco || null
     ]);
   }
   
@@ -190,7 +191,8 @@ async function insertResponsavel(responsavel, id_esc, id_est_civil, id_pcte, id_
       id_esc,
       id_est_civil,
       id_pcte,
-      id_end
+      id_end,
+      responsavel.pai_parentesco || null
     ]);
   }
   
@@ -210,7 +212,7 @@ async function insertResponsavel(responsavel, id_esc, id_est_civil, id_pcte, id_
       id_est_civil,
       id_pcte,
       id_end,
-      responsavel.outro_parentesco
+      responsavel.outro_parentesco || null
     ]);
   }
 }
@@ -290,8 +292,8 @@ async function insertSituacaoSocioEconomica(situacaoEcon, id_inst_ensino, id_pct
   const sql = `INSERT INTO sit_socio_econo (remuneracao, bolsa_bpc, 
                id_inst_ensino, id_pcte) VALUES ($1, $2, $3, $4);`;
   const values = [
-    situacao.renda_familiar,
-    situacao.valor_bpc,
+    situacaoEcon.renda_familiar,
+    situacaoEcon.valor_bpc,
     id_inst_ensino,
     id_pcte
   ];
@@ -334,6 +336,10 @@ async function insertSitucaoHabit(situacaoHibat, id_pcte, id_adq_casa, id_caract
 }
 
 module.exports = { insertEnderecoPaciente,
-                   insertPaciente, };
-
+                   insertPaciente, insertEscolaridade, inst_ensino,
+                   insertQuimioterapia, insertRadioterapia, insertCirurgia,
+                   insertEstadoCivil, insertResponsavel, insertHistoricoSaude,
+                   insertUbsReferencia, insertCrasReferencia, locaisHist,
+                   insertHistoricoSaudeResponsavel, insertSituacaoSocioEconomica,
+                   insertAdquirirCasa, insertCaracteristicasCasa, insertSitucaoHabit};
 connect();
