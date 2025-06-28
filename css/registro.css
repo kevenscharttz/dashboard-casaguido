@@ -381,7 +381,8 @@ body {
 #medicamentos-list,
 #radio-list,
 #quimio-list,
-#cirurgia-list {
+#cirurgia-list,
+#diagnosticos-familia-list {
   position: relative;
 }
 
