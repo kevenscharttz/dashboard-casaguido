@@ -568,28 +568,35 @@ function initializeAddButtons() {
 // Templates para os itens dinâmicos
 function createQuimioTemplate(count) {
     return `
-        <div class="form-row">
-            <div class="form-group full-width">
-              <label for="quimio_profissional_${count}">Nome do profissional</label>
-              <input type="text" id="quimio_profissional_${count}" name="quimio_profissional_${count}" />
-            </div>
-            <div class="form-group full-width">
-                      <label for="radio_crm_${count}">CRM</label>
-                      <input type="text" id="radio_crm_${count}" name="radio_crm_${count}" />
-                    </div>
-            <div class="form-group full-width">
-                <label for="quimio_local_${count}">Local</label>
-                <input type="text" id="quimio_local_${count}" name="quimio_local_${count}" />
-            </div>
-            <div class="form-group">
-                        <label for="radio_inicio_${count}">Data de Início</label>
-                        <input type="date" id="radio_inicio_${count}" name="radio_inicio_${count}" />
+        <div id="quimio-list">
+                <button type="button" class="btn-quimio-remove-${count}" onclick="this.blur()">
+                  <img src="../img/cancelar.png" alt="Remover">
+                </button>
+                <div class="quimio-item">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="quimio_profissional_${count}">Nome do profissional</label>
+                      <input type="text" id="quimio_profissional_${count}" name="quimio_profissional_${count}" />
                     </div>
                     <div class="form-group">
-                        <label for="radio_fim_${count}">Data de Finalização</label>
-                        <input type="date" id="radio_fim_${count}" name="radio_fim_${count}" />
+                      <label for="quimio_crm_${count}">CRM</label>
+                      <input type="text" id="quimio_crm_${count}" name="quimio_crm_${count}" />
                     </div>
-        </div>
+                    <div class="form-group">
+                        <label for="quimio_local_${count}">Local</label>
+                        <input type="text" id="quimio_local_${count}" name="quimio_local_${count}" />
+                    </div>
+                    <div class="form-group">
+                        <label for="quimio_inicio_${count}">Data de Início</label>
+                        <input type="date" id="quimio_inicio_${count}" name="quimio_inicio_${count}" />
+                    </div>
+                    <div class="form-group">
+                        <label for="quimio_fim_${count}">Data de Finalização</label>
+                        <input type="date" id="quimio_fim_${count}" name="quimio_fim_1${count}" />
+                    </div>
+                  </div>
+                </div>
+              </div>
     `;
 }
 
