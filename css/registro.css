@@ -55,8 +55,7 @@ body {
 /* Header styles */
 .header {
   grid-area: header;
-  background-color: var(--white);
-  border-bottom: 1px solid var(--border-light);
+  background-color: var(--primary-blue);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -66,6 +65,8 @@ body {
   height: 70px;
   z-index: 100;
   box-shadow: var(--shadow-light);
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
 }
 
 .header-left {
@@ -90,7 +91,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--text-medium);
+  color: var(--background-light);
   border-radius: 50%;
   width: 36px;
   height: 36px;
@@ -112,7 +113,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--text-medium);
+  color: var(--background-light);
   margin-right: 15px;
 }
 
@@ -377,6 +378,15 @@ body {
   grid-column: 1 / -1;
 }
 
+#diagnosticos-list,
+#medicamentos-list,
+#radio-list,
+#quimio-list,
+#cirurgia-list,
+#diagnosticos-familia-list {
+  position: relative;
+}
+
 /* Labels */
 label {
   font-weight: 500;
@@ -523,13 +533,7 @@ select {
 .btn-secondary,
 .btn-success,
 .btn-remove,
-.btn-add,
-.btn-quimio-1,
-.btn-medicamentos-remove-1,
-.btn-quimio-remove-1,
-.btn-radio-remove-1,
-.btn-cirurgia-remove-1,
-.btn-familia-remove-1 {
+.btn-add {
   padding: 12px 24px;
   border-radius: var(--border-radius-small);
   font-size: 14px;
@@ -543,6 +547,32 @@ select {
   justify-content: center;
   min-width: 120px;
   margin-right: 8px;
+}
+
+.btn-quimio-1,
+.btn-medicamentos-remove-1,
+.btn-quimio-remove-1, 
+.btn-radio-remove-1,
+.btn-cirurgia-remove-1,
+.btn-familia-remove-1 {
+  position:absolute;
+  background: transparent;
+  top: 5px;
+  right: 20px;
+  border: none;
+  cursor: pointer;
+  padding: 0px;
+  border-radius: 50%;
+  transition: background 0.2s;
+  z-index: 1;
+}
+
+
+[class^="btn-"] img {
+  height: 30px;
+  width: 30px;
+  display: block;
+  pointer-events: none;
 }
 
 .btn-primary {
@@ -591,21 +621,6 @@ select {
   color: var(--white);
 }
 
-.btn-quimio-1, 
-.btn-medicamentos-remove-1,
-.btn-quimio-remove-1,
-.btn-radio-remove-1,
-.btn-cirurgia-remove-1,
-.btn-familia-remove-1 {
-  background-color: rgb(255, 131, 131);
-  color: rgb(216, 37, 37);
-  border: 1px solid  rgb(216, 37, 37);
-  margin-top: 15px;
-  min-width: auto;
-  padding: 10px 20px;
-  font-size: 13px;
-}
-
 .btn-quimio-1:focus,
 .btn-medicamentos-remove-1:focus,
 .btn-quimio-remove-1:focus, 
@@ -616,14 +631,14 @@ select {
   outline-offset: 2px;
 }
 
-.btn-quimio-1:hover, 
-.btn-medicamento-remove:hover,
-.btn-quimio-remove-1:hover,
-.btn-radio-remove-1:hover,
-.btn-cirurgia-remove-1:hover,
-.btn-familia-remove-1:hover {
-  background-color: red;
-  color: var(--white);
+.btn-quimio-1:active, 
+.btn-medicamentos-remove-1:active,
+.btn-quimio-remove-1:active,
+.btn-radio-remove-1:active,
+.btn-cirurgia-remove-1:active,
+.btn-familia-remove-1:active {
+  transform: scale(0.8); 
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3); 
 }
 
 /* Summary section */

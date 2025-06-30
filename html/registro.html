@@ -18,7 +18,7 @@
           <a href="../index.html"><img src="../img/logo-nova.png" alt="Casa Guido"></a>
         </div>
         <nav class="header-right">
-          <a href="html/login.html" title="Sair">
+          <a href="login.html" title="Sair">
             <span class="material-icons-outlined">logout</span>
           </a>
         </nav>
@@ -225,10 +225,6 @@
           </div>
         </div>
 
-
-           <!-- Antiga Seção 7!!!!!!!!!!!!!! Nao sei se vai afetar o js
-           <div class="form-section" id="section-7"> -->
-
           <div class="section-title">Quimioterapia</div>
           <div class="form-card">
             <div class="form-row">
@@ -251,15 +247,15 @@
               <div id="quimio-list">
                 <div class="quimio-item">
                   <div class="form-row">
-                    <div class="form-group full-width">
+                    <div class="form-group">
                       <label for="quimio_profissional_1">Nome do profissional</label>
                       <input type="text" id="quimio_profissional_1" name="quimio_profissional[]" />
                     </div>
-                    <div class="form-group full-width">
+                    <div class="form-group">
                       <label for="quimio_crm_1">CRM</label>
                       <input type="text" id="quimio_crm_1" name="quimio_crm[]" />
                     </div>
-                    <div class="form-group full-width">
+                    <div class="form-group">
                         <label for="quimio_local_1">Local</label>
                         <input type="text" id="quimio_local_1" name="quimio_local[]" />
                     </div>
@@ -274,13 +270,10 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn-add" id="add-quimio">+ Adicionar Outra Quimioterapia</button>
-              <button type="button" class="btn-quimio-remove-1">X</button>
+              <button type="button" class="btn-add" id="add-quimio" onclick="this.blur()">+ Adicionar Outra Quimioterapia</button> 
             </div>
           </div>
-
-        <!-- Antiga Seção 8!!!!!!!!!!!!!! Nao sei se vai afetar o js
-           <div class="form-section" id="section-8"> -->
+          
           <div class="section-title">Radioterapia</div>
 
           <div class="form-card">
@@ -304,15 +297,15 @@
               <div id="radio-list">
                 <div class="radio-item-form">
                   <div class="form-row">
-                    <div class="form-group full-width">
+                    <div class="form-group">
                       <label for="radio_profissional_1">Nome do profissional</label>
                       <input type="text" id="radio_profissional_1" name="radio_profissional[]" />
                     </div>
-                    <div class="form-group full-width">
+                    <div class="form-group">
                       <label for="radio_crm_1">CRM</label>
                       <input type="text" id="radio_crm_1" name="radio_crm[]" />
                     </div>
-                    <div class="form-group full-width">
+                    <div class="form-group">
                       <label for="radio_local_1">Local</label>
                       <input type="text" id="radio_local_1" name="radio_local[]" />
                     </div>
@@ -327,13 +320,10 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn-add" id="add-radio">+ Adicionar Outra Radioterapia</button>
-              <button type="button" class="btn-radio-remove-1">X</button>
+              <button type="button" class="btn-add" id="add-radio" onclick="this.blur()">+ Adicionar Outra Radioterapia</button>
             </div>
           </div>
-
-          <!-- Antiga Seção 9!!!!!!!!!!!!!! Nao sei se vai afetar o js
-          <div class="form-section" id="section-9"> -->
+          
             <div class="section-title">Cirurgia</div>
 
             <div class="form-card">
@@ -384,8 +374,7 @@
                     </div>
                   </div>
                 </div>
-                <button type="button" class="btn-add" id="add-cirurgia">+ Adicionar Outra Cirurgia</button>
-                <button type="button" class="btn-cirurgia-remove-1">X</button>
+                <button type="button" class="btn-add" id="add-cirurgia" onclick="this.blur()">+ Adicionar Outra Cirurgia</button>
               </div>
             </div>
 
@@ -597,8 +586,6 @@
             </div>
           </div>
 
-        <!-- Antiga Seção 4!!!!!!!!!!!!!! Nao sei se vai afetar o js
-        <div class="form-section" id="section-4">-->
           <div class="section-title">Dados do Pai</div>
 
           <div class="form-card">
@@ -692,9 +679,7 @@
               </div>
             </div>
           </div>
-
-        <!-- Antiga Seção 5!!!!!!!!!!!!!! Nao sei se vai afetar o js
-        <div class="form-section" id="section-5">-->
+          
           <div class="section-title">Outro Responsável</div>
 
           <div class="form-card">
@@ -811,9 +796,6 @@
           </div>
         </div>
 
-        <!-- Antiga Seção 10: Histórico de Saúde!!!!!!!!!!!!!! Nao sei se vai afetar o js
-        <div class="form-section" id="section-10">-->
-
         <!-- Seção 4: Histórico de Saúde -->
         <div class="form-section" id="section-4">
           <div class="section-title">Histórico de Saúde do Paciente</div>
@@ -844,8 +826,7 @@
                 </div>
               </div>
             </div>
-            <button type="button" class="btn-add" id="add-diagnostico">+ Adicionar Diagnóstico</button>
-            <button type="button" class="btn-quimio-1">X</button>
+            <button type="button" class="btn-add" id="add-diagnostico" onclick="this.blur()">+ Adicionar Diagnóstico</button>
 
             <div class="subsection-title">Medicamentos de Uso Contínuo</div>
             <div class="form-row">
@@ -887,8 +868,7 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn-add" id="add-medicamento">+ Adicionar Medicamento</button>
-              <button type="button" class="btn-medicamentos-remove-1">X</button>
+              <button type="button" class="btn-add" id="add-medicamento" onclick="this.blur()">+ Adicionar Medicamento</button>
             </div>
 
             <div class="subsection-title">UBS de Referência</div>
@@ -934,9 +914,6 @@
           </div>
         </div>
 
-        <!-- Antiga Seção 11: Histórico Familiar!!!!!!!!!!!!!! Nao sei se vai afetar o js
-        <div class="form-section" id="section-11">-->
-
         <!-- Seção 5: Histórico Familiar -->
         <div class="form-section" id="section-5">
           <div class="section-title">Histórico Familiar de Saúde</div>
@@ -973,8 +950,7 @@
                 </div>
               </div>
             </div>
-            <button type="button" class="btn-add" id="add-diagnostico-familia">+ Adicionar Diagnóstico Familiar</button>
-            <button type="button" class="btn-familia-remove-1">X</button>
+            <button type="button" class="btn-add" id="add-diagnostico-familia" onclick="this.blur()">+ Adicionar Diagnóstico Familiar</button>
           </div>
 
           <div class="button-row">
@@ -1056,9 +1032,6 @@
             <button type="button" class="btn-primary" id="btn-next-6">Próximo</button>
           </div>
         </div>
-
-        <!-- Antiga Seção 12: Finalizar!!!!!!!!!!!!!! Nao sei se vai afetar o js
-        <div class="form-section" id="section-12">-->
 
         <!-- Seção 7: Finalizar -->
         <div class="form-section" id="section-7">

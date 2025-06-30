@@ -56,8 +56,7 @@ body {
 /* Header styles */
 .header {
   grid-area: header;
-  background-color: var(--white);
-  border-bottom: 1px solid var(--border-light);
+  background-color: var(--primary-blue);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -67,6 +66,8 @@ body {
   height: var(--header-height);
   z-index: 100;
   box-shadow: var(--shadow-light);
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
 }
 
 .header-left {
@@ -90,7 +91,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--text-medium);
+  color: var(--background-light);
   border-radius: 50%;
   width: 36px;
   height: 36px;
@@ -112,7 +113,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--text-medium);
+  color: var(--background-light);
   margin-right: 15px;
 }
 
