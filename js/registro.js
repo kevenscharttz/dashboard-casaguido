@@ -911,7 +911,7 @@ function goToStep(stepNumber) {
 function validateCurrentSection(sectionNumber) {
     // Defina os campos obrigatórios de cada seção
     const requiredFieldsBySection = {
-        1: ['paciente', 'data_nascimento'],
+        1: ['paciente', 'data_nascimento', 'cpf'],
         2: ['telefone1'],
         3: [] // Validação customizada para responsável principal
     };
