@@ -558,10 +558,10 @@ function initializeAddButtons() {
                 const list = document.getElementById(buttonConfig.listId);
                 if (!list) return;
                 
-                const count = list.querySelectorAll(`.${buttonConfig.className}`).length + 1;
                 const wrapper = document.createElement('div');
                 wrapper.style.position = 'relative';
-                wrapper.innerHTML = buttonConfig.template(count);
+                // Adicione esta linha para inserir o HTML do template
+                wrapper.innerHTML = buttonConfig.template();
                 list.appendChild(wrapper);
             });
         }
@@ -570,158 +570,158 @@ function initializeAddButtons() {
 
 // Templates para os itens dinâmicos
 
-function createQuimioTemplate(count) {
+function createQuimioTemplate() {
     return `
-        <button type="button" class="btn-quimio-remove-${count}" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
+        <button type="button" class="btn-quimio-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
             <img src="../img/cancelar.png" alt="Remover">
         </button>
         <div class="quimio-item">
             <div class="form-row">
                 <div class="form-group">
-                    <label for="quimio_profissional_${count}">Nome do profissional</label>
-                    <input type="text" id="quimio_profissional_${count}" name="quimio_profissional_${count}" />
+                    <label>Nome do profissional</label>
+                    <input type="text" name="quimio_profissional[]" />
                 </div>
                 <div class="form-group">
-                    <label for="quimio_crm_${count}">CRM</label>
-                    <input type="text" id="quimio_crm_${count}" name="quimio_crm_${count}" />
+                    <label>CRM</label>
+                    <input type="text" name="quimio_crm[]" />
                 </div>
                 <div class="form-group">
-                    <label for="quimio_local_${count}">Local</label>
-                    <input type="text" id="quimio_local_${count}" name="quimio_local_${count}" />
+                    <label>Local</label>
+                    <input type="text" name="quimio_local[]" />
                 </div>
                 <div class="form-group">
-                    <label for="quimio_inicio_${count}">Data de Início</label>
-                    <input type="date" id="quimio_inicio_${count}" name="quimio_inicio_${count}" />
+                    <label>Data de Início</label>
+                    <input type="date" name="quimio_inicio[]" />
                 </div>
                 <div class="form-group">
-                    <label for="quimio_fim_${count}">Data de Finalização</label>
-                    <input type="date" id="quimio_fim_${count}" name="quimio_fim_${count}" />
+                    <label>Data de Finalização</label>
+                    <input type="date" name="quimio_fim[]" />
                 </div>
             </div>
         </div>
     `;
 }
 
-function createRadioTemplate(count) {
+function createRadioTemplate() {
     return `
-        <button type="button" class="btn-radio-remove-${count}" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
+        <button type="button" class="btn-radio-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
             <img src="../img/cancelar.png" alt="Remover">
         </button>
         <div class="radio-item-form">
             <div class="form-row">
                 <div class="form-group full-width">
-                    <label for="radio_profissional_${count}">Nome do profissional</label>
-                    <input type="text" id="radio_profissional_${count}" name="radio_profissional_${count}" />
+                    <label>Nome do profissional</label>
+                    <input type="text" name="radio_profissional[]" />
                 </div>
                 <div class="form-group full-width">
-                    <label for="radio_crm_${count}">CRM</label>
-                    <input type="text" id="radio_crm_${count}" name="radio_crm_${count}" />
+                    <label>CRM</label>
+                    <input type="text" name="radio_crm[]" />
                 </div>
                 <div class="form-group full-width">
-                    <label for="radio_local_${count}">Local</label>
-                    <input type="text" id="radio_local_${count}" name="radio_local_${count}" />
+                    <label>Local</label>
+                    <input type="text" name="radio_local[]" />
                 </div>
                 <div class="form-group">
-                    <label for="radio_inicio_${count}">Data de Início</label>
-                    <input type="date" id="radio_inicio_${count}" name="radio_inicio_${count}" />
+                    <label>Data de Início</label>
+                    <input type="date" name="radio_inicio[]" />
                 </div>
                 <div class="form-group">
-                    <label for="radio_fim_${count}">Data de Finalização</label>
-                    <input type="date" id="radio_fim_${count}" name="radio_fim_${count}" />
+                    <label>Data de Finalização</label>
+                    <input type="date" name="radio_fim[]" />
                 </div>
             </div>
         </div>
     `;
 }
 
-function createCirurgiaTemplate(count) {
+function createCirurgiaTemplate() {
     return `
-        <button type="button" class="btn-cirurgia-remove-${count}" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
+        <button type="button" class="btn-cirurgia-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
             <img src="../img/cancelar.png" alt="Remover">
         </button>
         <div class="cirurgia-item">
             <div class="form-row">
                 <div class="form-group full-width">
-                    <label for="cirurgia_profissional_${count}">Nome do profissional</label>
-                    <input type="text" id="cirurgia_profissional_${count}" name="cirurgia_profissional_${count}" />
+                    <label>Nome do profissional</label>
+                    <input type="text" name="cirurgia_profissional[]" />
                 </div>
                 <div class="form-group full-width">
-                    <label for="cirurgia_crm_${count}">CRM</label>
-                    <input type="text" id="cirurgia_crm_${count}" name="cirurgia_crm_${count}" />
+                    <label>CRM</label>
+                    <input type="text" name="cirurgia_crm[]" />
                 </div>
                 <div class="form-group">
-                    <label for="cirurgia_inicio_${count}">Data de início</label>
-                    <input type="date" id="cirurgia_inicio_${count}" name="cirurgia_inicio_${count}" />
+                    <label>Data de início</label>
+                    <input type="date" name="cirurgia_inicio[]" />
                 </div>
                 <div class="form-group">
-                    <label for="cirurgia_final_${count}">Data de finalização</label>
-                    <input type="date" id="cirurgia_final_${count}" name="cirurgia_final_${count}" />
+                    <label>Data de finalização</label>
+                    <input type="date" name="cirurgia_fim[]" />
                 </div>
                 <div class="form-group full-width">
-                    <label for="cirurgia_tipo_${count}">Tipo</label>
-                    <input type="text" id="cirurgia_tipo_${count}" name="cirurgia_tipo_${count}" />
+                    <label>Tipo</label>
+                    <input type="text" name="cirurgia_tipo[]" />
                 </div>
                 <div class="form-group full-width">
-                    <label for="cirurgia_local_${count}">Local</label>
-                    <input type="text" id="cirurgia_local_${count}" name="cirurgia_local_${count}" />
+                    <label>Local</label>
+                    <input type="text" name="cirurgia_local[]" />
                 </div>
             </div>
         </div>
     `;
 }
 
-function createDiagnosticoTemplate(count) {
+function createMedicamentoTemplate() {
     return `
-        <button type="button" class="btn-quimio-1" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
-            <img src="../img/cancelar.png" alt="Remover">
-        </button>
-        <div class="diagnostico-item">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="nome_${count}">Nome</label>
-                    <input type="text" id="nome_${count}" name="nome_${count}" />
-                </div>
-                <div class="form-group">
-                    <label for="cid_${count}">CID</label>
-                    <input type="text" id="cid_${count}" name="cid_${count}" />
-                </div>
-                <div class="form-group full-width">
-                    <label for="descricao_${count}">Descrição</label>
-                    <input type="text" id="descricao_${count}" name="descricao_${count}" />
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group full-width">
-                    <label for="observacao_${count}">Observação</label>
-                    <textarea id="observacao_${count}" name="observacao_${count}" rows="2"></textarea>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-function createMedicamentoTemplate(count) {
-    return `
-        <button type="button" class="btn-medicamentos-remove-${count}" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
+        <button type="button" class="btn-medicamentos-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
             <img src="../img/cancelar.png" alt="Remover">
         </button>
         <div class="medicamento-item">
             <div class="form-row">
                 <div class="form-group">
-                    <label for="medicamento_nome_${count}">Nome do Medicamento</label>
-                    <input type="text" id="medicamento_nome_${count}" name="medicamento_nome_${count}" />
+                    <label>Nome do Medicamento</label>
+                    <input type="text" name="medicamento_nome[]" />
                 </div>
                 <div class="form-group">
-                    <label for="medicamento_dosagem_${count}">Dosagem</label>
-                    <input type="text" id="medicamento_dosagem_${count}" name="medicamento_dosagem_${count}" />
+                    <label>Dosagem</label>
+                    <input type="text" name="medicamento_dosagem[]" />
                 </div>
                 <div class="form-group">
-                    <label for="medicamento_frequencia_${count}">Frequência</label>
-                    <input type="text" id="medicamento_frequencia_${count}" name="medicamento_frequencia_${count}" />
+                    <label>Frequência</label>
+                    <input type="text" name="medicamento_frequencia[]" />
                 </div>
                 <div class="form-group full-width">
-                    <label for="medicamento_observacao_${count}">Observação</label>
-                    <textarea id="medicamento_observacao_${count}" name="medicamento_observacao_${count}" rows="2"></textarea>
+                    <label>Observação</label>
+                    <textarea name="medicamento_observacao[]"></textarea>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function createDiagnosticoTemplate() {
+    return `
+        <button type="button" class="btn-diagnostico-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
+            <img src="../img/cancelar.png" alt="Remover">
+        </button>
+        <div class="diagnostico-item">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" name="nome[]" />
+                </div>
+                <div class="form-group">
+                    <label>CID</label>
+                    <input type="text" name="cid[]" />
+                </div>
+                <div class="form-group full-width">
+                    <label>Descrição</label>
+                    <input type="text" name="descricao[]" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label>Observação</label>
+                    <textarea name="observacao[]"></textarea>
                 </div>
             </div>
         </div>

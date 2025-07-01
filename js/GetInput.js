@@ -32,6 +32,31 @@ form.addEventListener('submit', async (event) => {
     local: formData.getAll('cirurgia_local[]')
   };
 
+  // Diagnósticos Familiares
+  data.diagnosticosFamiliares = {
+    nome: formData.getAll('familia[]'),
+    cid: formData.getAll('familia_cid[]'),
+    parentesco: formData.getAll('familia_parentesco[]'),
+    descricao: formData.getAll('familia_descricao[]'),
+    observacao: formData.getAll('familia_observacao[]')
+  };
+
+  // Diagnósticos do paciente
+  data.diagnosticos = {
+    nome: formData.getAll('nome[]'),
+    cid: formData.getAll('cid[]'),
+    descricao: formData.getAll('descricao[]'),
+    observacao: formData.getAll('observacao[]')
+  };
+
+  // Monta o array de medicamentos
+  data.medicamentos = {
+    nome: formData.getAll('medicamento_nome[]'),
+    dosagem: formData.getAll('medicamento_dosagem[]'),
+    frequencia: formData.getAll('medicamento_frequencia[]'),
+    observacao: formData.getAll('medicamento_observacao_[]')
+  };
+
   // Conversão dos campos de dinheiro para inteiro, sem o R$ e sem vírgulas
   const moneyFields = ['mae_salario', 'pai_salario', 'outro_salario', 'valor_bpc', 'renda_familiar'];
   moneyFields.forEach(field => {
