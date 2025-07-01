@@ -568,6 +568,22 @@ function initializeAddButtons() {
     });
 }
 
+(function injectFocusStyle() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .btn-diagnostico-remove:focus,
+        .btn-medicamentos-remove:focus,
+        .btn-quimio-remove:focus, 
+        .btn-radio-remove:focus,
+        .btn-cirurgia-remove:focus,
+        .btn-familia-remove:focus {
+            outline: 2px solid red;
+            outline-offset: 2px;
+        }
+    `;
+    document.head.appendChild(style);
+})();
+
 // Templates para os itens dinâmicos
 
 function createQuimioTemplate() {
@@ -609,15 +625,15 @@ function createRadioTemplate() {
         </button>
         <div class="radio-item-form">
             <div class="form-row">
-                <div class="form-group full-width">
+                <div class="form-group">
                     <label>Nome do profissional</label>
                     <input type="text" name="radio_profissional[]" />
                 </div>
-                <div class="form-group full-width">
+                <div class="form-group">
                     <label>CRM</label>
                     <input type="text" name="radio_crm[]" />
                 </div>
-                <div class="form-group full-width">
+                <div class="form-group">
                     <label>Local</label>
                     <input type="text" name="radio_local[]" />
                 </div>
@@ -641,11 +657,11 @@ function createCirurgiaTemplate() {
         </button>
         <div class="cirurgia-item">
             <div class="form-row">
-                <div class="form-group full-width">
+                <div class="form-group">
                     <label>Nome do profissional</label>
                     <input type="text" name="cirurgia_profissional[]" />
                 </div>
-                <div class="form-group full-width">
+                <div class="form-group">
                     <label>CRM</label>
                     <input type="text" name="cirurgia_crm[]" />
                 </div>
@@ -657,11 +673,11 @@ function createCirurgiaTemplate() {
                     <label>Data de finalização</label>
                     <input type="date" name="cirurgia_fim[]" />
                 </div>
-                <div class="form-group full-width">
+                <div class="form-group">
                     <label>Tipo</label>
                     <input type="text" name="cirurgia_tipo[]" />
                 </div>
-                <div class="form-group full-width">
+                <div class="form-group">
                     <label>Local</label>
                     <input type="text" name="cirurgia_local[]" />
                 </div>
@@ -730,7 +746,7 @@ function createDiagnosticoTemplate() {
 
 function createDiagnosticoFamiliaTemplate(count) {
     return `
-        <button type="button" class="btn-familia-remove-${count}" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
+        <button type="button" class="btn-familia-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
             <img src="../img/cancelar.png" alt="Remover">
         </button>
         <div class="diagnostico-familia-item">
