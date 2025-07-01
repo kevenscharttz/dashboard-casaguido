@@ -580,6 +580,16 @@ function initializeAddButtons() {
             outline: 2px solid red;
             outline-offset: 2px;
         }
+
+        .btn-diagnostico-remove:active,
+        .btn-medicamentos-remove:active,
+        .btn-quimio-remove:active, 
+        .btn-radio-remove:active,
+        .btn-cirurgia-remove:active,
+        .btn-familia-remove:active {
+            transform: scale(0.8); 
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+        }
     `;
     document.head.appendChild(style);
 })();
