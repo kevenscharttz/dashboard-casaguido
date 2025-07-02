@@ -104,6 +104,18 @@ app.get('/pacientes/busca', async (req, res) => {
   }
 });
 
+// Rota para deletar paciente
+app.delete('/paciente/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    await db.deletarPaciente(id);
+    res.sendStatus(204); // No Content
+  } catch (error) {
+    console.error('Erro ao deletar paciente:', error);
+    res.status(500).json({ erro: 'Erro ao deletar paciente' });
+  }
+});
+
 // Exemplo de rota para index.html na raiz:
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

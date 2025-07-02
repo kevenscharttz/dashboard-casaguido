@@ -178,7 +178,7 @@ function renderizarPacientes() {
                     <button class="action-btn" title="Exportar PDF">
                         <span class="material-icons-outlined">picture_as_pdf</span>
                     </button>
-                    <button class="action-btn" title="Excluir paciente">
+                    <button class="action-btn btn-delete-paciente" title="Excluir paciente" data-id="${paciente.prontuario}" data-nome="${paciente.nome}">
                         <span class="material-icons-outlined">delete</span>
                     </button>
                 </div>
@@ -186,7 +186,7 @@ function renderizarPacientes() {
         `;
         tbody.appendChild(tr);
     });
-    // Adiciona evento ao botão de edição após renderizar
+    // Evento botão editar
     tbody.querySelectorAll('button[title="Editar dados"]').forEach(btn => {
         btn.addEventListener('click', function() {
             const id = btn.getAttribute('data-id');
@@ -195,7 +195,63 @@ function renderizarPacientes() {
             }
         });
     });
+    // Evento botão apagar
+    tbody.querySelectorAll('.btn-delete-paciente').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = btn.getAttribute('data-id');
+            const nome = btn.getAttribute('data-nome') || '';
+            mostrarModalConfirmacao(id, nome);
+        });
+    });
     atualizarPaginacao(pacientesData.length);
+}
+
+// Modal de confirmação de exclusão
+function mostrarModalConfirmacao(id, nome) {
+    let modal = document.getElementById('modal-confirm-delete');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modal-confirm-delete';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100vw';
+        modal.style.height = '100vh';
+        modal.style.background = 'rgba(0,0,0,0.4)';
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        modal.style.zIndex = '9999';
+        modal.innerHTML = `
+            <div style="background:#fff;padding:32px 24px;border-radius:8px;max-width:90vw;min-width:320px;box-shadow:0 2px 16px #0002;text-align:center;">
+                <h2 style="margin-bottom:16px;font-size:1.2rem;">Confirmar exclusão</h2>
+                <p id="modal-delete-msg" style="margin-bottom:24px;"></p>
+                <button id="btn-cancel-delete" style="margin-right:16px;padding:8px 18px;">Cancelar</button>
+                <button id="btn-confirm-delete" style="background:#c00;color:#fff;padding:8px 18px;">Apagar</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    } else {
+        modal.style.display = 'flex';
+    }
+    document.getElementById('modal-delete-msg').textContent = `Deseja realmente apagar o paciente "${nome}"? Esta ação não poderá ser desfeita.`;
+    document.getElementById('btn-cancel-delete').onclick = () => { modal.style.display = 'none'; };
+    document.getElementById('btn-confirm-delete').onclick = async () => {
+        await apagarPaciente(id, modal);
+    };
+}
+
+async function apagarPaciente(id, modal) {
+    try {
+        const resp = await fetch(`/paciente/${id}`, { method: 'DELETE' });
+        if (!resp.ok) throw new Error('Erro ao apagar paciente');
+        modal.style.display = 'none';
+        carregarPacientes();
+        alert('Paciente apagado com sucesso!');
+    } catch (err) {
+        alert('Erro ao apagar paciente.');
+        modal.style.display = 'none';
+    }
 }
 
 // Função para buscar e renderizar pacientes reais

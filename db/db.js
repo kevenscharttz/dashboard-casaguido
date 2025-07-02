@@ -602,6 +602,27 @@ async function buscarPacientes(termo) {
   }
 }
 
+async function deletarPaciente(id) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    // Remove todas as dependências antes do paciente
+    await client.query('DELETE FROM pcte_diag WHERE id_pcte = $1', [id]);
+    await client.query('DELETE FROM cirurgia WHERE id_pcte = $1', [id]);
+    await client.query('DELETE FROM pcte_quimio WHERE id_pcte = $1', [id]);
+    await client.query('DELETE FROM pcte_radio WHERE id_pcte = $1', [id]);
+    await client.query('DELETE FROM resp_diag WHERE id_pcte = $1', [id]);
+    await client.query('DELETE FROM sit_socio_econo WHERE id_pcte = $1', [id]);
+    await client.query('DELETE FROM responsavel WHERE id_pcte = $1', [id]);
+    await client.query('DELETE FROM sit_habit_san WHERE id_pcte = $1', [id]);
+    // Por fim, remove o paciente
+    await client.query('DELETE FROM paciente WHERE id_pcte = $1', [id]);
+    return true;
+  } finally {
+    client.release();
+  }
+}
+
 module.exports = { insertEnderecoPaciente,
                    insertPaciente, insertEscolaridade, inst_ensino,
                    insertQuimioterapia, insertRadioterapia, insertCirurgia,
@@ -614,5 +635,7 @@ module.exports = { insertEnderecoPaciente,
                    getCadastrosHoje,
                    getCadastrosSemana,
                    getUltimosPacientes,
-                   buscarPacientes};
+                   buscarPacientes,
+                   deletarPaciente
+};
 connect();
