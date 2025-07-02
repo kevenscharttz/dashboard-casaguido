@@ -489,11 +489,65 @@ async function insertSituacaoHabitacional(situacaoHibat, id_pcte, id_adq_casa, i
   }
 }
 
+async function getPacientes() {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    // Busca pacientes, diagnóstico principal e data do último tratamento (fim mais recente de quimio, radio ou cirurgia)
+    const sql = `SELECT p.id_pcte as prontuario, p.nome_pcte as nome, p.cpf_pcte as cpf, p.data_nasc_pcte,
+                        (SELECT nome_diag FROM pcte_diag d WHERE d.id_pcte = p.id_pcte ORDER BY d.id_pcte_diag ASC LIMIT 1) as diagnostico,
+                        GREATEST(
+                          COALESCE((SELECT MAX(data_ultima_sessao) FROM pcte_quimio q WHERE q.id_pcte = p.id_pcte), '1900-01-01'),
+                          COALESCE((SELECT MAX(data_ultima_sessao) FROM pcte_radio r WHERE r.id_pcte = p.id_pcte), '1900-01-01'),
+                          COALESCE((SELECT MAX(data_fim_cirurgia) FROM cirurgia c WHERE c.id_pcte = p.id_pcte), '1900-01-01')
+                        ) as ultimo_tratamento
+                 FROM paciente p ORDER BY p.id_pcte DESC`;
+    const result = await client.query(sql);
+    const pacientes = result.rows.map(row => {
+      let idade = '';
+      if (row.data_nasc_pcte) {
+        const nasc = new Date(row.data_nasc_pcte);
+        const hoje = new Date();
+        let anos = hoje.getFullYear() - nasc.getFullYear();
+        const m = hoje.getMonth() - nasc.getMonth();
+        if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) anos--;
+        if (anos < 1) {
+          let meses = (hoje.getFullYear() - nasc.getFullYear()) * 12 + (hoje.getMonth() - nasc.getMonth());
+          if (hoje.getDate() < nasc.getDate()) meses--;
+          meses = Math.max(meses, 0);
+          idade = meses + (meses === 1 ? ' mês' : ' meses');
+        } else {
+          idade = anos + (anos === 1 ? ' ano' : ' anos');
+        }
+      }
+      let ultimo_tratamento = '';
+      if (row.ultimo_tratamento && row.ultimo_tratamento.toISOString) {
+        const data = new Date(row.ultimo_tratamento);
+        if (data.getFullYear() > 1900) {
+          ultimo_tratamento = data.toLocaleDateString('pt-BR');
+        }
+      }
+      return {
+        prontuario: row.prontuario,
+        nome: row.nome,
+        cpf: row.cpf,
+        idade,
+        diagnostico: row.diagnostico || '',
+        ultimo_tratamento,
+      };
+    });
+    return pacientes;
+  } finally {
+    client.release();
+  }
+}
+
 module.exports = { insertEnderecoPaciente,
                    insertPaciente, insertEscolaridade, inst_ensino,
                    insertQuimioterapia, insertRadioterapia, insertCirurgia,
                    insertEstadoCivil, insertResponsavel, insertHistoricoSaude,
                    insertUbsReferencia, insertCrasReferencia, locaisHist,
                    insertHistoricoSaudeResponsavel, insertSituacaoSocioEconomica,
-                   insertAdquirirCasa, insertCaracteristicasCasa, insertSituacaoHabitacional};
+                   insertAdquirirCasa, insertCaracteristicasCasa, insertSituacaoHabitacional,
+                   getPacientes};
 connect();

@@ -43,6 +43,16 @@ app.post('/paciente', async (req, res) => {
   res.sendStatus(201);
 });
 
+app.get('/pacientes', async (req, res) => {
+  try {
+    const pacientes = await db.getPacientes();
+    res.json(pacientes);
+  } catch (error) {
+    console.error('Erro ao buscar pacientes:', error);
+    res.status(500).json({ erro: 'Erro ao buscar pacientes' });
+  }
+});
+
 // Exemplo de rota para index.html na raiz:
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
