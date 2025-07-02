@@ -54,7 +54,7 @@ async function insertPaciente(paciente, id_end) {
       paciente.cartao_sus || null, 
       paciente.rg || null,
       paciente.telefone1,
-      paciente.telefone2 || null,
+      paciente.telefone2 || paciente.telefone1,
       paciente.contato_emergencia || null,
       id_end
     ];
