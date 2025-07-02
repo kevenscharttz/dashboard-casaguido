@@ -93,6 +93,17 @@ app.get('/dashboard/ultimos-pacientes', async (req, res) => {
   }
 });
 
+// Endpoint de busca de pacientes por nome ou CPF
+app.get('/pacientes/busca', async (req, res) => {
+  const termo = req.query.q || '';
+  try {
+    const pacientes = await db.buscarPacientes(termo);
+    res.json(pacientes);
+  } catch (error) {
+    res.status(500).json({ erro: 'Erro ao buscar pacientes' });
+  }
+});
+
 // Exemplo de rota para index.html na raiz:
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

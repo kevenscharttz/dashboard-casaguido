@@ -586,6 +586,22 @@ async function getUltimosPacientes() {
   }
 }
 
+async function buscarPacientes(termo) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    const sql = `SELECT p.id_pcte, p.nome_pcte, p.cpf_pcte, p.data_nasc_pcte, p.data_cadast_pcte
+                 FROM paciente p
+                 WHERE LOWER(p.nome_pcte) LIKE LOWER($1) OR p.cpf_pcte LIKE $2
+                 ORDER BY p.data_cadast_pcte DESC, p.id_pcte DESC`;
+    const values = [`%${termo}%`, `%${termo}%`];
+    const result = await client.query(sql, values);
+    return result.rows;
+  } finally {
+    client.release();
+  }
+}
+
 module.exports = { insertEnderecoPaciente,
                    insertPaciente, insertEscolaridade, inst_ensino,
                    insertQuimioterapia, insertRadioterapia, insertCirurgia,
@@ -597,5 +613,6 @@ module.exports = { insertEnderecoPaciente,
                    getTotalPacientes,
                    getCadastrosHoje,
                    getCadastrosSemana,
-                   getUltimosPacientes};
+                   getUltimosPacientes,
+                   buscarPacientes};
 connect();

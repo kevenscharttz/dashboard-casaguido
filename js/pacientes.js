@@ -215,4 +215,55 @@ document.addEventListener('DOMContentLoaded', function() {
             renderizarPacientes();
         });
     }
+    // Evento de pesquisa
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        let searchTimeout;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const termo = this.value.trim();
+            if (termo.length === 0) {
+                carregarPacientes();
+                return;
+            }
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/pacientes/busca?q=${encodeURIComponent(termo)}`);
+                    if (!response.ok) throw new Error('Erro ao buscar pacientes');
+                    const resultados = await response.json();
+                    // Adapta para o formato esperado por renderizarPacientes
+                    pacientesData = resultados.map(p => ({
+                        prontuario: p.id_pcte,
+                        nome: p.nome_pcte,
+                        cpf: p.cpf_pcte,
+                        idade: p.data_nasc_pcte ? calcularIdade(p.data_nasc_pcte) : '',
+                        diagnostico: '',
+                        ultimo_tratamento: p.data_cadast_pcte ? new Date(p.data_cadast_pcte).toLocaleDateString('pt-BR') : ''
+                    }));
+                    paginaAtual = 1;
+                    renderizarPacientes();
+                } catch (err) {
+                    const tbody = document.getElementById('patients-tbody');
+                    tbody.innerHTML = '<tr><td colspan="7">Erro ao buscar pacientes.</td></tr>';
+                    atualizarPaginacao(0);
+                }
+            }, 400);
+        });
+    }
 });
+
+function calcularIdade(dataNasc) {
+    const nasc = new Date(dataNasc);
+    const hoje = new Date();
+    let anos = hoje.getFullYear() - nasc.getFullYear();
+    const m = hoje.getMonth() - nasc.getMonth();
+    if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) anos--;
+    if (anos < 1) {
+        let meses = (hoje.getFullYear() - nasc.getFullYear()) * 12 + (hoje.getMonth() - nasc.getMonth());
+        if (hoje.getDate() < nasc.getDate()) meses--;
+        meses = Math.max(meses, 0);
+        return meses + (meses === 1 ? ' mês' : ' meses');
+    } else {
+        return anos + (anos === 1 ? ' ano' : ' anos');
+    }
+}
