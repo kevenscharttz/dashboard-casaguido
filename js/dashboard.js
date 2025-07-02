@@ -1,30 +1,43 @@
 // Initialize dashboard
-document.addEventListener('DOMContentLoaded', function() {
-  // Set current date
+document.addEventListener('DOMContentLoaded', async function() {
+  // Data atual
   const currentDateElement = document.getElementById('current-date');
   if (currentDateElement) {
     const now = new Date();
-    const options = { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    };
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     currentDateElement.textContent = now.toLocaleDateString('pt-BR', options);
   }
-  
-  // Initialize sample data with smooth counting animation
-  setTimeout(() => {
-    animateCounter('total-pacientes', 0, 42, 1500);
-    animateCounter('novos-cadastros', 0, 7, 1200);
-    animateCounter('pacientes-ativos', 0, 38, 1800);
-    animateCounter('cadastros-hoje', 0, 3, 800);
-    animateCounter('sistema-pacientes', 0, 42, 1500);
-    animateCounter('sistema-ativos', 0, 38, 1800);
-  }, 300);
-  
-  // Add sample patient data
-  updatePatientList();
+
+  // Busca dados do backend
+  try {
+    // Total de pacientes
+    const totalRes = await fetch('/dashboard/total-pacientes');
+    const totalData = await totalRes.json();
+    animateCounter('total-pacientes', 0, totalData.total, 1200);
+    animateCounter('sistema-pacientes', 0, totalData.total, 1200);
+
+    // Pacientes cadastrados na semana
+    const semanaRes = await fetch('/dashboard/cadastros-semana');
+    const semanaData = await semanaRes.json();
+    animateCounter('novos-cadastros', 0, semanaData.total, 1200);
+
+    // Pacientes cadastrados hoje
+    const hojeRes = await fetch('/dashboard/cadastros-hoje');
+    const hojeData = await hojeRes.json();
+    animateCounter('cadastros-hoje', 0, hojeData.total, 1200);
+
+    // Últimos 3 pacientes
+    const ultimosRes = await fetch('/dashboard/ultimos-pacientes');
+    const ultimos = await ultimosRes.json();
+    updatePatientList(ultimos);
+  } catch (e) {
+    // fallback: zera tudo
+    animateCounter('total-pacientes', 0, 0, 500);
+    animateCounter('sistema-pacientes', 0, 0, 500);
+    animateCounter('novos-cadastros', 0, 0, 500);
+    animateCounter('cadastros-hoje', 0, 0, 500);
+    updatePatientList([]);
+  }
 });
 
 // Sidebar toggle functions
@@ -77,47 +90,37 @@ function animateCounter(elementId, start, end, duration = 1000) {
   requestAnimationFrame(updateCounter);
 }
 
-// APENAS PARA ENFEITE!!!!!!!! ARRUMAREM QUANDO LIGAR O BANCO 
-function updatePatientList() {
+function updatePatientList(pacientes) {
   const activityList = document.querySelector('.activity-list');
   if (!activityList) return;
-  
-  const samplePatients = [
-    {
-      name: 'Ana Silva',
-      date: '15/05/2024',
-      status: 'Ativo'
-    },
-    {
-      name: 'João Santos',
-      date: '14/05/2024',
-      status: 'Em tratamento'
-    },
-    {
-      name: 'Maria Oliveira',
-      date: '13/05/2024',
-      status: 'Consulta agendada'
-    }
-  ];
-  
-  // Clear existing content
   activityList.innerHTML = '';
-  
-  // Add sample patients
-  samplePatients.forEach(patient => {
-    const patientItem = document.createElement('div');
-    patientItem.className = 'activity-item';
-    patientItem.innerHTML = `
+  if (!pacientes || pacientes.length === 0) {
+    activityList.innerHTML = `<div class="activity-item">
+      <figure class="activity-icon background-blue">
+        <span class="material-icons-outlined">person</span>
+      </figure>
+      <div class="activity-content">
+        <h3>Nenhum paciente cadastrado ainda</h3>
+        <p>Clique em \"Registro\" para adicionar o primeiro paciente</p>
+        <time class="activity-time">Sistema iniciado</time>
+      </div>
+    </div>`;
+    return;
+  }
+  pacientes.forEach(paciente => {
+    const data = paciente.data_cadast_pcte ? new Date(paciente.data_cadast_pcte).toLocaleDateString('pt-BR') : '';
+    const item = document.createElement('div');
+    item.className = 'activity-item';
+    item.innerHTML = `
       <figure class="activity-icon">
         <span class="material-icons-outlined">person</span>
       </figure>
       <div class="activity-content">
-        <h3>${patient.name}</h3>
-        <p>Cadastrado em: ${patient.date}</p>
-        <time class="activity-time">Status: ${patient.status}</time>
+        <h3>${paciente.nome_pcte}</h3>
+        <p>Cadastrado em: ${data}</p>
       </div>
     `;
-    activityList.appendChild(patientItem);
+    activityList.appendChild(item);
   });
 }
 

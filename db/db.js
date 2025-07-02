@@ -542,6 +542,50 @@ async function getPacientes() {
   }
 }
 
+async function getTotalPacientes() {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    const result = await client.query('SELECT COUNT(*) AS total FROM paciente');
+    return parseInt(result.rows[0].total, 10);
+  } finally {
+    client.release();
+  }
+}
+
+async function getCadastrosHoje() {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    const result = await client.query("SELECT COUNT(*) AS total FROM paciente WHERE data_cadast_pcte::date = CURRENT_DATE");
+    return parseInt(result.rows[0].total, 10);
+  } finally {
+    client.release();
+  }
+}
+
+async function getCadastrosSemana() {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    const result = await client.query("SELECT COUNT(*) AS total FROM paciente WHERE data_cadast_pcte >= date_trunc('week', CURRENT_DATE)");
+    return parseInt(result.rows[0].total, 10);
+  } finally {
+    client.release();
+  }
+}
+
+async function getUltimosPacientes() {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    const result = await client.query('SELECT nome_pcte, data_cadast_pcte FROM paciente ORDER BY data_cadast_pcte DESC, id_pcte DESC LIMIT 3');
+    return result.rows;
+  } finally {
+    client.release();
+  }
+}
+
 module.exports = { insertEnderecoPaciente,
                    insertPaciente, insertEscolaridade, inst_ensino,
                    insertQuimioterapia, insertRadioterapia, insertCirurgia,
@@ -549,5 +593,9 @@ module.exports = { insertEnderecoPaciente,
                    insertUbsReferencia, insertCrasReferencia, locaisHist,
                    insertHistoricoSaudeResponsavel, insertSituacaoSocioEconomica,
                    insertAdquirirCasa, insertCaracteristicasCasa, insertSituacaoHabitacional,
-                   getPacientes};
+                   getPacientes,
+                   getTotalPacientes,
+                   getCadastrosHoje,
+                   getCadastrosSemana,
+                   getUltimosPacientes};
 connect();
