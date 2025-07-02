@@ -192,11 +192,61 @@ function renderizarPacientes() {
 // Função para buscar e renderizar pacientes reais
 async function carregarPacientes() {
     try {
-        const response = await fetch('http://localhost:8080/pacientes');
+        const response = await fetch('http://localhost:3000/pacientes');
         if (!response.ok) throw new Error('Erro ao buscar pacientes');
-        pacientesData = await response.json();
-        paginaAtual = 1;
-        renderizarPacientes();
+        const pacientes = await response.json();
+        const tbody = document.getElementById('patients-tbody');
+        tbody.innerHTML = '';
+        if (pacientes.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7">Nenhum paciente encontrado.</td></tr>';
+            return;
+        }
+        pacientes.forEach(paciente => {
+            const tr = document.createElement('tr');
+            function mostrarOuNao(valor) {
+                return valor && valor !== '' ? valor : 'Não informado';
+            }
+            tr.innerHTML = `
+                <td><strong>${mostrarOuNao(paciente.prontuario)}</strong></td>
+                <td>
+                    <div class="patient-info">
+                        <div class="patient-avatar">${(paciente.nome || '').split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase() || 'NI'}</div>
+                        <div class="patient-details">
+                            <span class="patient-name">${mostrarOuNao(paciente.nome)}</span>
+                            <span class="patient-id">${mostrarOuNao(paciente.cpf)}</span>
+                        </div>
+                    </div>
+                </td>
+                <td>${mostrarOuNao(paciente.idade)}</td>
+                <td><span class="badge badge-primary">${mostrarOuNao(paciente.diagnostico)}</span></td>
+                <td>${mostrarOuNao(paciente.ultimo_tratamento)}</td>
+                <td>
+                    <div class="actions">
+                        <button class="action-btn" title="Ver prontuário">
+                            <span class="material-icons-outlined">visibility</span>
+                        </button>
+                        <button class="action-btn" title="Editar dados" data-id="${paciente.prontuario}">
+                            <span class="material-icons-outlined">edit</span>
+                        </button>
+                        <button class="action-btn" title="Exportar PDF">
+                            <span class="material-icons-outlined">picture_as_pdf</span>
+                        </button>
+                        <button class="action-btn" title="Excluir paciente">
+                            <span class="material-icons-outlined">delete</span>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        tbody.querySelectorAll('button[title="Editar dados"]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = btn.getAttribute('data-id');
+                window.location.href = `registro.html?id=${id}`;
+            });
+        });
+        
     } catch (err) {
         const tbody = document.getElementById('patients-tbody');
         tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar pacientes.</td></tr>';
