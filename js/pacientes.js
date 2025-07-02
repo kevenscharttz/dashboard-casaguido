@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Função para buscar e renderizar pacientes reais
 async function carregarPacientes() {
     try {
-        const response = await fetch('http://localhost:8080/pacientes');
+        const response = await fetch('http://localhost:3000/pacientes');
         if (!response.ok) throw new Error('Erro ao buscar pacientes');
         const pacientes = await response.json();
         const tbody = document.getElementById('patients-tbody');
@@ -139,7 +139,7 @@ async function carregarPacientes() {
                         <button class="action-btn" title="Ver prontuário">
                             <span class="material-icons-outlined">visibility</span>
                         </button>
-                        <button class="action-btn" title="Editar dados">
+                        <button class="action-btn" title="Editar dados" data-id="${paciente.prontuario}">
                             <span class="material-icons-outlined">edit</span>
                         </button>
                         <button class="action-btn" title="Exportar PDF">
@@ -153,6 +153,14 @@ async function carregarPacientes() {
             `;
             tbody.appendChild(tr);
         });
+
+        tbody.querySelectorAll('button[title="Editar dados"]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = btn.getAttribute('data-id');
+                window.location.href = `registro.html?id=${id}`;
+            });
+        });
+        
     } catch (err) {
         const tbody = document.getElementById('patients-tbody');
         tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar pacientes.</td></tr>';
