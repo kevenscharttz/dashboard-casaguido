@@ -54,7 +54,7 @@ form.addEventListener('submit', async (event) => {
     nome: formData.getAll('medicamento_nome[]'),
     dosagem: formData.getAll('medicamento_dosagem[]'),
     frequencia: formData.getAll('medicamento_frequencia[]'),
-    observacao: formData.getAll('medicamento_observacao_[]')
+    observacao: formData.getAll('medicamento_observacao[]')
   };
 
   // Conversão dos campos de dinheiro para inteiro, sem o R$ e sem vírgulas

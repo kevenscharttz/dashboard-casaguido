@@ -15,8 +15,6 @@ app.use(bodyParser.json());
 
 app.post('/paciente', async (req, res) => {
   const dados = req.body;
-  console.log('DADOS RECEBIDOS DO FRONTEND:', dados);
-  console.log('DADOS CIRURGIA:', dados.cirurgia);
   const id_cras = await db.insertCrasReferencia(dados);          // tabela cras_referencia
   const id_unidade = await db.insertUbsReferencia(dados);        // tabela ubs_referencia
   const id_end = await db.insertEnderecoPaciente(dados);         // tabela endereco_paciente
@@ -31,17 +29,13 @@ app.post('/paciente', async (req, res) => {
   const id_responsavel = await db.insertResponsavel({...dados},  ids_esc, ids_est_civil, id_pcte, id_end);  // tabela responsavel  
   await db.insertHistoricoSaude(dados, id_pcte);
   await db.locaisHist(id_unidade, id_cras); // tabela locais historico
-  await db.insertHistoricoSaudeResponsavel({...dados}, id_responsavel); // tabela responsavel_diagnostico
+  await db.insertHistoricoSaudeResponsavel(dados.diagnosticosFamiliares, id_pcte); // tabela responsavel_diagnostico
   await db.insertSituacaoSocioEconomica({...dados}, id_inst_ensino, id_pcte);  // tabela socio_economica
   const id_adq_casa = await db.insertAdquirirCasa({situacao_habitacional: dados.situacao_habitacional || null});         // tabela Tipo da aquisição da casa
   const id_caract = await db.insertCaracteristicasCasa(dados); // tabela Características da casa
   await db.insertSituacaoHabitacional(dados, id_pcte, id_adq_casa, id_caract); // tabela Situação habitacional
   res.sendStatus(201);
-  console.log('UBS:', {
-    municipio: dados.ubs_municipio,
-    bairro: dados.ubs_bairro,
-    obs: dados.ubs_observacao
-  });
+  
 });
 
 

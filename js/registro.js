@@ -754,7 +754,7 @@ function createDiagnosticoTemplate() {
     `;
 }
 
-function createDiagnosticoFamiliaTemplate(count) {
+function createDiagnosticoFamiliaTemplate() {
     return `
         <button type="button" class="btn-familia-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
             <img src="../img/cancelar.png" alt="Remover">
@@ -762,26 +762,26 @@ function createDiagnosticoFamiliaTemplate(count) {
         <div class="diagnostico-familia-item">
             <div class="form-row">
                 <div class="form-group">
-                    <label for="familia_${count}">Nome</label>
-                    <input type="text" id="familia_${count}" name="familia_${count}" />
+                    <label>Nome</label>
+                    <input type="text" name="familia[]" />
                 </div>
                 <div class="form-group">
-                    <label for="familia_cid_${count}">CID</label>
-                    <input type="text" id="familia_cid_${count}" name="familia_cid_${count}" />
+                    <label>CID</label>
+                    <input type="text" name="familia_cid[]" />
                 </div>
                 <div class="form-group">
-                    <label for="familia_parentesco_${count}">Parentesco</label>
-                    <input type="text" id="familia_parentesco_${count}" name="familia_parentesco_${count}" placeholder="Ex: Mãe, Pai, Avó..." />
+                    <label>Parentesco</label>
+                    <input type="text" name="familia_parentesco[]" placeholder="Ex: Mãe, Pai, Avó..." />
                 </div>
                 <div class="form-group">
-                    <label for="familia_descricao_${count}">Descrição</label>
-                    <input type="text" id="familia_descricao_${count}" name="familia_descricao_${count}" />
+                    <label>Descrição</label>
+                    <input type="text" name="familia_descricao[]" />
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group full-width">
-                    <label for="familia_observacao_${count}">Observação</label>
-                    <textarea id="familia_observacao_${count}" name="familia_observacao_${count}" rows="2"></textarea>
+                    <label>Observação</label>
+                    <textarea name="familia_observacao[]" rows="2"></textarea>
                 </div>
             </div>
         </div>

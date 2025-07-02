@@ -208,7 +208,7 @@ async function insertEstadoCivil(dados) {
     }
     return ids;
   } finally {
-    client.release(); // libera só uma vez, no final
+    client.release();
   }
 };
 
@@ -224,7 +224,6 @@ async function insertResponsavel(responsavel, ids_esc, ids_est_civil, id_pcte, i
   let idx = 0;
   let ids = [];
 
-  // Mãe
   if (responsavel.mae_nome) {
     const result = await client.query(sql, [
       responsavel.mae_responsavel_principal,
@@ -237,8 +236,8 @@ async function insertResponsavel(responsavel, ids_esc, ids_est_civil, id_pcte, i
       responsavel.mae_ocupacao,
       responsavel.mae_observacao,
       responsavel.mae_salario,
-      ids_esc[idx],         // id escolaridade da mãe
-      ids_est_civil[idx],   // id estado civil da mãe
+      ids_esc[idx],         
+      ids_est_civil[idx],   
       id_pcte,
       id_end,
       responsavel.mae_parentesco || null
@@ -247,7 +246,6 @@ async function insertResponsavel(responsavel, ids_esc, ids_est_civil, id_pcte, i
     ids.push(result.rows[0].id_responsavel);
   }
 
-  // Pai
   if (responsavel.pai_nome) {
     const result = await client.query(sql, [
       responsavel.pai_responsavel_principal,
@@ -260,8 +258,8 @@ async function insertResponsavel(responsavel, ids_esc, ids_est_civil, id_pcte, i
       responsavel.pai_ocupacao,
       responsavel.pai_observacao,
       responsavel.pai_salario,
-      ids_esc[idx],         // id escolaridade do pai
-      ids_est_civil[idx],   // id estado civil do pai
+      ids_esc[idx],       
+      ids_est_civil[idx],   
       id_pcte,
       id_end,
       responsavel.pai_parentesco || null
@@ -270,7 +268,6 @@ async function insertResponsavel(responsavel, ids_esc, ids_est_civil, id_pcte, i
     ids.push(result.rows[0].id_responsavel);
   }
 
-  // Outro
   if (responsavel.outro_nome) {
     const result = await client.query(sql, [
       responsavel.outro_responsavel_principal,
@@ -283,8 +280,8 @@ async function insertResponsavel(responsavel, ids_esc, ids_est_civil, id_pcte, i
       responsavel.outro_ocupacao,
       responsavel.outro_responsavel_observacao,
       responsavel.outro_salario,
-      ids_esc[idx],         // id escolaridade do outro
-      ids_est_civil[idx],   // id estado civil do outro
+      ids_esc[idx],        
+      ids_est_civil[idx],   
       id_pcte,
       id_end,
       responsavel.outro_parentesco || null
@@ -304,45 +301,46 @@ async function insertHistoricoSaude(historico, id_pcte) {
   const pool = await connect();
   const client = await pool.connect();
   try {
-  // Suporte a múltiplos diagnósticos e medicamentos
-  const nomes = historico.nome || historico.nome_1 ? (historico.nome || [historico.nome_1]) : [];
-  const cids = historico.cid || historico.cid_1 ? (historico.cid || [historico.cid_1]) : [];
-  const descricoes = historico.descricao || historico.descricao_1 ? (historico.descricao || [historico.descricao_1]) : [];
-  const observacoes = historico.observacao || historico.observacao_1 ? (historico.observacao || [historico.observacao_1]) : [];
-  const medicamentos = historico.medicamentos || {};
-  const medic_uso = medicamentos.nome || historico.medicamento_nome_1 ? (medicamentos.nome || [historico.medicamento_nome_1]) : [];
-  const medic_dosagem = medicamentos.dosagem || historico.medicamento_dosagem_1 ? (medicamentos.dosagem || [historico.medicamento_dosagem_1]) : [];
-  const medic_freq = medicamentos.frequencia || historico.medicamento_frequencia_1 ? (medicamentos.frequencia || [historico.medicamento_frequencia_1]) : [];
-  const med_obs = medicamentos.observacao || historico.medicamento_observacao_1 ? (medicamentos.observacao || [historico.medicamento_observacao_1]) : [];
+    // Suporte a múltiplos diagnósticos e medicamentos
+    const diagnosticos = historico.diagnosticos || {};
+    const nomes = diagnosticos.nome || [];
+    const cids = diagnosticos.cid || [];
+    const descricoes = diagnosticos.descricao || [];
+    const observacoes = diagnosticos.observacao || [];
 
-  // Descobre o maior tamanho dos arrays
-  const max = Math.max(
-    nomes.length, cids.length, descricoes.length, observacoes.length,
-    medic_uso.length, medic_dosagem.length, medic_freq.length, med_obs.length
-  );
+    const medicamentos = historico.medicamentos || {};
+    const medic_uso = medicamentos.nome || [];
+    const medic_dosagem = medicamentos.dosagem || [];
+    const medic_freq = medicamentos.frequencia || [];
+    const med_obs = medicamentos.observacao || [];
 
-  const sql = `INSERT INTO pcte_diag (desc_diag, nome_diag, cid_diag, obs_diag, id_pcte, medic_uso, medic_dosagem, medic_freq, med_obs)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id_pcte_diag;`;
+    // Descobre o maior tamanho dos arrays
+    const max = Math.max(
+      nomes.length, cids.length, descricoes.length, observacoes.length,
+      medic_uso.length, medic_dosagem.length, medic_freq.length, med_obs.length
+    );
 
-  let ids = [];
-  for (let i = 0; i < max; i++) {
-    const values = [
-      descricoes[i] || null,
-      nomes[i] || null,
-      cids[i] || null,
-      observacoes[i] || null,
-      id_pcte,
-      medic_uso[i] || null,
-      medic_dosagem[i] || null,
-      medic_freq[i] || null,
-      med_obs[i] || null
-    ];
-    const result = await client.query(sql, values);
-    ids.push(result.rows[0].id_pcte_diag);
-  }
-  return ids;
-  }
-  finally {
+    const sql = `INSERT INTO pcte_diag (desc_diag, nome_diag, cid_diag, obs_diag, id_pcte, medic_uso, medic_dosagem, medic_freq, med_obs)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id_pcte_diag;`;
+
+    let ids = [];
+    for (let i = 0; i < max; i++) {
+      const values = [
+        descricoes[i] || null,
+        nomes[i] || null,
+        cids[i] || null,
+        observacoes[i] || null,
+        id_pcte,
+        medic_uso[i] || null,
+        medic_dosagem[i] || null,
+        medic_freq[i] || null,
+        med_obs[i] || null
+      ];
+      const result = await client.query(sql, values);
+      ids.push(result.rows[0].id_pcte_diag);
+    }
+    return ids;
+  } finally {
     client.release();
   }
 }
@@ -401,23 +399,22 @@ async function locaisHist(id_unidade, id_cras) {
   }
 }
 
-async function insertHistoricoSaudeResponsavel(diagnosticosFamiliares, id_resp) {
+async function insertHistoricoSaudeResponsavel(diagnosticosFamiliares, id_pcte) {
   const pool = await connect();
   const client = await pool.connect();
   try {
     // Suporte a múltiplos diagnósticos familiares
-    const nomes = diagnosticosFamiliares.nome || diagnosticosFamiliares.familia_1 ? (diagnosticosFamiliares.nome || [diagnosticosFamiliares.familia_1]) : [];
-    const cids = diagnosticosFamiliares.cid || diagnosticosFamiliares.familia_cid_1 ? (diagnosticosFamiliares.cid || [diagnosticosFamiliares.familia_cid_1]) : [];
-    const descricoes = diagnosticosFamiliares.descricao || diagnosticosFamiliares.familia_descricao_1 ? (diagnosticosFamiliares.descricao || [diagnosticosFamiliares.familia_descricao_1]) : [];
-    const observacoes = diagnosticosFamiliares.observacao || diagnosticosFamiliares.familia_observacao_1 ? (diagnosticosFamiliares.observacao || [diagnosticosFamiliares.familia_observacao_1]) : [];
-    const parentescos = diagnosticosFamiliares.parentesco || diagnosticosFamiliares.familia_parentesco_1 ? (diagnosticosFamiliares.parentesco || [diagnosticosFamiliares.familia_parentesco_1]) : [];
+    const nomes = diagnosticosFamiliares.nome 
+    const cids = diagnosticosFamiliares.cid 
+    const descricoes = diagnosticosFamiliares.descricao
+    const observacoes = diagnosticosFamiliares.observacao
+    const parentescos = diagnosticosFamiliares.parentesco
 
     const max = Math.max(nomes.length, cids.length, descricoes.length, observacoes.length, parentescos.length);
 
-    const sql = `INSERT INTO resp_diag (desc_diag, nome_diag, cid_diag, obs_diag, parestesco_diag, id_responsavel)
+    const sql = `INSERT INTO resp_diag (desc_diag, nome_diag, cid_diag, obs_diag, parestesco_diag, id_pcte)
                  VALUES ($1, $2, $3, $4, $5, $6) RETURNING id_resp_diag;`;
 
-    let ids = [];
     for (let i = 0; i < max; i++) {
       const values = [
         descricoes[i] || null,
@@ -425,12 +422,10 @@ async function insertHistoricoSaudeResponsavel(diagnosticosFamiliares, id_resp) 
         cids[i] || null,
         observacoes[i] || null,
         parentescos[i] || null,
-        id_resp
+        id_pcte
       ];
-      const result = await client.query(sql, values);
-      ids.push(result.rows[0].id_resp_diag);
+      await client.query(sql, values);
     }
-    return ids;
   } finally {
     client.release();
   }
