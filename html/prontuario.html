@@ -6,24 +6,12 @@
     <title>Prontuário - Laura Silva - Casa Guido</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="../css/prontuario.css">
-    <style>
-        .visually-hidden {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-    </style>
 </head>
 <body>
     <main class="prontuario-container" role="main" aria-labelledby="prontuario-title">
         <header class="prontuario-header">
-            <h1 id="prontuario-title">Prontuário Médico</h1>
+            <img class="logo-nova" src="../img/logo-nova.png" alt="Logo Casa Guido" width="100" height="100">
+            <h1 id="prontuario-title">Prontuário Médico </h1>
             <section class="patient-identification" aria-labelledby="patient-info-title">
                 <h2 id="patient-info-title" class="visually-hidden">Identificação do Paciente</h2>
                 <div class="patient-avatar" role="img" aria-label="Avatar da paciente Laura Silva">LS</div>
@@ -33,9 +21,9 @@
                         <dt class="visually-hidden">Número do Prontuário:</dt>
                         <dd id="patient-id">Prontuário: P00123</dd>
                         <dt class="visually-hidden">Idade:</dt>
-                        <dd id="patient-age">8 anos</dd>
+                        <dd id="patient-age">Idade: 8 anos</dd>
                         <dt class="visually-hidden">CPF:</dt>
-                        <dd id="patient-cpf">12.345.678-9</dd>
+                        <dd id="patient-cpf">CPF: 12.345.678-9</dd>
                     </dl>
                 </div>
             </section>
@@ -45,88 +33,37 @@
             <section class="dados-pessoais" aria-labelledby="dados-pessoais-title">
                 <h3 id="dados-pessoais-title">Dados Pessoais</h3>
                 <dl class="prontuario-grid">
-                    <dt>Data de Nascimento:</dt>
-                    <dd id="birth-date">
-                        <time datetime="2017-05-15">15/05/2017</time>
-                    </dd>
-                    
-                    <dt>Cartão SUS:</dt>
-                    <dd id="sus-card">123 4567 8901 2345</dd>
-                    
-                    <dt>Endereço:</dt>
-                    <dd id="address">
-                        <address>Rua Exemplo, 123 - Centro, São Paulo/SP</address>
-                    </dd>
-                    
-                    <dt>Telefone:</dt>
-                    <dd id="phone">
-                        <a href="tel:+5511999999999">(11) 99999-9999</a>
-                    </dd>
+                    <div class="prontuario-grid-item">
+                        <dt>Data de Nascimento:</dt>
+                        <dd id="birth-date">
+                            <time datetime="2017-05-15">15/05/2017</time>
+                        </dd>
+                    </div>
+
+                    <div class="prontuario-grid-item">
+                        <dt>Cartão SUS:</dt>
+                        <dd id="sus-card">123 4567 8901 2345</dd>
+                    </div>
+
+                    <div class="prontuario-grid-item">
+                        <dt>Endereço:</dt>
+                        <dd id="address">
+                            <address>Rua Exemplo, 123 - Centro, São Paulo/SP</address>
+                        </dd>
+                    </div>
+
+                    <div class="prontuario-grid-item">
+                        <dt>Telefone:</dt>
+                        <dd id="phone">
+                            <a href="tel:+5511999999999">(11) 99999-9999</a>
+                        </dd>
+                    </div>
+
                 </dl>
             </section>
 
-            <section class="diagnostico-principal" aria-labelledby="diagnostico-title">
-                <h3 id="diagnostico-title">Diagnóstico Principal</h3>
-                <div class="diagnosis-info">
-                    <h4 class="diagnosis-badge">Leucemia Linfóide Aguda</h4>
-                    <dl class="diagnosis-details">
-                        <dt>CID:</dt>
-                        <dd>C91.0</dd>
-                        
-                        <dt>Status:</dt>
-                        <dd>
-                            <span class="status-active" role="status" aria-live="polite">Em tratamento</span>
-                        </dd>
-                        
-                        <dt>Último atendimento:</dt>
-                        <dd>
-                            <time datetime="2025-05-15">15/05/2025</time>
-                        </dd>
-                    </dl>
-                </div>
-            </section>
-
-            <section class="historico-tratamentos" aria-labelledby="tratamentos-title">
-                <h3 id="tratamentos-title">Histórico de Tratamentos</h3>
-                <div class="treatment-tabs" role="tablist" aria-label="Tipos de tratamento">
-                    <button class="treatment-tab" role="tab" aria-selected="true" aria-controls="quimio-panel" id="quimio-tab">
-                        Quimioterapia
-                    </button>
-                    <button class="treatment-tab" role="tab" aria-selected="false" aria-controls="radio-panel" id="radio-tab">
-                        Radioterapia
-                    </button>
-                    <button class="treatment-tab" role="tab" aria-selected="false" aria-controls="cirurgia-panel" id="cirurgia-tab">
-                        Cirurgias
-                    </button>
-                </div>
-                
-                <div class="treatment-content" role="tabpanel" id="quimio-panel" aria-labelledby="quimio-tab">
-                    <article class="treatment-item">
-                        <header class="treatment-header">
-                            <time datetime="2025-03-10" class="treatment-date">10/03/2025</time>
-                            <h4>Protocolo XYZ</h4>
-                        </header>
-                        <div class="treatment-details">
-                            <p><strong>Local:</strong> Hospital das Clínicas - São Paulo/SP</p>
-                            <p><strong>Observações:</strong> Paciente respondeu bem ao tratamento inicial</p>
-                        </div>
-                    </article>
-                    
-                    <article class="treatment-item">
-                        <header class="treatment-header">
-                            <time datetime="2025-04-15" class="treatment-date">15/04/2025</time>
-                            <h4>Protocolo XYZ - Ciclo 2</h4>
-                        </header>
-                        <div class="treatment-details">
-                            <p><strong>Local:</strong> Hospital das Clínicas - São Paulo/SP</p>
-                            <p><strong>Observações:</strong> Apresentou náuseas moderadas</p>
-                        </div>
-                    </article>
-                </div>
-            </section>
-
             <section class="dados-familiares" aria-labelledby="familia-title">
-                <h3 id="familia-title">Dados Familiares</h3>
+                <h3 id="familia-title">Familiares</h3>
                 <div class="family-grid">
                     <article class="family-member">
                         <h4>Mãe</h4>
@@ -159,8 +96,64 @@
                 </div>
             </section>
 
-            <section class="historico-saude" aria-labelledby="saude-title">
-                <h3 id="saude-title">Histórico de Saúde</h3>
+            <section class="diagnostico-principal" aria-labelledby="diagnostico-title">
+                <h3 id="diagnostico-title">Diagnósticos</h3>
+                <div class="diagnosis-info">
+                    <h4 class="diagnosis-badge">Leucemia Linfóide Aguda</h4>
+                    <dl class="diagnosis-details">
+                        <dl class="diagnosis-details">
+                        <div class="diagnosis-details-item">
+                            <dt>CID:</dt>
+                            <dd>C91.0</dd>
+                        </div>
+                        <div class="diagnosis-details-item">
+                            <dt>Status:</dt>
+                            <dd>
+                                <span class="status-active" role="status" aria-live="polite">Em tratamento</span>
+                            </dd>
+                        </div>
+                        <div class="diagnosis-details-item">
+                            <dt>Último atendimento:</dt>
+                            <dd>
+                                <time datetime="2025-05-15">15/05/2025</time>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </section>
+
+            <section class="historico-tratamentos" aria-labelledby="tratamentos-title">
+                <h3 id="tratamentos-title">Histórico de Tratamentos</h3>
+                
+                <div class="treatment-content" role="tabpanel" id="quimio-panel" aria-labelledby="quimio-tab">
+                    <article class="treatment-item">
+                        <header class="treatment-header">
+                            <time class="treatment-date">Data de início: 10/03/2025</time>
+                            <!--Puxar do Banco para saber  o tipo de tratamento
+                                apenas um exemplo de como ficaria o tratamento
+                            -->
+                            <h4>Radioterapia</h4>
+                        </header>
+                        <div class="treatment-details">
+                            <p><strong>Local:</strong> Hospital das Clínicas - São Paulo/SP</p>
+                            <p><strong>Observações:</strong> Paciente respondeu bem ao tratamento inicial</p>
+                        </div>
+                    </article>
+                    
+                    <article class="treatment-item">
+                        <header class="treatment-header">
+                            <time class="treatment-date">Data de início: 15/04/2025</time>
+                            <h4>Quimioterapia</h4>
+                        </header>
+                        <div class="treatment-details">
+                            <p><strong>Local:</strong> Hospital das Clínicas - São Paulo/SP</p>
+                            <p><strong>Observações:</strong> Apresentou náuseas moderadas</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+            
+            
                 <dl class="health-history">
                     <dt>Condições de saúde:</dt>
                     <dd>Nenhuma condição adicional relatada</dd>
@@ -171,21 +164,14 @@
                             <li>Prednisona 20mg/dia</li>
                             <li>Metotrexato 15mg/semana</li>
                         </ul>
-                    </dd>
-                    
+                    </dd>                    
                     <dt>UBS de referência:</dt>
                     <dd>UBS Jardim Saúde - São Paulo/SP</dd>
-                </dl>
-            </section>
-
-            <section class="historico-familiar" aria-labelledby="historia-familia-title">
-                <h3 id="historia-familia-title">Histórico Familiar</h3>
-                <dl class="family-history">
-                    <dt>Condições na família:</dt>
+                           
+                    <dt>Histórico familiar de saúde:</dt>
                     <dd>Diabetes (avó paterna)</dd>
-                </dl>
-            </section>
-
+                </dl>          
+          
             <section class="situacao-socioeconomica" aria-labelledby="socioeconomico-title">
                 <h3 id="socioeconomico-title">Situação Socioeconômica</h3>
                 <dl class="socioeconomic-info">
