@@ -11,104 +11,108 @@ document.addEventListener('DOMContentLoaded', function() {
     showSection(1);
 
     const form = document.getElementById('cadastro-form');
+    
     if (form) {
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
 
-            if (validateAllSections()) {
-                // MONTE OS OBJETOS DINÂMICOS AQUI
-
-                // Função utilitária para pegar arrays de campos
-                function getArrayFromInputs(name) {
-                    return Array.from(document.getElementsByName(name)).map(el => el.value);
-                }
-
-                // Quimioterapia
-                const quimio = {
-                    profissional: getArrayFromInputs('quimio_profissional[]'),
-                    crm: getArrayFromInputs('quimio_crm[]'),
-                    local: getArrayFromInputs('quimio_local[]'),
-                    inicio: getArrayFromInputs('quimio_inicio[]'),
-                    fim: getArrayFromInputs('quimio_fim[]')
-                };
-
-                // Radioterapia
-                const radio = {
-                    profissional: getArrayFromInputs('radio_profissional[]'),
-                    crm: getArrayFromInputs('radio_crm[]'),
-                    local: getArrayFromInputs('radio_local[]'),
-                    inicio: getArrayFromInputs('radio_inicio[]'),
-                    fim: getArrayFromInputs('radio_fim[]')
-                };
-
-                // Cirurgia
-                const cirurgia = {
-                    profissional: getArrayFromInputs('cirurgia_profissional[]'),
-                    crm: getArrayFromInputs('cirurgia_crm[]'),
-                    inicio: getArrayFromInputs('cirurgia_inicio[]'),
-                    fim: getArrayFromInputs('cirurgia_fim[]'),
-                    tipo: getArrayFromInputs('cirurgia_tipo[]'),
-                    local: getArrayFromInputs('cirurgia_local[]')
-                };
-
-                // Medicamentos
-                const medicamentos = {
-                    nome: getArrayFromInputs('medicamento_nome[]'),
-                    dosagem: getArrayFromInputs('medicamento_dosagem[]'),
-                    frequencia: getArrayFromInputs('medicamento_frequencia[]'),
-                    observacao: getArrayFromInputs('medicamento_observacao[]')
-                };
-
-                // Diagnósticos do paciente
-                const diagnosticos = {
-                    nome: getArrayFromInputs('nome[]'),
-                    cid: getArrayFromInputs('cid[]'),
-                    descricao: getArrayFromInputs('descricao[]'),
-                    observacao: getArrayFromInputs('observacao[]')
-                };
-
-                // Diagnósticos familiares
-                const diagnosticosFamiliares = {
-                    nome: getArrayFromInputs('familia[]'),
-                    cid: getArrayFromInputs('familia_cid[]'),
-                    parentesco: getArrayFromInputs('familia_parentesco[]'),
-                    descricao: getArrayFromInputs('familia_descricao[]'),
-                    observacao: getArrayFromInputs('familia_observacao[]')
-                };
-
-                // Pegue os outros campos do formulário normalmente
-                const formData = new FormData(form);
-                const dados = Object.fromEntries(formData.entries());
-
-                // Adicione os objetos dinâmicos ao payload
-                dados.quimio = quimio;
-                dados.radio = radio;
-                dados.cirurgia = cirurgia;
-                dados.medicamentos = medicamentos;
-                dados.diagnosticos = diagnosticos;
-                dados.diagnosticosFamiliares = diagnosticosFamiliares;
-
-                // Envie para o backend
-                try {
-                    const response = await fetch('/paciente', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(dados)
-                    });
-
-                    if (response.ok) {
-                        showSuccessMessage();
-                        form.reset();
-                    } else {
-                        const error = await response.json();
-                        alert(error.error || 'Erro ao cadastrar paciente.');
-                    }
-                } catch (err) {
-                    alert('Erro de conexão com o servidor.');
-                }
+        if (validateAllSections()) {
+            // Função utilitária para pegar arrays de campos
+            function getArrayFromInputs(name) {
+                return Array.from(document.getElementsByName(name)).map(el => el.value);
             }
-        });
-    } 
+
+            // Quimioterapia
+            const quimio = {
+                profissional: getArrayFromInputs('quimio_profissional[]'),
+                crm: getArrayFromInputs('quimio_crm[]'),
+                local: getArrayFromInputs('quimio_local[]'),
+                inicio: getArrayFromInputs('quimio_inicio[]'),
+                fim: getArrayFromInputs('quimio_fim[]')
+            };
+
+            // Radioterapia
+            const radio = {
+                profissional: getArrayFromInputs('radio_profissional[]'),
+                crm: getArrayFromInputs('radio_crm[]'),
+                local: getArrayFromInputs('radio_local[]'),
+                inicio: getArrayFromInputs('radio_inicio[]'),
+                fim: getArrayFromInputs('radio_fim[]')
+            };
+
+            // Cirurgia
+            const cirurgia = {
+                profissional: getArrayFromInputs('cirurgia_profissional[]'),
+                crm: getArrayFromInputs('cirurgia_crm[]'),
+                inicio: getArrayFromInputs('cirurgia_inicio[]'),
+                fim: getArrayFromInputs('cirurgia_fim[]'),
+                tipo: getArrayFromInputs('cirurgia_tipo[]'),
+                local: getArrayFromInputs('cirurgia_local[]')
+            };
+
+            // Medicamentos
+            const medicamentos = {
+                nome: getArrayFromInputs('medicamento_nome[]'),
+                dosagem: getArrayFromInputs('medicamento_dosagem[]'),
+                frequencia: getArrayFromInputs('medicamento_frequencia[]'),
+                observacao: getArrayFromInputs('medicamento_observacao[]')
+            };
+
+            // Diagnósticos do paciente
+            const diagnosticos = {
+                nome: getArrayFromInputs('nome[]'),
+                cid: getArrayFromInputs('cid[]'),
+                descricao: getArrayFromInputs('descricao[]'),
+                observacao: getArrayFromInputs('observacao[]')
+            };
+
+            // Diagnósticos familiares
+            const diagnosticosFamiliares = {
+                nome: getArrayFromInputs('familia[]'),
+                cid: getArrayFromInputs('familia_cid[]'),
+                parentesco: getArrayFromInputs('familia_parentesco[]'),
+                descricao: getArrayFromInputs('familia_descricao[]'),
+                observacao: getArrayFromInputs('familia_observacao[]')
+            };
+
+            // Pegue os outros campos do formulário normalmente
+            const formData = new FormData(form);
+            const dados = Object.fromEntries(formData.entries());
+
+            // Adicione os objetos dinâmicos ao payload
+            dados.quimio = quimio;
+            dados.radio = radio;
+            dados.cirurgia = cirurgia;
+            dados.medicamentos = medicamentos;
+            dados.diagnosticos = diagnosticos;
+            dados.diagnosticosFamiliares = diagnosticosFamiliares;
+
+            // Detecta se é edição (id na URL)
+            const urlParams = new URLSearchParams(window.location.search);
+            const pacienteId = urlParams.get('id');
+            const url = pacienteId ? `/paciente/${pacienteId}` : '/paciente';
+            const method = pacienteId ? 'PUT' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dados)
+                });
+
+                if (response.ok) {
+                    showSuccessMessage();
+                    form.reset();
+                } else {
+                    const error = await response.json();
+                    alert(error.error || 'Erro ao salvar paciente.');
+                }
+            } catch (err) {
+                alert('Erro de conexão com o servidor.');
+            }
+        }
+    });
+    }
 
     // Inicializar botões de remover
     initializeRemoveCardButtons(); 
