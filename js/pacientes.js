@@ -194,7 +194,6 @@ async function carregarPacientes() {
     try {
         const response = await fetch('http://localhost:3000/pacientes');
         if (!response.ok) throw new Error('Erro ao buscar pacientes');
-<<<<<<< HEAD
         const pacientes = await response.json();
         const tbody = document.getElementById('patients-tbody');
         tbody.innerHTML = '';
@@ -248,11 +247,6 @@ async function carregarPacientes() {
             });
         });
         
-=======
-        pacientesData = await response.json();
-        paginaAtual = 1;
-        renderizarPacientes();
->>>>>>> f1068497d07a9fa69cb5ae8bf0c14a51304bc652
     } catch (err) {
         const tbody = document.getElementById('patients-tbody');
         tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar pacientes.</td></tr>';
