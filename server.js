@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 
 app.post('/paciente', async (req, res) => {
   const dados = req.body;
+  console.log('Dados recebidos:', dados);
   const id_cras = await db.insertCrasReferencia(dados);          // tabela cras_referencia
   const id_unidade = await db.insertUbsReferencia(dados);        // tabela ubs_referencia
   const id_end = await db.insertEnderecoPaciente(dados);         // tabela endereco_paciente
@@ -35,7 +36,6 @@ app.post('/paciente', async (req, res) => {
   const id_caract = await db.insertCaracteristicasCasa(dados); // tabela Características da casa
   await db.insertSituacaoHabitacional(dados, id_pcte, id_adq_casa, id_caract); // tabela Situação habitacional
   res.sendStatus(201);
-  
 });
 
 
