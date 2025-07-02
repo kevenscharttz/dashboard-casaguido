@@ -53,6 +53,46 @@ app.get('/pacientes', async (req, res) => {
   }
 });
 
+// Endpoint: total de pacientes
+app.get('/dashboard/total-pacientes', async (req, res) => {
+  try {
+    const total = await db.getTotalPacientes();
+    res.json({ total });
+  } catch (error) {
+    res.status(500).json({ erro: 'Erro ao buscar total de pacientes' });
+  }
+});
+
+// Endpoint: pacientes cadastrados hoje
+app.get('/dashboard/cadastros-hoje', async (req, res) => {
+  try {
+    const total = await db.getCadastrosHoje();
+    res.json({ total });
+  } catch (error) {
+    res.status(500).json({ erro: 'Erro ao buscar cadastros de hoje' });
+  }
+});
+
+// Endpoint: pacientes cadastrados na semana
+app.get('/dashboard/cadastros-semana', async (req, res) => {
+  try {
+    const total = await db.getCadastrosSemana();
+    res.json({ total });
+  } catch (error) {
+    res.status(500).json({ erro: 'Erro ao buscar cadastros da semana' });
+  }
+});
+
+// Endpoint: últimos 3 pacientes
+app.get('/dashboard/ultimos-pacientes', async (req, res) => {
+  try {
+    const pacientes = await db.getUltimosPacientes();
+    res.json(pacientes);
+  } catch (error) {
+    res.status(500).json({ erro: 'Erro ao buscar últimos pacientes' });
+  }
+});
+
 // Exemplo de rota para index.html na raiz:
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
