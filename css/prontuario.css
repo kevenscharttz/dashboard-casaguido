@@ -57,7 +57,12 @@ body {
   padding: 30px;
   position: relative;
 }
-
+.logo-nova{
+  float: right;
+  width: 230px;
+  height: auto;
+  padding: 2px;
+}
 .prontuario-header::before {
   content: '';
   position: absolute;
@@ -141,7 +146,7 @@ body {
 }
 
 .prontuario-content h3 {
-  background: linear-gradient(135deg, var(--background-light) 0%, #f0f4f8 100%);
+  background: #c8e2f1;
   color: var(--text-dark);
   font-size: 16px;
   font-weight: 600;
@@ -166,31 +171,31 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  padding: 24px;
+  padding: 24px; 
 }
 
-.prontuario-grid dt {
+.prontuario-grid-item dt {
   color: var(--text-medium);
   font-weight: 500;
   font-size: 13px;
-  margin-bottom: 4px;
+  margin-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
+	}
+  
+  .prontuario-grid-item dd {
+    color: var(--text-dark);
+    font-weight: 500;
+    font-size: 14px;            
+  }
 
-.prontuario-grid dd {
-  color: var(--text-dark);
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.prontuario-grid dd a {
+.prontuario-grid-item dd a {
   color: var(--primary-blue);
   text-decoration: none;
   transition: var(--transition);
 }
 
-.prontuario-grid dd a:hover {
+.prontuario-grid-item dd a:hover {
   color: var(--primary-blue-dark);
   text-decoration: underline;
 }
@@ -202,7 +207,7 @@ body {
 
 .diagnosis-badge {
   display: inline-block;
-  background: linear-gradient(135deg, var(--danger-red) 0%, #c0392b 100%);
+  background: #f55543;
   color: var(--white);
   padding: 8px 16px;
   border-radius: var(--border-radius-small);
@@ -519,10 +524,17 @@ body {
   
   .prontuario-header {
     padding: 20px;
+    text-align: center;
   }
   
   .prontuario-header h1 {
     font-size: 24px;
+  }
+
+ .logo-nova{
+    float: none;
+    width: 230px;
+    height: auto;
   }
   
   .patient-identification {
