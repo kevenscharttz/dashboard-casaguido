@@ -13,7 +13,7 @@ async function connect() {
     console.log("Hora atual do banco de dados:", res.rows[0].now);
     client.release();
     global.connection = pool;
-    return pool;
+    return pool; 
 }
 
 async function insertEnderecoPaciente(endereco) {
@@ -49,7 +49,7 @@ async function insertPaciente(paciente, id_end) {
     const values = [
       paciente.paciente,
       paciente.data_nascimento,
-      data_cadastro = new Date(),  
+      new Date(),  
       paciente.cpf,
       paciente.cartao_sus || null, 
       paciente.rg || null,
@@ -71,22 +71,19 @@ async function insertEscolaridade(escolaridade) {
   try {
     const sql = `INSERT INTO escolaridade (desc_esc) VALUES ($1) RETURNING id_esc`;
     let ids = [];
-    if (escolaridade.escolaridade_paciente) {
-      const result = await client.query(sql, [escolaridade.escolaridade_paciente]);
-      ids.push(result.rows[0].id_esc);
-    }
-    if (escolaridade.mae_escolaridade) {
-      const result = await client.query(sql, [escolaridade.mae_escolaridade]);
-      ids.push(result.rows[0].id_esc);
-    }
-    if (escolaridade.pai_escolaridade) {
-      const result = await client.query(sql, [escolaridade.pai_escolaridade]);
-      ids.push(result.rows[0].id_esc);
-    }
-    if (escolaridade.outro_escolaridade) {
-      const result = await client.query(sql, [escolaridade.outro_escolaridade]);
-      ids.push(result.rows[0].id_esc);
-    }
+    // Sempre insere, mesmo que vazio
+    const resultPaciente = await client.query(sql, [escolaridade.escolaridade_paciente || null]);
+    ids.push(resultPaciente.rows[0].id_esc);
+
+    const resultMae = await client.query(sql, [escolaridade.mae_escolaridade || null]);
+    ids.push(resultMae.rows[0].id_esc);
+
+    const resultPai = await client.query(sql, [escolaridade.pai_escolaridade || null]);
+    ids.push(resultPai.rows[0].id_esc);
+
+    const resultOutro = await client.query(sql, [escolaridade.outro_escolaridade || null]);
+    ids.push(resultOutro.rows[0].id_esc);
+
     return ids;
   } finally {
     client.release();
@@ -194,18 +191,15 @@ async function insertEstadoCivil(dados) {
     const sql = `INSERT INTO estado_civil (denom_estado_civil) VALUES ($1) RETURNING id_est_civil;`;
     let ids = [];
 
-    if (dados.mae_nome && dados.mae_estado_civil) {
-      const result = await client.query(sql, [dados.mae_estado_civil]);
-      ids.push(result.rows[0].id_est_civil);
-    }
-    if (dados.pai_nome && dados.pai_estado_civil) {
-      const result = await client.query(sql, [dados.pai_estado_civil]);
-      ids.push(result.rows[0].id_est_civil);
-    }
-    if (dados.outro_nome && dados.outro_estado_civil) {
-      const result = await client.query(sql, [dados.outro_estado_civil]);
-      ids.push(result.rows[0].id_est_civil);
-    }
+    const resultMae = await client.query(sql, [dados.mae_estado_civil || null]);
+    ids.push(resultMae.rows[0].id_est_civil);
+
+    const resultPai = await client.query(sql, [dados.pai_estado_civil || null]);
+    ids.push(resultPai.rows[0].id_est_civil);
+
+    const resultOutro = await client.query(sql, [dados.outro_estado_civil || null]);
+    ids.push(resultOutro.rows[0].id_est_civil);
+
     return ids;
   } finally {
     client.release();
@@ -216,16 +210,16 @@ async function insertResponsavel(responsavel, ids_esc, ids_est_civil, id_pcte, i
   const pool = await connect();
   const client = await pool.connect();
   try {
-  const sql = `INSERT INTO responsavel 
-    (resp_principal, nome_resp, cpf_resp, rg_resp, data_nasc_resp, natur_resp, tel_cel_responsavel,
-    situacao_resp, obs_resp, renda_resp, id_esc, id_est_civil, id_pcte, id_end, parent_resp) 
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) returning id_responsavel;`;
+    const sql = `INSERT INTO responsavel 
+      (resp_principal, nome_resp, cpf_resp, rg_resp, data_nasc_resp, natur_resp, tel_cel_responsavel,
+      situacao_resp, obs_resp, renda_resp, id_esc, id_est_civil, id_pcte, id_end, parent_resp) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) returning id_responsavel;`;
 
-  let idx = 0;
-  let ids = [];
+    let idx = 0;
+    let ids = [];
 
-  if (responsavel.mae_nome) {
-    const result = await client.query(sql, [
+    // Mãe
+    const resultMae = await client.query(sql, [
       responsavel.mae_responsavel_principal || null,
       responsavel.mae_nome || null,
       responsavel.mae_cpf || null,
@@ -242,12 +236,11 @@ async function insertResponsavel(responsavel, ids_esc, ids_est_civil, id_pcte, i
       id_end || null,
       responsavel.mae_parentesco || null
     ]);
+    ids.push(resultMae.rows[0].id_responsavel);
     idx++;
-    ids.push(result.rows[0].id_responsavel);
-  }
 
-  if (responsavel.pai_nome) {
-    const result = await client.query(sql, [
+    // Pai
+    const resultPai = await client.query(sql, [
       responsavel.pai_responsavel_principal || null,
       responsavel.pai_nome || null,
       responsavel.pai_cpf || null,
@@ -264,12 +257,11 @@ async function insertResponsavel(responsavel, ids_esc, ids_est_civil, id_pcte, i
       id_end || null,
       responsavel.pai_parentesco || null
     ]);
+    ids.push(resultPai.rows[0].id_responsavel);
     idx++;
-    ids.push(result.rows[0].id_responsavel);
-  }
 
-  if (responsavel.outro_nome) {
-    const result = await client.query(sql, [
+    // Outro
+    const resultOutro = await client.query(sql, [
       responsavel.outro_responsavel_principal || null,
       responsavel.outro_nome || null,
       responsavel.outro_cpf || null,
@@ -286,13 +278,10 @@ async function insertResponsavel(responsavel, ids_esc, ids_est_civil, id_pcte, i
       id_end || null,
       responsavel.outro_parentesco || null
     ]);
-    idx++;
-    ids.push(result.rows[0].id_responsavel);
-  }
+    ids.push(resultOutro.rows[0].id_responsavel);
 
-  return ids;
-  }
-  finally {
+    return ids;
+  } finally {
     client.release();
   }
 }

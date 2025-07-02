@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 require('dotenv').config();
 const db = require('./db/db'); // Importa a conexão com o banco de dados
@@ -11,6 +12,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'html')));
+app.use(express.static(path.join(__dirname, 'css')));
+app.use(express.static(path.join(__dirname, 'js')));
+app.use(express.static(__dirname)); // Para servir index.html na raiz
 // app.use('/api', authRoutes);
 
 app.post('/paciente', async (req, res) => {
@@ -38,6 +43,10 @@ app.post('/paciente', async (req, res) => {
   res.sendStatus(201);
 });
 
+// Exemplo de rota para index.html na raiz:
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

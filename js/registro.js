@@ -12,17 +12,106 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const form = document.getElementById('cadastro-form');
     if (form) {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             if (validateAllSections()) {
-                showSuccessMessage();
+                // MONTE OS OBJETOS DINÂMICOS AQUI
+
+                // Função utilitária para pegar arrays de campos
+                function getArrayFromInputs(name) {
+                    return Array.from(document.getElementsByName(name)).map(el => el.value);
+                }
+
+                // Quimioterapia
+                const quimio = {
+                    profissional: getArrayFromInputs('quimio_profissional[]'),
+                    crm: getArrayFromInputs('quimio_crm[]'),
+                    local: getArrayFromInputs('quimio_local[]'),
+                    inicio: getArrayFromInputs('quimio_inicio[]'),
+                    fim: getArrayFromInputs('quimio_fim[]')
+                };
+
+                // Radioterapia
+                const radio = {
+                    profissional: getArrayFromInputs('radio_profissional[]'),
+                    crm: getArrayFromInputs('radio_crm[]'),
+                    local: getArrayFromInputs('radio_local[]'),
+                    inicio: getArrayFromInputs('radio_inicio[]'),
+                    fim: getArrayFromInputs('radio_fim[]')
+                };
+
+                // Cirurgia
+                const cirurgia = {
+                    profissional: getArrayFromInputs('cirurgia_profissional[]'),
+                    crm: getArrayFromInputs('cirurgia_crm[]'),
+                    inicio: getArrayFromInputs('cirurgia_inicio[]'),
+                    fim: getArrayFromInputs('cirurgia_fim[]'),
+                    tipo: getArrayFromInputs('cirurgia_tipo[]'),
+                    local: getArrayFromInputs('cirurgia_local[]')
+                };
+
+                // Medicamentos
+                const medicamentos = {
+                    nome: getArrayFromInputs('medicamento_nome[]'),
+                    dosagem: getArrayFromInputs('medicamento_dosagem[]'),
+                    frequencia: getArrayFromInputs('medicamento_frequencia[]'),
+                    observacao: getArrayFromInputs('medicamento_observacao[]')
+                };
+
+                // Diagnósticos do paciente
+                const diagnosticos = {
+                    nome: getArrayFromInputs('nome[]'),
+                    cid: getArrayFromInputs('cid[]'),
+                    descricao: getArrayFromInputs('descricao[]'),
+                    observacao: getArrayFromInputs('observacao[]')
+                };
+
+                // Diagnósticos familiares
+                const diagnosticosFamiliares = {
+                    nome: getArrayFromInputs('familia[]'),
+                    cid: getArrayFromInputs('familia_cid[]'),
+                    parentesco: getArrayFromInputs('familia_parentesco[]'),
+                    descricao: getArrayFromInputs('familia_descricao[]'),
+                    observacao: getArrayFromInputs('familia_observacao[]')
+                };
+
+                // Pegue os outros campos do formulário normalmente
+                const formData = new FormData(form);
+                const dados = Object.fromEntries(formData.entries());
+
+                // Adicione os objetos dinâmicos ao payload
+                dados.quimio = quimio;
+                dados.radio = radio;
+                dados.cirurgia = cirurgia;
+                dados.medicamentos = medicamentos;
+                dados.diagnosticos = diagnosticos;
+                dados.diagnosticosFamiliares = diagnosticosFamiliares;
+
+                // Envie para o backend
+                try {
+                    const response = await fetch('/paciente', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dados)
+                    });
+
+                    if (response.ok) {
+                        showSuccessMessage();
+                        form.reset();
+                    } else {
+                        const error = await response.json();
+                        alert(error.error || 'Erro ao cadastrar paciente.');
+                    }
+                } catch (err) {
+                    alert('Erro de conexão com o servidor.');
+                }
             }
         });
     } 
 
     // Inicializar botões de remover
-    initializeRemoveCardButtons();
+    initializeRemoveCardButtons(); 
 });
 
 // Funções de formatação
@@ -397,8 +486,7 @@ function hideError(fieldId) {
 
 function initializeValidation() {
     const requiredFields = [
-        'paciente', 'data_nascimento', 'telefone1',
-        'cpf'
+        'paciente', 'data_nascimento', 'telefone1', 'cpf'
     ];
     requiredFields.forEach(field => {
         const element = document.getElementById(field);
@@ -909,11 +997,10 @@ function goToStep(stepNumber) {
 }
 
 function validateCurrentSection(sectionNumber) {
-    // Defina os campos obrigatórios de cada seção
     const requiredFieldsBySection = {
         1: ['paciente', 'data_nascimento', 'cpf'],
         2: ['telefone1'],
-        3: [] // Validação customizada para responsável principal
+        3: []
     };
 
     let isValid = true;
@@ -1037,4 +1124,20 @@ function initializeRemoveCardButtons() {
             btn.parentElement.remove();
         }
     });
+}
+
+function getQuimioData() {
+  const profissionais = Array.from(document.getElementsByName('quimio_profissional[]')).map(el => el.value);
+  const crms = Array.from(document.getElementsByName('quimio_crm[]')).map(el => el.value);
+  const locais = Array.from(document.getElementsByName('quimio_local[]')).map(el => el.value);
+  const inicios = Array.from(document.getElementsByName('quimio_inicio[]')).map(el => el.value);
+  const fins = Array.from(document.getElementsByName('quimio_fim[]')).map(el => el.value);
+
+  return {
+    profissional: profissionais,
+    crm: crms,
+    local: locais,
+    inicio: inicios,
+    fim: fins
+  };
 }
