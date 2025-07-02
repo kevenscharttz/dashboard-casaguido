@@ -113,39 +113,19 @@ function atualizarPaginacao(totalPacientes) {
     if (!paginacao) return;
     paginacao.innerHTML = '';
     const totalPaginas = Math.ceil(totalPacientes / pacientesPorPagina);
-<<<<<<< HEAD
-    if (totalPaginas <= 1) return; // Não mostra paginação se só tem uma página
-=======
->>>>>>> a118a61ab42f6054098bc129be2c230653a5aeb8
     // Botão anterior
     const btnPrev = document.createElement('button');
     btnPrev.className = 'pagination-btn';
     btnPrev.disabled = paginaAtual === 1;
     btnPrev.innerHTML = '<span class="material-icons-outlined">keyboard_arrow_left</span>';
-<<<<<<< HEAD
-    btnPrev.onclick = () => {
-        if (paginaAtual > 1) {
-            paginaAtual--;
-            renderizarPacientes();
-        }
-    };
-=======
     btnPrev.onclick = () => { if (paginaAtual > 1) { paginaAtual--; renderizarPacientes(); } };
->>>>>>> a118a61ab42f6054098bc129be2c230653a5aeb8
     paginacao.appendChild(btnPrev);
     // Botões de página
     for (let i = 1; i <= totalPaginas; i++) {
         const btn = document.createElement('button');
         btn.className = 'pagination-btn' + (i === paginaAtual ? ' active' : '');
         btn.textContent = i;
-<<<<<<< HEAD
-        btn.onclick = () => {
-            paginaAtual = i;
-            renderizarPacientes();
-        };
-=======
         btn.onclick = () => { paginaAtual = i; renderizarPacientes(); };
->>>>>>> a118a61ab42f6054098bc129be2c230653a5aeb8
         paginacao.appendChild(btn);
     }
     // Botão próximo
@@ -153,16 +133,7 @@ function atualizarPaginacao(totalPacientes) {
     btnNext.className = 'pagination-btn';
     btnNext.disabled = paginaAtual === totalPaginas || totalPaginas === 0;
     btnNext.innerHTML = '<span class="material-icons-outlined">keyboard_arrow_right</span>';
-<<<<<<< HEAD
-    btnNext.onclick = () => {
-        if (paginaAtual < totalPaginas) {
-            paginaAtual++;
-            renderizarPacientes();
-        }
-    };
-=======
     btnNext.onclick = () => { if (paginaAtual < totalPaginas) { paginaAtual++; renderizarPacientes(); } };
->>>>>>> a118a61ab42f6054098bc129be2c230653a5aeb8
     paginacao.appendChild(btnNext);
 }
 
@@ -201,11 +172,7 @@ function renderizarPacientes() {
                     <button class="action-btn" title="Ver prontuário">
                         <span class="material-icons-outlined">visibility</span>
                     </button>
-<<<<<<< HEAD
                     <button class="action-btn" title="Editar dados" data-id="${paciente.prontuario}">
-=======
-                    <button class="action-btn" title="Editar dados">
->>>>>>> a118a61ab42f6054098bc129be2c230653a5aeb8
                         <span class="material-icons-outlined">edit</span>
                     </button>
                     <button class="action-btn" title="Exportar PDF">
@@ -219,84 +186,32 @@ function renderizarPacientes() {
         `;
         tbody.appendChild(tr);
     });
+    // Adiciona evento ao botão de edição após renderizar
+    tbody.querySelectorAll('button[title="Editar dados"]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = btn.getAttribute('data-id');
+            if (id) {
+                window.location.href = `registro.html?id=${id}`;
+            }
+        });
+    });
     atualizarPaginacao(pacientesData.length);
 }
 
 // Função para buscar e renderizar pacientes reais
 async function carregarPacientes() {
     try {
-<<<<<<< HEAD
         const response = await fetch('/pacientes');
         if (!response.ok) throw new Error('Erro ao buscar pacientes');
         const pacientes = await response.json();
         pacientesData = pacientes;
         paginaAtual = 1;
         renderizarPacientes();
-=======
-        const response = await fetch('http://localhost:3000/pacientes');
-        if (!response.ok) throw new Error('Erro ao buscar pacientes');
-        const pacientes = await response.json();
-        const tbody = document.getElementById('patients-tbody');
-        tbody.innerHTML = '';
-        if (pacientes.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7">Nenhum paciente encontrado.</td></tr>';
-            return;
-        }
-        pacientes.forEach(paciente => {
-            const tr = document.createElement('tr');
-            function mostrarOuNao(valor) {
-                return valor && valor !== '' ? valor : 'Não informado';
-            }
-            tr.innerHTML = `
-                <td><strong>${mostrarOuNao(paciente.prontuario)}</strong></td>
-                <td>
-                    <div class="patient-info">
-                        <div class="patient-avatar">${(paciente.nome || '').split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase() || 'NI'}</div>
-                        <div class="patient-details">
-                            <span class="patient-name">${mostrarOuNao(paciente.nome)}</span>
-                            <span class="patient-id">${mostrarOuNao(paciente.cpf)}</span>
-                        </div>
-                    </div>
-                </td>
-                <td>${mostrarOuNao(paciente.idade)}</td>
-                <td><span class="badge badge-primary">${mostrarOuNao(paciente.diagnostico)}</span></td>
-                <td>${mostrarOuNao(paciente.ultimo_tratamento)}</td>
-                <td>
-                    <div class="actions">
-                        <button class="action-btn" title="Ver prontuário">
-                            <span class="material-icons-outlined">visibility</span>
-                        </button>
-                        <button class="action-btn" title="Editar dados" data-id="${paciente.prontuario}">
-                            <span class="material-icons-outlined">edit</span>
-                        </button>
-                        <button class="action-btn" title="Exportar PDF">
-                            <span class="material-icons-outlined">picture_as_pdf</span>
-                        </button>
-                        <button class="action-btn" title="Excluir paciente">
-                            <span class="material-icons-outlined">delete</span>
-                        </button>
-                    </div>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-
-        tbody.querySelectorAll('button[title="Editar dados"]').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const id = btn.getAttribute('data-id');
-                window.location.href = `registro.html?id=${id}`;
-            });
-        });
-        
->>>>>>> a118a61ab42f6054098bc129be2c230653a5aeb8
     } catch (err) {
         const tbody = document.getElementById('patients-tbody');
         tbody.innerHTML = '<tr><td colspan="7">Erro ao carregar pacientes.</td></tr>';
         atualizarPaginacao(0);
-<<<<<<< HEAD
         console.error('Erro ao carregar pacientes:', err);
-=======
->>>>>>> a118a61ab42f6054098bc129be2c230653a5aeb8
     }
 }
 
@@ -309,10 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
             pacientesPorPagina = parseInt(this.value, 10);
             paginaAtual = 1;
             renderizarPacientes();
-<<<<<<< HEAD
             console.log('Alterou pacientes por página para', pacientesPorPagina);
-=======
->>>>>>> a118a61ab42f6054098bc129be2c230653a5aeb8
         });
     }
     // Evento de pesquisa
@@ -331,10 +243,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const response = await fetch(`/pacientes/busca?q=${encodeURIComponent(termo)}`);
                     if (!response.ok) throw new Error('Erro ao buscar pacientes');
                     const resultados = await response.json();
-<<<<<<< HEAD
-=======
-                    // Adapta para o formato esperado por renderizarPacientes
->>>>>>> a118a61ab42f6054098bc129be2c230653a5aeb8
                     pacientesData = resultados.map(p => ({
                         prontuario: p.id_pcte,
                         nome: p.nome_pcte,
@@ -349,10 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const tbody = document.getElementById('patients-tbody');
                     tbody.innerHTML = '<tr><td colspan="7">Erro ao buscar pacientes.</td></tr>';
                     atualizarPaginacao(0);
-<<<<<<< HEAD
                     console.error('Erro ao buscar pacientes:', err);
-=======
->>>>>>> a118a61ab42f6054098bc129be2c230653a5aeb8
                 }
             }, 400);
         });
