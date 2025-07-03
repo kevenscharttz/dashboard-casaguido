@@ -16,6 +16,73 @@ async function connect() {
     return pool; 
 }
 
+// ------Contas Login------
+async function createUser({ usuario_login, senha_login }) {
+    const pool = await connect();
+    const client = await pool.connect();
+    try {
+        const query = 'INSERT INTO contas_login (usuario_login, senha_login) VALUES ($1, $2) RETURNING *';
+        const values = [usuario_login, senha_login];
+        const result = await client.query(query, values);
+        return result.rows[0];
+    } finally {
+        client.release();
+    }
+}
+
+async function getUserById(id_login) {
+    const pool = await connect();
+    const client = await pool.connect();
+    try {
+        const query = 'SELECT * FROM contas_login WHERE id_login = $1';
+        const values = [id_login];
+        const result = await client.query(query, values);
+        return result.rows[0];
+    } finally {
+        client.release();
+    }
+}
+
+async function updateUser(id_login, { usuario_login, senha_login }) {
+    const pool = await connect();
+    const client = await pool.connect();
+    try {
+        const query = 'UPDATE contas_login SET usuario_login = $1, senha_login = $2 WHERE id_login = $3 RETURNING *';
+        const values = [usuario_login, senha_login, id_login];
+        const result = await client.query(query, values);
+        return result.rows[0];
+    } finally {
+        client.release();
+    }
+}
+
+async function deleteUser(id_login) {
+    const pool = await connect();
+    const client = await pool.connect();
+    try {
+        const query = 'DELETE FROM contas_login WHERE id_login = $1 RETURNING *';
+        const values = [id_login];
+        const result = await client.query(query, values);
+        return result.rowCount > 0;
+    } finally {
+        client.release();
+    }
+}
+
+async function getAllUsers() {
+    const pool = await connect();
+    const client = await pool.connect();
+    try {
+        const query = 'SELECT * FROM contas_login ORDER BY id_login';
+        const result = await client.query(query);
+        return result.rows;
+    } finally {
+        client.release();
+    }
+}
+
+// Inicio pacientes
+
 async function insertEnderecoPaciente(endereco) {
   const pool = await connect();
   const client = await pool.connect();
@@ -623,6 +690,365 @@ async function deletarPaciente(id) {
   }
 }
 
+function buildUpdateQuery(table, idField, data, idValue) {
+  const keys = Object.keys(data);
+  const sets = keys.map((k, i) => `${k} = $${i + 1}`);
+  const values = keys.map(k => data[k]);
+  values.push(idValue);
+  const sql = `UPDATE ${table} SET ${sets.join(', ')} WHERE ${idField} = $${values.length} RETURNING *`;
+  return { sql, values };
+}
+
+// → CRUD contas_login
+async function createLogin({ usuario_login, senha_login }) {
+  const sql = `INSERT INTO contas_login (usuario_login, senha_login) VALUES ($1, $2) RETURNING *`;
+  const res = await pool.query(sql, [usuario_login, senha_login]);
+  return res.rows[0];
+}
+async function getLogin(id_login) {
+  const res = await pool.query(`SELECT * FROM contas_login WHERE id_login = $1`, [id_login]);
+  return res.rows[0];
+}
+async function updateLogin(id_login, data) {
+  const { sql, values } = buildUpdateQuery('contas_login', 'id_login', data, id_login);
+  const res = await pool.query(sql, values);
+  return res.rows[0];
+}
+async function deleteLogin(id_login) {
+  await pool.query(`DELETE FROM contas_login WHERE id_login = $1`, [id_login]);
+}
+
+// → CRUD end_pcte
+async function createEndereco(end) {
+  const fields = Object.keys(end);
+  const cols = fields.join(', ');
+  const placeholders = fields.map((_, i) => `$${i + 1}`).join(', ');
+  const values = fields.map(f => end[f]);
+  const sql = `INSERT INTO end_pcte (${cols}) VALUES (${placeholders}) RETURNING *`;
+  const res = await pool.query(sql, values);
+  return res.rows[0];
+}
+async function getEndereco(id_end) {
+  const res = await pool.query(`SELECT * FROM end_pcte WHERE id_end = $1`, [id_end]);
+  return res.rows[0];
+}
+async function updateEndereco(id_end, data) {
+  const { sql, values } = buildUpdateQuery('end_pcte', 'id_end', data, id_end);
+  const res = await pool.query(sql, values);
+  return res.rows[0];
+}
+async function deleteEndereco(id_end) {
+  await pool.query(`DELETE FROM end_pcte WHERE id_end = $1`, [id_end]);
+}
+
+// → CRUD estado_civil
+async function createEstadoCivil({ denom_estado_civil }) {
+  const sql = `INSERT INTO estado_civil (denom_estado_civil) VALUES ($1) RETURNING *`;
+  const res = await pool.query(sql, [denom_estado_civil]);
+  return res.rows[0];
+}
+async function getEstadoCivil(id_est_civil) {
+  const res = await pool.query(`SELECT * FROM estado_civil WHERE id_est_civil = $1`, [id_est_civil]);
+  return res.rows[0];
+}
+async function listEstadoCivil() {
+  const res = await pool.query(`SELECT * FROM estado_civil ORDER BY denom_estado_civil`);
+  return res.rows;
+}
+async function updateEstadoCivil(id_est_civil, data) {
+  const { sql, values } = buildUpdateQuery('estado_civil', 'id_est_civil', data, id_est_civil);
+  const res = await pool.query(sql, values);
+  return res.rows[0];
+}
+async function deleteEstadoCivil(id_est_civil) {
+  await pool.query(`DELETE FROM estado_civil WHERE id_est_civil = $1`, [id_est_civil]);
+}
+
+// → CRUD escolaridade
+async function createEscolaridade({ desc_esc }) {
+  const sql = `INSERT INTO escolaridade (desc_esc) VALUES ($1) RETURNING *`;
+  const res = await pool.query(sql, [desc_esc]);
+  return res.rows[0];
+}
+async function getEscolaridade(id_esc) {
+  const res = await pool.query(`SELECT * FROM escolaridade WHERE id_esc = $1`, [id_esc]);
+  return res.rows[0];
+}
+async function listEscolaridade() {
+  const res = await pool.query(`SELECT * FROM escolaridade ORDER BY desc_esc`);
+  return res.rows;
+}
+async function updateEscolaridade(id_esc, data) {
+  const { sql, values } = buildUpdateQuery('escolaridade', 'id_esc', data, id_esc);
+  const res = await pool.query(sql, values);
+  return res.rows[0];
+}
+async function deleteEscolaridade(id_esc) {
+  await pool.query(`DELETE FROM escolaridade WHERE id_esc = $1`, [id_esc]);
+}
+
+// → CRUD ubs_ref
+async function createUbsRef(data) {
+  const fields = Object.keys(data);
+  const cols = fields.join(', ');
+  const placeholders = fields.map((_, i) => `$${i + 1}`).join(', ');
+  const values = fields.map(f => data[f]);
+  const sql = `INSERT INTO ubs_ref (${cols}) VALUES (${placeholders}) RETURNING *`;
+  const res = await pool.query(sql, values);
+  return res.rows[0];
+}
+async function getUbsRef(id_unidade) {
+  const res = await pool.query(`SELECT * FROM ubs_ref WHERE id_unidade = $1`, [id_unidade]);
+  return res.rows[0];
+}
+async function listUbsRef() {
+  const res = await pool.query(`SELECT * FROM ubs_ref ORDER BY municipio_ubs_ref`);
+  return res.rows;
+}
+async function updateUbsRef(id_unidade, data) {
+  const { sql, values } = buildUpdateQuery('ubs_ref', 'id_unidade', data, id_unidade);
+  const res = await pool.query(sql, values);
+  return res.rows[0];
+}
+async function deleteUbsRef(id_unidade) {
+  await pool.query(`DELETE FROM ubs_ref WHERE id_unidade = $1`, [id_unidade]);
+}
+
+// → CRUD cras_ref
+async function createCrasRef(data) {
+  const fields = Object.keys(data);
+  const cols = fields.join(', ');
+  const placeholders = fields.map((_, i) => `$${i + 1}`).join(', ');
+  const values = fields.map(f => data[f]);
+  const sql = `INSERT INTO cras_ref (${cols}) VALUES (${placeholders}) RETURNING *`;
+  const res = await pool.query(sql, values);
+  return res.rows[0];
+}
+async function getCrasRef(id_cras) {
+  const res = await pool.query(`SELECT * FROM cras_ref WHERE id_cras = $1`, [id_cras]);
+  return res.rows[0];
+}
+async function listCrasRef() {
+  const res = await pool.query(`SELECT * FROM cras_ref ORDER BY municipio_cras_ref`);
+  return res.rows;
+}
+async function updateCrasRef(id_cras, data) {
+  const { sql, values } = buildUpdateQuery('cras_ref', 'id_cras', data, id_cras);
+  const res = await pool.query(sql, values);
+  return res.rows[0];
+}
+async function deleteCrasRef(id_cras) {
+  await pool.query(`DELETE FROM cras_ref WHERE id_cras = $1`, [id_cras]);
+}
+
+// → CRUD form_adq_casa
+async function createFormAdqCasa({ forma_adq_casa }) {
+  const sql = `INSERT INTO form_adq_casa (forma_adq_casa) VALUES ($1) RETURNING *`;
+  const res = await pool.query(sql, [forma_adq_casa]);
+  return res.rows[0];
+}
+async function getFormAdqCasa(id_adq_casa) {
+  const res = await pool.query(`SELECT * FROM form_adq_casa WHERE id_adq_casa = $1`, [id_adq_casa]);
+  return res.rows[0];
+}
+async function listFormAdqCasa() {
+  const res = await pool.query(`SELECT * FROM form_adq_casa ORDER BY forma_adq_casa`);
+  return res.rows;
+}
+async function updateFormAdqCasa(id_adq_casa, data) {
+  const { sql, values } = buildUpdateQuery('form_adq_casa', 'id_adq_casa', data, id_adq_casa);
+  const res = await pool.query(sql, values);
+  return res.rows[0];
+}
+async function deleteFormAdqCasa(id_adq_casa) {
+  await pool.query(`DELETE FROM form_adq_casa WHERE id_adq_casa = $1`, [id_adq_casa]);
+}
+
+// → CRUD habit_san_caract
+async function createHabitSanCaract({ nome_caract }) {
+  const sql = `INSERT INTO habit_san_caract (nome_caract) VALUES ($1) RETURNING *`;
+  const res = await pool.query(sql, [nome_caract]);
+  return res.rows[0];
+}
+async function getHabitSanCaract(id_caract) {
+  const res = await pool.query(`SELECT * FROM habit_san_caract WHERE id_caract = $1`, [id_caract]);
+  return res.rows[0];
+}
+async function listHabitSanCaract() {
+  const res = await pool.query(`SELECT * FROM habit_san_caract ORDER BY nome_caract`);
+  return res.rows;
+}
+async function updateHabitSanCaract(id_caract, data) {
+  const { sql, values } = buildUpdateQuery('habit_san_caract', 'id_caract', data, id_caract);
+  const res = await pool.query(sql, values);
+  return res.rows[0];
+}
+async function deleteHabitSanCaract(id_caract) {
+  await pool.query(`DELETE FROM habit_san_caract WHERE id_caract = $1`, [id_caract]);
+}
+
+// → CRUD paciente
+async function createPaciente(p) {
+  const end = await createEndereco(p.endereco);
+  const sql = `INSERT INTO paciente (
+    nome_pcte, data_nasc_pcte, data_cadast_pcte,
+    cpf_pcte, cns_pcte, rg_pcte,
+    cel_pcte, tel_pcte, contato_emergencia,
+    id_end
+  ) VALUES (
+    $1,$2,$3,$4,$5,$6,$7,$8,$9,$10
+  ) RETURNING *`;
+  const vals = [
+    p.nome_pcte, p.data_nasc_pcte, p.data_cadast_pcte,
+    p.cpf_pcte, p.cns_pcte, p.rg_pcte,
+    p.cel_pcte, p.tel_pcte, p.contato_emergencia,
+    end.id_end
+  ];
+  const res = await pool.query(sql, vals);
+  return res.rows[0];
+}
+async function getPaciente(id_pcte) {
+  const sql = `SELECT p.*, e.* FROM paciente p
+               LEFT JOIN end_pcte e ON p.id_end=e.id_end
+               WHERE p.id_pcte=$1`;
+  const res = await pool.query(sql, [id_pcte]);
+  return res.rows[0];
+}
+async function updatePaciente(id_pcte, data) {
+  await updateEndereco(data.endereco.id_end, data.endereco);
+  const upFields = (({ endereco, ...rest }) => rest)(data);
+  const { sql, values } = buildUpdateQuery('paciente','id_pcte', upFields, id_pcte);
+  const res = await pool.query(sql, values);
+  return res.rows[0];
+}
+async function deletePaciente(id_pcte) {
+  await pool.query(`DELETE FROM paciente WHERE id_pcte=$1`, [id_pcte]);
+}
+
+// → CRUD inst_ensino
+async function createInstEnsino(data) {
+  const keys = ['id_esc','nome_inst','tipo_inst','municipio_inst'];
+  const vals = keys.map(k => data[k]);
+  const placeholders = keys.map((_,i)=>`$${i+1}`).join(',');
+  const sql = `INSERT INTO inst_ensino (${keys.join(',')}) VALUES(${placeholders}) RETURNING *`;
+  const res = await pool.query(sql, vals);
+  return res.rows[0];
+}
+async function getInstEnsino(id_inst_ens) {
+  const res = await pool.query(`SELECT * FROM inst_ensino WHERE id_inst_ens=$1`,[id_inst_ens]);
+  return res.rows[0];
+}
+async function updateInstEnsino(id_inst_ens,data){
+  const {sql,values}=buildUpdateQuery('inst_ensino','id_inst_ens',data,id_inst_ens);
+  const res = await pool.query(sql,values);
+  return res.rows[0];
+}
+async function deleteInstEnsino(id_inst_ens){ await pool.query(`DELETE FROM inst_ensino WHERE id_inst_ens=$1`,[id_inst_ens]);}
+
+// → CRUD pcte_diag
+async function createPcteDiag(data){
+  const keys=['desc_diag','nome_diag','cid_diag','obs_diag','id_pcte','medic_uso','medic_dosagem','medic_freq','med_obs'];
+  const vals=keys.map(k=>data[k]);
+  const sql=`INSERT INTO pcte_diag(${keys.join(',')}) VALUES(${keys.map((_,i)=>`$${i+1}`).join(',')}) RETURNING *`;
+  const res=await pool.query(sql,vals);
+  return res.rows[0];
+}
+async function getPcteDiag(id_pcte_diag){
+  const res=await pool.query(`SELECT * FROM pcte_diag WHERE id_pcte_diag=$1`,[id_pcte_diag]); return res.rows[0];
+}
+async function updatePcteDiag(id_pcte_diag,data){const{sql,values}=buildUpdateQuery('pcte_diag','id_pcte_diag',data,id_pcte_diag);const res=await pool.query(sql,values);return res.rows[0];}
+async function deletePcteDiag(id_pcte_diag){await pool.query(`DELETE FROM pcte_diag WHERE id_pcte_diag=$1`,[id_pcte_diag]);}
+
+// → CRUD locais_hist
+async function createLocaisHist({id_ubs,id_cras}){const sql=`INSERT INTO locais_hist(id_ubs,id_cras) VALUES($1,$2) RETURNING *`;const res=await pool.query(sql,[id_ubs,id_cras]);return res.rows[0];}
+async function getLocaisHist(id_locais_hist){const res=await pool.query(`SELECT * FROM locais_hist WHERE id_locais_hist=$1`,[id_locais_hist]);return res.rows[0];}
+async function updateLocaisHist(id_locais_hist,data){const{sql,values}=buildUpdateQuery('locais_hist','id_locais_hist',data,id_locais_hist);const res=await pool.query(sql,values);return res.rows[0];}
+async function deleteLocaisHist(id_locais_hist){await pool.query(`DELETE FROM locais_hist WHERE id_locais_hist=$1`,[id_locais_hist]);}
+
+// → CRUD cirurgia
+async function createCirurgia(data){
+  const keys=['tipo_cirurgia','data_inic_cirurgia','data_fim_cirurgia','hosp_cirurgia','nome_prof','crm_prof','id_pcte'];
+  const vals=keys.map(k=>data[k]);
+  const sql=`INSERT INTO cirurgia(${keys.join(',')}) VALUES(${keys.map((_,i)=>`$${i+1}`).join(',')}) RETURNING *`;
+  const res=await pool.query(sql,vals);
+  return res.rows[0];
+}
+async function getCirurgia(id_cirurgia){const res=await pool.query(`SELECT * FROM cirurgia WHERE id_cirurgia=$1`,[id_cirurgia]);return res.rows[0];}
+async function updateCirurgia(id_cirurgia,data){const{sql,values}=buildUpdateQuery('cirurgia','id_cirurgia',data,id_cirurgia);const res=await pool.query(sql,values);return res.rows[0];}
+async function deleteCirurgia(id_cirurgia){await pool.query(`DELETE FROM cirurgia WHERE id_cirurgia=$1`,[id_cirurgia]);}
+
+// → CRUD sit_habit_san
+async function createSitHabitSan(data){
+  const keys=['num_comodos','id_pcte','id_adq_casa','id_caract','num_pessoas_casa'];
+  const vals=keys.map(k=>data[k]);
+  const sql=`INSERT INTO sit_habit_san(${keys.join(',')}) VALUES(${keys.map((_,i)=>`$${i+1}`).join(',')}) RETURNING *`;
+  const res=await pool.query(sql,vals);
+  return res.rows[0];
+}
+async function getSitHabitSan(id_sit_hab){const res=await pool.query(`SELECT * FROM sit_habit_san WHERE id_sit_hab=$1`,[id_sit_hab]);return res.rows[0];}
+async function updateSitHabitSan(id_sit_hab,data){const{sql,values}=buildUpdateQuery('sit_habit_san','id_sit_hab',data,id_sit_hab);const res=await pool.query(sql,values);return res.rows[0];}
+async function deleteSitHabitSan(id_sit_hab){await pool.query(`DELETE FROM sit_habit_san WHERE id_sit_hab=$1`,[id_sit_hab]);}
+
+// → CRUD pcte_radio
+async function createPcteRadio(data){
+  const keys=['data_ini','data_ultima_sessao','local_radio','nome_prof_radio','crm_prof_radio','id_pcte'];
+  const vals=keys.map(k=>data[k]);
+  const sql=`INSERT INTO pcte_radio(${keys.join(',')}) VALUES(${keys.map((_,i)=>`$${i+1}`).join(',')}) RETURNING *`;
+  const res=await pool.query(sql,vals);
+  return res.rows[0];
+}
+async function getPcteRadio(id_radio){const res=await pool.query(`SELECT * FROM pcte_radio WHERE id_radio=$1`,[id_radio]);return res.rows[0];}
+async function updatePcteRadio(id_radio,data){const{sql,values}=buildUpdateQuery('pcte_radio','id_radio',data,id_radio);const res=await pool.query(sql,values);return res.rows[0];}
+async function deletePcteRadio(id_radio){await pool.query(`DELETE FROM pcte_radio WHERE id_radio=$1`,[id_radio]);}
+
+// → CRUD pcte_quimio
+async function createPcteQuimio(data){
+  const keys=['data_ini','data_ultima_sessao','local_quimio','nome_prof_quimio','crm_prof_quimio','id_pcte'];
+  const vals=keys.map(k=>data[k]);
+  const sql=`INSERT INTO pcte_quimio(${keys.join(',')}) VALUES(${keys.map((_,i)=>`$${i+1}`).join(',')}) RETURNING *`;
+  const res=await pool.query(sql,vals);
+  return res.rows[0];
+}
+async function getPcteQuimio(id_quimio){const res=await pool.query(`SELECT * FROM pcte_quimio WHERE id_quimio=$1`,[id_quimio]);return res.rows[0];}
+async function updatePcteQuimio(id_quimio,data){const{sql,values}=buildUpdateQuery('pcte_quimio','id_quimio',data,id_quimio);const res=await pool.query(sql,values);return res.rows[0];}
+async function deletePcteQuimio(id_quimio){await pool.query(`DELETE FROM pcte_quimio WHERE id_quimio=$1`,[id_quimio]);}
+
+// → CRUD sit_socio_econo
+async function createSitSocioEcono(data){
+  const keys=['bolsa_bpc','remuneracao','id_inst_ensino','id_pcte'];
+  const vals=keys.map(k=>data[k]);
+  const sql=`INSERT INTO sit_socio_econo(${keys.join(',')}) VALUES(${keys.map((_,i)=>`$${i+1}`).join(',')}) RETURNING *`;
+  const res=await pool.query(sql,vals);
+  return res.rows[0];
+}
+async function getSitSocioEcono(id_socio_eco){const res=await pool.query(`SELECT * FROM sit_socio_econo WHERE id_socio_eco=$1`,[id_socio_eco]);return res.rows[0];}
+async function updateSitSocioEcono(id_socio_eco,data){const{sql,values}=buildUpdateQuery('sit_socio_econo','id_socio_eco',data,id_socio_eco);const res=await pool.query(sql,values);return res.rows[0];}
+async function deleteSitSocioEcono(id_socio_eco){await pool.query(`DELETE FROM sit_socio_econo WHERE id_socio_eco=$1`,[id_socio_eco]);}
+
+// → CRUD responsavel
+async function createResponsavel(data){
+  const keys=['resp_principal','nome_resp','cpf_resp','rg_resp','data_nasc_resp','natur_resp','tel_cel_responsavel','situacao_resp','obs_resp','renda_resp','parent_resp','id_esc','id_est_civil','id_pcte','id_end'];
+  const vals=keys.map(k=>data[k]);
+  const sql=`INSERT INTO responsavel(${keys.join(',')}) VALUES(${keys.map((_,i)=>`$${i+1}`).join(',')}) RETURNING *`;
+  const res=await pool.query(sql,vals);
+  return res.rows[0];
+}
+async function getResponsavel(id_responsavel){const res=await pool.query(`SELECT * FROM responsavel WHERE id_responsavel=$1`,[id_responsavel]);return res.rows[0];}
+async function updateResponsavel(id_responsavel,data){const{sql,values}=buildUpdateQuery('responsavel','id_responsavel',data,id_responsavel);const res=await pool.query(sql,values);return res.rows[0];}
+async function deleteResponsavel(id_responsavel){await pool.query(`DELETE FROM responsavel WHERE id_responsavel=$1`,[id_responsavel]);}
+
+// → CRUD resp_diag
+async function createRespDiag(data){
+  const keys=['desc_diag','nome_diag','cid_diag','obs_diag','parestesco_diag','id_pcte'];
+  const vals=keys.map(k=>data[k]);
+  const sql=`INSERT INTO resp_diag(${keys.join(',')}) VALUES(${keys.map((_,i)=>`$${i+1}`).join(',')}) RETURNING *`;
+  const res=await pool.query(sql,vals);
+  return res.rows[0];
+}
+async function getRespDiag(id_resp_diag){const res=await pool.query(`SELECT * FROM resp_diag WHERE id_resp_diag=$1`,[id_resp_diag]);return res.rows[0];}
+async function updateRespDiag(id_resp_diag,data){const{sql,values}=buildUpdateQuery('resp_diag','id_resp_diag',data,id_resp_diag);const res=await pool.query(sql,values);return res.rows[0];}
+async function deleteRespDiag(id_resp_diag){await pool.query(`DELETE FROM resp_diag WHERE id_resp_diag=$1`,[id_resp_diag]);}
+
 module.exports = { insertEnderecoPaciente,
                    insertPaciente, insertEscolaridade, inst_ensino,
                    insertQuimioterapia, insertRadioterapia, insertCirurgia,
@@ -636,6 +1062,26 @@ module.exports = { insertEnderecoPaciente,
                    getCadastrosSemana,
                    getUltimosPacientes,
                    buscarPacientes,
-                   deletarPaciente
+                   deletarPaciente,
+                     createLogin, getLogin, updateLogin, deleteLogin,
+  createEndereco, getEndereco, updateEndereco, deleteEndereco,
+  createEstadoCivil, getEstadoCivil, listEstadoCivil, updateEstadoCivil, deleteEstadoCivil,
+  createEscolaridade, getEscolaridade, listEscolaridade, updateEscolaridade, deleteEscolaridade,
+  createUbsRef, getUbsRef, listUbsRef, updateUbsRef, deleteUbsRef,
+  createCrasRef, getCrasRef, listCrasRef, updateCrasRef, deleteCrasRef,
+  createFormAdqCasa, getFormAdqCasa, listFormAdqCasa, updateFormAdqCasa, deleteFormAdqCasa,
+  createHabitSanCaract, getHabitSanCaract, listHabitSanCaract, updateHabitSanCaract, deleteHabitSanCaract,
+  createPaciente, getPaciente, updatePaciente, deletePaciente,
+  createInstEnsino, getInstEnsino, updateInstEnsino, deleteInstEnsino,
+  createPcteDiag, getPcteDiag, updatePcteDiag, deletePcteDiag,
+  createLocaisHist, getLocaisHist, updateLocaisHist, deleteLocaisHist,
+  createCirurgia, getCirurgia, updateCirurgia, deleteCirurgia,
+  createSitHabitSan, getSitHabitSan, updateSitHabitSan, deleteSitHabitSan,
+  createPcteRadio, getPcteRadio, updatePcteRadio, deletePcteRadio,
+  createPcteQuimio, getPcteQuimio, updatePcteQuimio, deletePcteQuimio,
+  createSitSocioEcono, getSitSocioEcono, updateSitSocioEcono, deleteSitSocioEcono,
+  createResponsavel, getResponsavel, updateResponsavel, deleteResponsavel,
+  createRespDiag, getRespDiag, updateRespDiag, deleteRespDiag,
+  createUser, getUserById, updateUser, deleteUser, getAllUsers
 };
 connect();

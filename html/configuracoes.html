@@ -76,25 +76,13 @@
                     <h4>Cadastrar Novo Usuário</h4>
                     <form id="novo-usuario-form">
                         <div class="form-group">
-                            <label for="nome-usuario">Nome Completo:</label>
-                            <input type="text" id="nome-usuario" name="nome-usuario" required>
+                            <label for="usuario_login">Usuário:</label>
+                            <input type="text" id="usuario_login" name="usuario_login" maxlength="50" required>
                         </div>
-                        
                         <div class="form-group">
-                            <label for="email-usuario">Email:</label>
-                            <input type="email" id="email-usuario" name="email-usuario" required>
+                            <label for="senha_login">Senha:</label>
+                            <input type="password" id="senha_login" name="senha_login" maxlength="20" required>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="senha-usuario">Senha Temporária:</label>
-                            <input type="password" id="senha-usuario" name="senha-usuario" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="confirmar-senha">Confirmar Senha:</label>
-                            <input type="password" id="confirmar-senha" name="confirmar-senha" required>
-                        </div>
-                        
                         <button type="submit" class="btn-primary">Cadastrar Usuário</button>
                     </form>
                 </div>
@@ -106,104 +94,45 @@
                         <table class="usuarios-table">
                             <thead>
                                 <tr>
-                                    <th>Nome</th>
-                                    <th>Email</th>
-                                    <th>Tipo</th>
-                                    <th>Status</th>
+                                    <th>ID</th>
+                                    <th>Usuário</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Dr. João Silva</td>
-                                    <td>joao.silva@casaguido.com</td>
-                                    <td>Médico</td>
-                                    <td>Ativo</td>
-                                    <td>
-                                        <button class="btn-edit" title="Editar">
-                                            <span class="material-icons-outlined">edit</span>
-                                        </button>
-                                        <button class="btn-reset-password" title="Resetar Senha">
-                                            <span class="material-icons-outlined">lock_reset</span>
-                                        </button>
-                                        <button class="btn-deactivate" title="Desativar">
-                                            <span class="material-icons-outlined">person_off</span>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Maria Santos</td>
-                                    <td>maria.santos@casaguido.com</td>
-                                    <td>Enfermeira</td>
-                                    <td>Ativo</td>
-                                    <td>
-                                        <button class="btn-edit" title="Editar">
-                                            <span class="material-icons-outlined">edit</span>
-                                        </button>
-                                        <button class="btn-reset-password" title="Resetar Senha">
-                                            <span class="material-icons-outlined">lock_reset</span>
-                                        </button>
-                                        <button class="btn-deactivate" title="Desativar">
-                                            <span class="material-icons-outlined">person_off</span>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Ana Costa</td>
-                                    <td>ana.costa@casaguido.com</td>
-                                    <td>Recepcionista</td>
-                                    <td>Inativo</td>
-                                    <td>
-                                        <button class="btn-edit" title="Editar">
-                                            <span class="material-icons-outlined">edit</span>
-                                        </button>
-                                        <button class="btn-reset-password" title="Resetar Senha">
-                                            <span class="material-icons-outlined">lock_reset</span>
-                                        </button>
-                                        <button class="btn-activate" title="Ativar">
-                                            <span class="material-icons-outlined">person</span>
-                                        </button>
-                                    </td>
-                                </tr>
+                            <tbody id="usuarios-tbody">
+                                <!-- Preenchido via JS -->
                             </tbody>
                         </table>
                     </div>
                 </div>
+
+    <!-- Modal para Editar Usuário -->
+    <div id="modal-editar-usuario" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Editar Usuário</h3>
+                <span class="modal-close" onclick="fecharModalEditarUsuario()">&times;</span>
             </div>
-            
-            <!-- Seção de Configurações do Sistema -->
-            <div class="config-section">
-                <h3>Configurações do Sistema</h3>
-                
-                <div class="config-card">
-                    <h4>Configurações Gerais</h4>
-                    <form id="config-sistema-form">
-                        <div class="form-group">
-                            <label for="nome-instituicao">Nome da Instituição:</label>
-                            <input type="text" id="nome-instituicao" name="nome-instituicao" value="Casa Guido">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="endereco-instituicao">Endereço:</label>
-                            <textarea id="endereco-instituicao" name="endereco-instituicao" rows="3">Rua das Flores, 123 - Centro - São Paulo/SP</textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="telefone-instituicao">Telefone:</label>
-                            <input type="tel" id="telefone-instituicao" name="telefone-instituicao" value="(11) 1234-5678">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email-instituicao">Email Institucional:</label>
-                            <input type="email" id="email-instituicao" name="email-instituicao" value="contato@casaguido.com">
-                        </div>
-                        
-                        <button type="submit" class="btn-primary">Salvar Configurações</button>
-                    </form>
-                </div>
+            <div class="modal-body">
+                <form id="editar-usuario-form">
+                    <input type="hidden" id="editar-id-usuario" name="id_usuario">
+                    <div class="form-group">
+                        <label for="editar-usuario_login">Usuário:</label>
+                        <input type="text" id="editar-usuario_login" name="usuario_login" maxlength="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editar-senha_login">Nova Senha:</label>
+                        <input type="password" id="editar-senha_login" name="senha_login" maxlength="20" required>
+                    </div>
+                </form>
             </div>
-        </main>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="fecharModalEditarUsuario()">Cancelar</button>
+                <button type="submit" form="editar-usuario-form" class="btn-primary">Salvar Alterações</button>
+            </div>
+        </div>
     </div>
+            </div>
     
     <!-- Modal para Resetar Senha -->
     <div id="modal-reset-password" class="modal" style="display: none;">

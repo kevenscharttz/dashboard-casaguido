@@ -90,63 +90,65 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Form submission
-    loginForm.addEventListener('submit', function(e) {
+    loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
-        const email = emailInput.value.trim();
-        const password = passwordInput.value;
+        const usuario = emailInput.value.trim();
+        const senha = passwordInput.value;
         let isValid = true;
 
-        // Validate email
-        if (email === '') {
-            showError('email', 'Email é obrigatório');
+        // Validate email/usuário
+        if (usuario === '') {
+            showError('email', 'Usuário é obrigatório');
             isValid = false;
-        } else if (!validateEmail(email)) {
-            showError('email', 'Por favor, insira um email válido');
+        } else if (!validateEmail(usuario)) {
+            showError('email', 'Por favor, insira um email ou usuário válido');
             isValid = false;
         } else {
             showSuccess('email');
         }
 
         // Validate password
-        if (password === '') {
+        if (senha === '') {
             showError('password', 'Senha é obrigatória');
             isValid = false;
-        } else if (!validatePassword(password)) {
+        } else if (!validatePassword(senha)) {
             showError('password', 'A senha deve ter pelo menos 6 caracteres');
             isValid = false;
         } else {
             showSuccess('password');
         }
 
-        if (isValid) {
-            performLogin(email, password);
-        }
-    });
+        if (!isValid) return;
 
-    // Login simulation
-    function performLogin(email, password) {
-        // Show loading state
+        // Mostra loading
         loginButton.disabled = true;
         loginButton.querySelector('.button-text').style.display = 'none';
         loginButton.querySelector('.button-loading').style.display = 'flex';
 
-        // Simulate API call
-        setTimeout(() => {
-            // Demo credentials
-            if (email === 'admin@casaguido.com' && password === '123456') {
-                // Success
+        // Faz login real no backend contas_login
+        try {
+            const resp = await fetch('/api/contas/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuario_login: usuario, senha_login: senha })
+            });
+            if (resp.ok) {
                 showLoginSuccess();
                 setTimeout(() => {
-                    window.location.href = '../dashboard.html';
-                }, 1500);
+                    window.location.href = '../index.html';
+                }, 1200);
+            } else if (resp.status === 401) {
+                showLoginError('Usuário ou senha incorretos');
+                resetLoginButton();
             } else {
-                // Error
-                showLoginError('Email ou senha incorretos');
+                showLoginError('Erro ao tentar login');
                 resetLoginButton();
             }
-        }, 2000);
-    }
+        } catch (err) {
+            showLoginError('Erro de conexão com o servidor');
+            resetLoginButton();
+        }
+    });
 
     function showLoginSuccess() {
         loginButton.style.background = 'linear-gradient(135deg, #27AE60 0%, #219A52 100%)';
