@@ -623,6 +623,609 @@ async function deletarPaciente(id) {
   }
 }
 
+<<<<<<< HEAD
+=======
+async function getPacientePorId(id) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    // Dados básicos do paciente
+    const result = await client.query('SELECT * FROM paciente WHERE id_pcte = $1', [id]);
+    if (!result.rows.length) return null;
+    const paciente = result.rows[0];
+
+    // Endereço
+    let endereco = null;
+    if (paciente.id_end) {
+      const endRes = await client.query('SELECT * FROM end_pcte WHERE id_end = $1', [paciente.id_end]);
+      endereco = endRes.rows[0] || {};
+    }
+
+    // Quimioterapias
+    const quimioRes = await client.query('SELECT * FROM pcte_quimio WHERE id_pcte = $1', [id]);
+    paciente.quimio = {
+      id_quimio: quimioRes.rows.map(r => r.id_quimio),
+      profissional: quimioRes.rows.map(r => r.nome_prof_quimio),
+      crm: quimioRes.rows.map(r => r.crm_prof_quimio),
+      local: quimioRes.rows.map(r => r.local_quimio),
+      inicio: quimioRes.rows.map(r => r.data_ini ? r.data_ini.toISOString().substr(0,10) : ''),
+      fim: quimioRes.rows.map(r => r.data_ultima_sessao ? r.data_ultima_sessao.toISOString().substr(0,10) : '')
+    };
+
+    // Radioterapias
+    const radioRes = await client.query('SELECT * FROM pcte_radio WHERE id_pcte = $1', [id]);
+    paciente.radio = {
+      id_radio: radioRes.rows.map(r => r.id_radio),
+      profissional: radioRes.rows.map(r => r.nome_prof_radio),
+      crm: radioRes.rows.map(r => r.crm_prof_radio),
+      local: radioRes.rows.map(r => r.local_radio),
+      inicio: radioRes.rows.map(r => r.data_ini ? r.data_ini.toISOString().substr(0,10) : ''),
+      fim: radioRes.rows.map(r => r.data_ultima_sessao ? r.data_ultima_sessao.toISOString().substr(0,10) : '')
+    };
+
+    // Cirurgias
+    const cirurgiaRes = await client.query('SELECT * FROM cirurgia WHERE id_pcte = $1', [id]);
+    paciente.cirurgia = {
+      id_cirurgia: cirurgiaRes.rows.map(r => r.id_cirurgia),
+      tipo: cirurgiaRes.rows.map(r => r.tipo_cirurgia),
+      inicio: cirurgiaRes.rows.map(r => r.data_inic_cirurgia ? r.data_inic_cirurgia.toISOString().substr(0,10) : ''),
+      fim: cirurgiaRes.rows.map(r => r.data_fim_cirurgia ? r.data_fim_cirurgia.toISOString().substr(0,10) : ''),
+      local: cirurgiaRes.rows.map(r => r.hosp_cirurgia),
+      profissional: cirurgiaRes.rows.map(r => r.nome_prof),
+      crm: cirurgiaRes.rows.map(r => r.crm_prof)
+    };
+
+    // Diagnósticos e medicamentos
+    const diagRes = await client.query('SELECT * FROM pcte_diag WHERE id_pcte = $1', [id]);
+    paciente.diagnosticos = {
+      id_pcte_diag: diagRes.rows.map(r => r.id_pcte_diag),
+      nome: diagRes.rows.map(r => r.nome_diag),
+      cid: diagRes.rows.map(r => r.cid_diag),
+      descricao: diagRes.rows.map(r => r.desc_diag),
+      observacao: diagRes.rows.map(r => r.obs_diag)
+    };
+    paciente.medicamentos = {
+      nome: diagRes.rows.map(r => r.medic_uso),
+      dosagem: diagRes.rows.map(r => r.medic_dosagem),
+      frequencia: diagRes.rows.map(r => r.medic_freq),
+      observacao: diagRes.rows.map(r => r.med_obs)
+    };
+
+    // Diagnósticos familiares
+    const diagFamRes = await client.query('SELECT * FROM resp_diag WHERE id_pcte = $1', [id]);
+    paciente.diagnosticosFamiliares = {
+      id_resp_diag: diagFamRes.rows.map(r => r.id_resp_diag),
+      nome: diagFamRes.rows.map(r => r.nome_diag),
+      cid: diagFamRes.rows.map(r => r.cid_diag),
+      descricao: diagFamRes.rows.map(r => r.desc_diag),
+      observacao: diagFamRes.rows.map(r => r.obs_diag),
+      parentesco: diagFamRes.rows.map(r => r.parestesco_diag)
+    };
+
+    // Responsáveis
+    const respRes = await client.query('SELECT * FROM responsavel WHERE id_pcte = $1 ORDER BY id_responsavel ASC', [id]);
+    const responsaveis = respRes.rows;
+    paciente.responsavel = {
+      mae_nome: responsaveis[0]?.nome_resp || '',
+      mae_cpf: responsaveis[0]?.cpf_resp || '',
+      mae_rg: responsaveis[0]?.rg_resp || '',
+      mae_data_nascimento: responsaveis[0]?.data_nasc_resp ? responsaveis[0].data_nasc_resp.toISOString().substr(0,10) : '',
+      mae_naturalidade: responsaveis[0]?.natur_resp || '',
+      mae_telefone: responsaveis[0]?.tel_cel_responsavel || '',
+      mae_ocupacao: responsaveis[0]?.situacao_resp || '',
+      mae_observacao: responsaveis[0]?.obs_resp || '',
+      mae_salario: responsaveis[0]?.renda_resp || '',
+      mae_parentesco: responsaveis[0]?.parent_resp || '',
+      mae_responsavel_principal: responsaveis[0]?.resp_principal || false,
+
+      pai_nome: responsaveis[1]?.nome_resp || '',
+      pai_cpf: responsaveis[1]?.cpf_resp || '',
+      pai_rg: responsaveis[1]?.rg_resp || '',
+      pai_data_nascimento: responsaveis[1]?.data_nasc_resp ? responsaveis[1].data_nasc_resp.toISOString().substr(0,10) : '',
+      pai_naturalidade: responsaveis[1]?.natur_resp || '',
+      pai_telefone: responsaveis[1]?.tel_cel_responsavel || '',
+      pai_ocupacao: responsaveis[1]?.situacao_resp || '',
+      pai_observacao: responsaveis[1]?.obs_resp || '',
+      pai_salario: responsaveis[1]?.renda_resp || '',
+      pai_parentesco: responsaveis[1]?.parent_resp || '',
+      pai_responsavel_principal: responsaveis[1]?.resp_principal || false,
+
+      outro_nome: responsaveis[2]?.nome_resp || '',
+      outro_cpf: responsaveis[2]?.cpf_resp || '',
+      outro_rg: responsaveis[2]?.rg_resp || '',
+      outro_data_nascimento: responsaveis[2]?.data_nasc_resp ? responsaveis[2].data_nasc_resp.toISOString().substr(0,10) : '',
+      outro_naturalidade: responsaveis[2]?.natur_resp || '',
+      outro_telefone: responsaveis[2]?.tel_cel_responsavel || '',
+      outro_ocupacao: responsaveis[2]?.situacao_resp || '',
+      outro_responsavel_observacao: responsaveis[2]?.obs_resp || '',
+      outro_salario: responsaveis[2]?.renda_resp || '',
+      outro_parentesco: responsaveis[2]?.parent_resp || '',
+      outro_responsavel_principal: responsaveis[2]?.resp_principal || false,
+    };
+
+    // Escolaridade dos responsáveis
+    paciente.escolaridade_paciente = null;
+    paciente.mae_escolaridade = null;
+    paciente.pai_escolaridade = null;
+    paciente.outro_escolaridade = null;
+    if (responsaveis[0]?.id_esc) {
+      const escMae = await client.query('SELECT desc_esc FROM escolaridade WHERE id_esc = $1', [responsaveis[0].id_esc]);
+      paciente.mae_escolaridade = escMae.rows[0]?.desc_esc || '';
+    }
+    if (responsaveis[1]?.id_esc) {
+      const escPai = await client.query('SELECT desc_esc FROM escolaridade WHERE id_esc = $1', [responsaveis[1].id_esc]);
+      paciente.pai_escolaridade = escPai.rows[0]?.desc_esc || '';
+    }
+    if (responsaveis[2]?.id_esc) {
+      const escOutro = await client.query('SELECT desc_esc FROM escolaridade WHERE id_esc = $1', [responsaveis[2].id_esc]);
+      paciente.outro_escolaridade = escOutro.rows[0]?.desc_esc || '';
+    }
+
+    // Estado civil dos responsáveis
+    paciente.mae_estado_civil = null;
+    paciente.pai_estado_civil = null;
+    paciente.outro_estado_civil = null;
+    if (responsaveis[0]?.id_est_civil) {
+      const estMae = await client.query('SELECT denom_estado_civil FROM estado_civil WHERE id_est_civil = $1', [responsaveis[0].id_est_civil]);
+      paciente.mae_estado_civil = estMae.rows[0]?.denom_estado_civil || '';
+    }
+    if (responsaveis[1]?.id_est_civil) {
+      const estPai = await client.query('SELECT denom_estado_civil FROM estado_civil WHERE id_est_civil = $1', [responsaveis[1].id_est_civil]);
+      paciente.pai_estado_civil = estPai.rows[0]?.denom_estado_civil || '';
+    }
+    if (responsaveis[2]?.id_est_civil) {
+      const estOutro = await client.query('SELECT denom_estado_civil FROM estado_civil WHERE id_est_civil = $1', [responsaveis[2].id_est_civil]);
+      paciente.outro_estado_civil = estOutro.rows[0]?.denom_estado_civil || '';
+    }
+
+    // Situação socioeconômica
+    const socioRes = await client.query('SELECT * FROM sit_socio_econo WHERE id_pcte = $1', [id]);
+    if (socioRes.rows.length) {
+      paciente.valor_bpc = socioRes.rows[0].bolsa_bpc || '';
+      paciente.renda_familiar = socioRes.rows[0].remuneracao || '';
+      paciente.id_inst_ensino = socioRes.rows[0].id_inst_ensino || null;
+    }
+
+    // Instituição de ensino
+    if (paciente.id_inst_ensino) {
+      const instEnsRes = await client.query('SELECT * FROM inst_ensino WHERE id_inst_ens = $1', [paciente.id_inst_ensino]);
+      const inst = instEnsRes.rows[0] || {};
+      paciente.instituicao_ensino = inst.nome_inst || '';
+      paciente.tipo_instituicao = inst.tipo_inst || '';
+      paciente.municipio_ensino = inst.municipio_inst || '';
+      paciente.id_esc = inst.id_esc || null;
+    }
+
+    // UBS de referência
+    const ubsRes = await client.query('SELECT * FROM ubs_ref WHERE id_unidade = (SELECT id_ubs FROM locais_hist WHERE id_cras = (SELECT id_cras FROM cras_ref WHERE id_cras = (SELECT id_cras FROM responsavel WHERE id_pcte = $1 LIMIT 1)))', [id]);
+    if (ubsRes.rows.length) {
+      paciente.ubs_municipio = ubsRes.rows[0].municipio_ubs_ref || '';
+      paciente.ubs_bairro = ubsRes.rows[0].bairro_ubs_ref || '';
+      paciente.ubs_observacao = ubsRes.rows[0].obs_ubs_ref || '';
+    }
+
+    // CRAS de referência
+    const crasRes = await client.query('SELECT * FROM cras_ref WHERE id_cras = (SELECT id_cras FROM responsavel WHERE id_pcte = $1 LIMIT 1)', [id]);
+    if (crasRes.rows.length) {
+      paciente.cras_municipio = crasRes.rows[0].municipio_cras_ref || '';
+      paciente.cras_bairro = crasRes.rows[0].bairro_cras_ref || '';
+      paciente.cras_observacao = crasRes.rows[0].obs_cras_ref || '';
+    }
+
+    // Situação habitacional sanitária
+    const habitRes = await client.query('SELECT * FROM sit_habit_san WHERE id_pcte = $1', [id]);
+    if (habitRes.rows.length) {
+      paciente.comodos = habitRes.rows[0].num_comodos || '';
+      paciente.pessoas_casa = habitRes.rows[0].num_pessoas_casa || '';
+      paciente.id_adq_casa = habitRes.rows[0].id_adq_casa || null;
+      paciente.id_caract = habitRes.rows[0].id_caract || null;
+    }
+
+    // Forma de aquisição da casa
+    if (paciente.id_adq_casa) {
+      const adqRes = await client.query('SELECT * FROM form_adq_casa WHERE id_adq_casa = $1', [paciente.id_adq_casa]);
+      paciente.situacao_habitacional = adqRes.rows[0]?.forma_adq_casa || '';
+    }
+
+    // Características da casa
+    if (paciente.id_caract) {
+      const caractRes = await client.query('SELECT * FROM habit_san_caract WHERE id_caract = $1', [paciente.id_caract]);
+      paciente.material_habitacao = caractRes.rows[0]?.nome_caract || '';
+    }
+
+    // Junta endereço ao objeto principal
+    if (endereco) {
+      paciente.endereco = endereco.rua_end || '';
+      paciente.numero = endereco.num_end || '';
+      paciente.complemento = endereco.complemento_end || '';
+      paciente.cidade = endereco.cidade_end || '';
+      paciente.bairro = endereco.bairro_end || '';
+      paciente.cep = endereco.cep_end || '';
+      paciente.estado = endereco.uf_end || '';
+      paciente.ponto_referencia = endereco.ponto_ref_end || '';
+      paciente.id_end = endereco.id_end || null;
+    }
+
+    return paciente;
+  } finally {
+    client.release();
+  }
+}
+
+// Atualiza todos os dados do paciente e suas dependências (apenas UPDATE)
+async function atualizarPaciente(id, dados) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    // Atualiza dados básicos do paciente
+    await client.query(
+      `UPDATE paciente SET 
+        nome_pcte = $1,
+        data_nasc_pcte = $2,
+        cpf_pcte = $3,
+        cns_pcte = $4,
+        rg_pcte = $5,
+        tel_pcte = $6,
+        cel_pcte = $7,
+        contato_emergencia = $8
+      WHERE id_pcte = $9`,
+      [
+        dados.paciente,
+        dados.data_nascimento,
+        dados.cpf,
+        dados.cartao_sus || null,
+        dados.rg || null,
+        dados.telefone1,
+        dados.telefone2 || dados.telefone1,
+        dados.contato_emergencia || null,
+        id
+      ]
+    );
+
+    // Atualiza endereço se vier id_end
+    if (dados.id_end) {
+      await client.query(
+        `UPDATE end_pcte SET 
+          rua_end = $1, num_end = $2, complemento_end = $3, cidade_end = $4, bairro_end = $5, cep_end = $6, uf_end = $7, ponto_ref_end = $8
+        WHERE id_end = $9`,
+        [
+          dados.endereco,
+          dados.numero,
+          dados.complemento,
+          dados.cidade,
+          dados.bairro,
+          dados.cep,
+          dados.estado,
+          dados.ponto_referencia,
+          dados.id_end
+        ]
+      );
+    }
+
+    // Atualiza quimioterapias
+    if (dados.quimio && Array.isArray(dados.quimio.id_quimio)) {
+      const sql = `UPDATE pcte_quimio SET 
+        nome_prof_quimio = $1, crm_prof_quimio = $2, local_quimio = $3, data_ini = $4, data_ultima_sessao = $5
+        WHERE id_quimio = $6 AND id_pcte = $7`;
+      for (let i = 0; i < dados.quimio.id_quimio.length; i++) {
+        await client.query(sql, [
+          dados.quimio.profissional[i] || null,
+          dados.quimio.crm[i] || null,
+          dados.quimio.local[i] || null,
+          dados.quimio.inicio[i] || null,
+          dados.quimio.fim[i] || null,
+          dados.quimio.id_quimio[i],
+          id
+        ]);
+      }
+    }
+
+    // Atualiza radioterapias
+    if (dados.radio && Array.isArray(dados.radio.id_radio)) {
+      const sql = `UPDATE pcte_radio SET 
+        nome_prof_radio = $1, crm_prof_radio = $2, local_radio = $3, data_ini = $4, data_ultima_sessao = $5
+        WHERE id_radio = $6 AND id_pcte = $7`;
+      for (let i = 0; i < dados.radio.id_radio.length; i++) {
+        await client.query(sql, [
+          dados.radio.profissional[i] || null,
+          dados.radio.crm[i] || null,
+          dados.radio.local[i] || null,
+          dados.radio.inicio[i] || null,
+          dados.radio.fim[i] || null,
+          dados.radio.id_radio[i],
+          id
+        ]);
+      }
+    }
+
+    // Atualiza cirurgias
+    if (dados.cirurgia && Array.isArray(dados.cirurgia.id_cirurgia)) {
+      const sql = `UPDATE cirurgia SET 
+        tipo_cirurgia = $1, data_inic_cirurgia = $2, data_fim_cirurgia = $3, hosp_cirurgia = $4, nome_prof = $5, crm_prof = $6
+        WHERE id_cirurgia = $7 AND id_pcte = $8`;
+      for (let i = 0; i < dados.cirurgia.id_cirurgia.length; i++) {
+        await client.query(sql, [
+          dados.cirurgia.tipo[i] || null,
+          dados.cirurgia.inicio[i] || null,
+          dados.cirurgia.fim[i] || null,
+          dados.cirurgia.local[i] || null,
+          dados.cirurgia.profissional[i] || null,
+          dados.cirurgia.crm[i] || null,
+          dados.cirurgia.id_cirurgia[i],
+          id
+        ]);
+      }
+    }
+
+    // Atualiza diagnósticos e medicamentos
+    if (dados.diagnosticos && Array.isArray(dados.diagnosticos.id_pcte_diag)) {
+      const sql = `UPDATE pcte_diag SET 
+        desc_diag = $1, nome_diag = $2, cid_diag = $3, obs_diag = $4, medic_uso = $5, medic_dosagem = $6, medic_freq = $7, med_obs = $8
+        WHERE id_pcte_diag = $9 AND id_pcte = $10`;
+      for (let i = 0; i < dados.diagnosticos.id_pcte_diag.length; i++) {
+        await client.query(sql, [
+          dados.diagnosticos.descricao[i] || null,
+          dados.diagnosticos.nome[i] || null,
+          dados.diagnosticos.cid[i] || null,
+          dados.diagnosticos.observacao[i] || null,
+          (dados.medicamentos && dados.medicamentos.nome && dados.medicamentos.nome[i]) || null,
+          (dados.medicamentos && dados.medicamentos.dosagem && dados.medicamentos.dosagem[i]) || null,
+          (dados.medicamentos && dados.medicamentos.frequencia && dados.medicamentos.frequencia[i]) || null,
+          (dados.medicamentos && dados.medicamentos.observacao && dados.medicamentos.observacao[i]) || null,
+          dados.diagnosticos.id_pcte_diag[i],
+          id
+        ]);
+      }
+    }
+
+    // Atualiza diagnósticos familiares
+    if (dados.diagnosticosFamiliares && Array.isArray(dados.diagnosticosFamiliares.id_resp_diag)) {
+      const sql = `UPDATE resp_diag SET 
+        desc_diag = $1, nome_diag = $2, cid_diag = $3, obs_diag = $4, parestesco_diag = $5
+        WHERE id_resp_diag = $6 AND id_pcte = $7`;
+      for (let i = 0; i < dados.diagnosticosFamiliares.id_resp_diag.length; i++) {
+        await client.query(sql, [
+          dados.diagnosticosFamiliares.descricao[i] || null,
+          dados.diagnosticosFamiliares.nome[i] || null,
+          dados.diagnosticosFamiliares.cid[i] || null,
+          dados.diagnosticosFamiliares.observacao[i] || null,
+          dados.diagnosticosFamiliares.parentesco[i] || null,
+          dados.diagnosticosFamiliares.id_resp_diag[i],
+          id
+        ]);
+      }
+    }
+
+    // Adicione outros updates de tabelas relacionadas conforme sua modelagem
+
+    await client.query('COMMIT');
+    return true;
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+// Atualiza estado civil
+async function atualizarEstadoCivil(id_est_civil, denom_estado_civil) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `UPDATE estado_civil SET denom_estado_civil = $1 WHERE id_est_civil = $2`,
+      [denom_estado_civil, id_est_civil]
+    );
+    return true;
+  } finally {
+    client.release();
+  }
+}
+
+// Atualiza escolaridade
+async function atualizarEscolaridade(id_esc, desc_esc) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `UPDATE escolaridade SET desc_esc = $1 WHERE id_esc = $2`,
+      [desc_esc, id_esc]
+    );
+    return true;
+  } finally {
+    client.release();
+  }
+}
+
+// Atualiza UBS de referência
+async function atualizarUbsReferencia(id_unidade, dados) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `UPDATE ubs_ref SET municipio_ubs_ref = $1, bairro_ubs_ref = $2, obs_ubs_ref = $3 WHERE id_unidade = $4`,
+      [
+        dados.ubs_municipio || null,
+        dados.ubs_bairro || null,
+        dados.ubs_observacao || null,
+        id_unidade
+      ]
+    );
+    return true;
+  } finally {
+    client.release();
+  }
+}
+
+// Atualiza CRAS de referência
+async function atualizarCrasReferencia(id_cras, dados) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `UPDATE cras_ref SET municipio_cras_ref = $1, bairro_cras_ref = $2, obs_cras_ref = $3 WHERE id_cras = $4`,
+      [
+        dados.cras_municipio || null,
+        dados.cras_bairro || null,
+        dados.cras_observacao || null,
+        id_cras
+      ]
+    );
+    return true;
+  } finally {
+    client.release();
+  }
+}
+
+// Atualiza forma de aquisição da casa
+async function atualizarAdquirirCasa(id_adq_casa, situacao_habitacional) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `UPDATE form_adq_casa SET forma_adq_casa = $1 WHERE id_adq_casa = $2`,
+      [situacao_habitacional, id_adq_casa]
+    );
+    return true;
+  } finally {
+    client.release();
+  }
+}
+
+// Atualiza características da casa
+async function atualizarCaracteristicasCasa(id_caract, material_habitacao) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `UPDATE habit_san_caract SET nome_caract = $1 WHERE id_caract = $2`,
+      [material_habitacao, id_caract]
+    );
+    return true;
+  } finally {
+    client.release();
+  }
+}
+
+// Atualiza instituição de ensino
+async function atualizarInstEnsino(id_inst_ens, dados) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `UPDATE inst_ensino SET id_esc = $1, nome_inst = $2, tipo_inst = $3, municipio_inst = $4 WHERE id_inst_ens = $5`,
+      [
+        dados.id_esc || null,
+        dados.instituicao_ensino || null,
+        dados.tipo_instituicao || null,
+        dados.municipio_ensino || null,
+        id_inst_ens
+      ]
+    );
+    return true;
+  } finally {
+    client.release();
+  }
+}
+
+// Atualiza locais_hist
+async function atualizarLocaisHist(id_locais_hist, id_ubs, id_cras) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `UPDATE locais_hist SET id_ubs = $1, id_cras = $2 WHERE id_locais_hist = $3`,
+      [id_ubs, id_cras, id_locais_hist]
+    );
+    return true;
+  } finally {
+    client.release();
+  }
+}
+
+// Atualiza situação habitacional sanitária
+async function atualizarSituacaoHabitacional(id_sit_hab, dados) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `UPDATE sit_habit_san SET num_comodos = $1, id_pcte = $2, id_adq_casa = $3, id_caract = $4, num_pessoas_casa = $5 WHERE id_sit_hab = $6`,
+      [
+        dados.comodos || null,
+        dados.id_pcte || null,
+        dados.id_adq_casa || null,
+        dados.id_caract || null,
+        dados.pessoas_casa || null,
+        id_sit_hab
+      ]
+    );
+    return true;
+  } finally {
+    client.release();
+  }
+}
+
+// Atualiza situação socioeconômica
+async function atualizarSituacaoSocioEconomica(id_socio_eco, dados) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `UPDATE sit_socio_econo SET bolsa_bpc = $1, remuneracao = $2, id_inst_ensino = $3, id_pcte = $4 WHERE id_socio_eco = $5`,
+      [
+        dados.valor_bpc || null,
+        dados.renda_familiar || null,
+        dados.id_inst_ensino || null,
+        dados.id_pcte || null,
+        id_socio_eco
+      ]
+    );
+    return true;
+  } finally {
+    client.release();
+  }
+}
+
+// Atualiza responsável
+async function atualizarResponsavel(id_responsavel, dados) {
+  const pool = await connect();
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `UPDATE responsavel SET 
+        resp_principal = $1, nome_resp = $2, cpf_resp = $3, rg_resp = $4, data_nasc_resp = $5, natur_resp = $6,
+        tel_cel_responsavel = $7, situacao_resp = $8, obs_resp = $9, renda_resp = $10, parent_resp = $11,
+        id_esc = $12, id_est_civil = $13, id_pcte = $14, id_end = $15
+      WHERE id_responsavel = $16`,
+      [
+        dados.resp_principal || null,
+        dados.nome_resp || null,
+        dados.cpf_resp || null,
+        dados.rg_resp || null,
+        dados.data_nasc_resp || null,
+        dados.natur_resp || null,
+        dados.tel_cel_responsavel || null,
+        dados.situacao_resp || null,
+        dados.obs_resp || null,
+        dados.renda_resp || null,
+        dados.parent_resp || null,
+        dados.id_esc || null,
+        dados.id_est_civil || null,
+        dados.id_pcte || null,
+        dados.id_end || null,
+        id_responsavel
+      ]
+    );
+    return true;
+  } finally {
+    client.release();
+  }
+}
+
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
 module.exports = { insertEnderecoPaciente,
                    insertPaciente, insertEscolaridade, inst_ensino,
                    insertQuimioterapia, insertRadioterapia, insertCirurgia,
@@ -636,6 +1239,23 @@ module.exports = { insertEnderecoPaciente,
                    getCadastrosSemana,
                    getUltimosPacientes,
                    buscarPacientes,
+<<<<<<< HEAD
                    deletarPaciente
+=======
+                   deletarPaciente,
+                   getPacientePorId,
+                   atualizarPaciente,
+                   atualizarEstadoCivil,
+                   atualizarEscolaridade,
+                   atualizarUbsReferencia,
+                   atualizarCrasReferencia,
+                   atualizarAdquirirCasa,
+                   atualizarCaracteristicasCasa,
+                   atualizarInstEnsino,
+                   atualizarLocaisHist,
+                   atualizarSituacaoHabitacional,
+                   atualizarSituacaoSocioEconomica,
+                   atualizarResponsavel
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
 };
 connect();

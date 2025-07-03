@@ -1,12 +1,33 @@
 // SUBSTITUA a função DOMContentLoaded existente por esta:
 
+<<<<<<< HEAD
 document.addEventListener('DOMContentLoaded', function() {
     initializeValidation();
+=======
+document.addEventListener('DOMContentLoaded', async function() {
+        // — Pré-carrega dados para edição
+    const urlParams = new URLSearchParams(window.location.search);
+    const pacienteId = urlParams.get('id');
+    if (pacienteId) {
+      try {
+        const resp = await fetch(`/paciente/${pacienteId}`);
+        if (!resp.ok) throw new Error('Paciente não encontrado');
+        const dados = await resp.json();
+        preencherFormularioPaciente(dados);
+      } catch (err) {
+        console.error(err);
+        alert('Não foi possível carregar os dados para edição.');
+      }
+    }
+
+initializeValidation();
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
     initializeFormatting();
     initializeFormLogic();
     initializeBirthDateValidation();
     initializeNavigation();
     initializeResponsavelPrincipal();
+<<<<<<< HEAD
     initializeSidebar(); // <-- ESTA LINHA É NOVA
     showSection(1);
 
@@ -117,6 +138,114 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar botões de remover
     initializeRemoveCardButtons(); 
 });
+=======
+    initializeSidebar();
+    showSection(1);
+
+    const form = document.getElementById('cadastro-form');
+
+    // --- Adicionado: Submeter ao clicar no botão da última sessão ---
+    const finalizarBtn = document.getElementById('finalizar-btn');
+    if (finalizarBtn && form) {
+        finalizarBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+        });
+    }
+    // --- Fim do trecho adicionado ---
+
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (validateAllSections()) {
+                function getArrayFromInputs(name) {
+                    return Array.from(document.getElementsByName(name)).map(el => el.value);
+                }
+
+                const quimio = {
+                    id_quimio: getArrayFromInputs('quimio_id[]'),
+                    profissional: getArrayFromInputs('quimio_profissional[]'),
+                    crm: getArrayFromInputs('quimio_crm[]'),
+                    local: getArrayFromInputs('quimio_local[]'),
+                    inicio: getArrayFromInputs('quimio_inicio[]'),
+                    fim: getArrayFromInputs('quimio_fim[]')
+                };
+
+                const radio = {
+                    id_radio: getArrayFromInputs('radio_id[]'),
+                    profissional: getArrayFromInputs('radio_profissional[]'),
+                    crm: getArrayFromInputs('radio_crm[]'),
+                    local: getArrayFromInputs('radio_local[]'),
+                    inicio: getArrayFromInputs('radio_inicio[]'),
+                    fim: getArrayFromInputs('radio_fim[]')
+                };
+
+                const cirurgia = {
+                    id_cirurgia: getArrayFromInputs('cirurgia_id[]'),
+                    profissional: getArrayFromInputs('cirurgia_profissional[]'),
+                    crm: getArrayFromInputs('cirurgia_crm[]'),
+                    inicio: getArrayFromInputs('cirurgia_inicio[]'),
+                    fim: getArrayFromInputs('cirurgia_fim[]'),
+                    tipo: getArrayFromInputs('cirurgia_tipo[]'),
+                    local: getArrayFromInputs('cirurgia_local[]')
+                };
+
+                const medicamentos = {
+                    id_medicamento: getArrayFromInputs('medicamento_id[]'),
+                    nome: getArrayFromInputs('medicamento_nome[]'),
+                    dosagem: getArrayFromInputs('medicamento_dosagem[]'),
+                    frequencia: getArrayFromInputs('medicamento_frequencia[]'),
+                    observacao: getArrayFromInputs('medicamento_observacao[]')
+                };
+
+                const diagnosticos = {
+                    id_pcte_diag: getArrayFromInputs('pcte_diag_id[]'),
+                    nome: getArrayFromInputs('nome[]'),
+                    cid: getArrayFromInputs('cid[]'),
+                    descricao: getArrayFromInputs('descricao[]'),
+                    observacao: getArrayFromInputs('observacao[]')
+                };
+
+                const diagnosticosFamiliares = {
+                    id_resp_diag: getArrayFromInputs('id_resp_diag[]'),
+                    nome: getArrayFromInputs('familia[]'),
+                    cid: getArrayFromInputs('familia_cid[]'),
+                    parentesco: getArrayFromInputs('familia_parentesco[]'),
+                    descricao: getArrayFromInputs('familia_descricao[]'),
+                    observacao: getArrayFromInputs('familia_observacao[]')
+                };
+
+                const formData = new FormData(form);
+                const dados = Object.fromEntries(formData.entries());
+
+                dados.quimio = quimio;
+                dados.radio = radio;
+                dados.cirurgia = cirurgia;
+                dados.medicamentos = medicamentos;
+                dados.diagnosticos = diagnosticos;
+                dados.diagnosticosFamiliares = diagnosticosFamiliares;
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const pacienteId = urlParams.get('id');
+                const url = pacienteId ? `/paciente/${pacienteId}` : '/paciente';
+                const method = pacienteId ? 'PUT' : 'POST';
+
+                try {
+                    const resp = await fetch(url, {
+                        method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dados)
+                    });
+                    if (!resp.ok) throw new Error('Erro ao salvar');
+                    window.location.href = '/pacientes.html';
+                } catch (err) {
+                    alert('Erro ao salvar os dados.');
+                }
+            }
+        });
+    }});
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
 
 // Funções de formatação
 function formatCPF(value) {
@@ -690,6 +819,10 @@ function initializeAddButtons() {
 
 function createQuimioTemplate() {
     return `
+<<<<<<< HEAD
+=======
+        <input type=\"hidden\" name=\"quimio_id[]\" value=\"\" />
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
         <button type="button" class="btn-quimio-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
             <img src="../img/cancelar.png" alt="Remover">
         </button>
@@ -722,6 +855,10 @@ function createQuimioTemplate() {
 
 function createRadioTemplate() {
     return `
+<<<<<<< HEAD
+=======
+        <input type=\"hidden\" name=\"radio_id[]\" value=\"\" />
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
         <button type="button" class="btn-radio-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
             <img src="../img/cancelar.png" alt="Remover">
         </button>
@@ -754,6 +891,10 @@ function createRadioTemplate() {
 
 function createCirurgiaTemplate() {
     return `
+<<<<<<< HEAD
+=======
+        <input type=\"hidden\" name=\"cirurgia_id[]\" value=\"\" />
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
         <button type="button" class="btn-cirurgia-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
             <img src="../img/cancelar.png" alt="Remover">
         </button>
@@ -790,6 +931,10 @@ function createCirurgiaTemplate() {
 
 function createMedicamentoTemplate() {
     return `
+<<<<<<< HEAD
+=======
+        <input type=\"hidden\" name=\"medicamento_id[]\" value=\"\" />
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
         <button type="button" class="btn-medicamentos-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
             <img src="../img/cancelar.png" alt="Remover">
         </button>
@@ -818,6 +963,10 @@ function createMedicamentoTemplate() {
 
 function createDiagnosticoTemplate() {
     return `
+<<<<<<< HEAD
+=======
+        <input type=\"hidden\" name=\"pcte_diag_id[]\" value=\"\" />
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
         <button type="button" class="btn-diagnostico-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
             <img src="../img/cancelar.png" alt="Remover">
         </button>
@@ -848,6 +997,10 @@ function createDiagnosticoTemplate() {
 
 function createDiagnosticoFamiliaTemplate() {
     return `
+<<<<<<< HEAD
+=======
+        <input type=\"hidden\" name=\"id_resp_diag[]\" value=\"\" />
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
         <button type="button" class="btn-familia-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
             <img src="../img/cancelar.png" alt="Remover">
         </button>
@@ -1145,3 +1298,132 @@ function getQuimioData() {
     fim: fins
   };
 }
+<<<<<<< HEAD
+=======
+
+// Função para preencher o formulário
+function preencherFormularioPaciente(dados) {
+  if (!dados) return;
+
+  // Campos simples
+  document.getElementById('paciente').value = dados.nome_pcte || '';
+  document.getElementById('data_nascimento').value = dados.data_nasc_pcte ? dados.data_nasc_pcte.substr(0,10) : '';
+  document.getElementById('cpf').value = dados.cpf_pcte || '';
+  document.getElementById('cartao_sus').value = dados.cns_pcte || '';
+  document.getElementById('rg').value = dados.rg_pcte || '';
+  document.getElementById('telefone1').value = dados.tel_pcte || '';
+  document.getElementById('telefone2').value = dados.cel_pcte || '';
+  document.getElementById('contato_emergencia').value = dados.contato_emergencia || '';
+  // Adicione outros campos simples conforme necessário...
+
+  // -------- CAMPOS DINÂMICOS --------
+
+  // Helper para limpar listas
+  function limparLista(id) {
+    const list = document.getElementById(id);
+    if (list) list.innerHTML = '';
+  }
+
+  // Helper para adicionar e preencher cards dinâmicos
+  function preencherLista(id, templateFunc, valores, nomesCampos) {
+    limparLista(id);
+    const list = document.getElementById(id);
+    if (!list || !valores || !Array.isArray(valores) || valores.length === 0) return;
+    valores.forEach((item, idx) => {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = templateFunc();
+      list.appendChild(wrapper);
+
+      nomesCampos.forEach(campo => {
+        const input = wrapper.querySelector(`[name="${campo}[]"]`);
+        if (input) input.value = item[campo.replace(/.*_/, '')] || '';
+      });
+    });
+  }
+
+  // QUIMIOTERAPIA
+  if (dados.quimio && Array.isArray(dados.quimio.profissional)) {
+    const quimioValores = dados.quimio.profissional.map((_, i) => ({
+      profissional: dados.quimio.profissional[i],
+      crm: dados.quimio.crm[i],
+      local: dados.quimio.local[i],
+      inicio: dados.quimio.inicio[i],
+      fim: dados.quimio.fim[i]
+    }));
+    preencherLista('quimio-list', createQuimioTemplate, quimioValores, [
+      'quimio_profissional', 'quimio_crm', 'quimio_local', 'quimio_inicio', 'quimio_fim'
+    ]);
+  }
+
+  // RADIOTERAPIA
+  if (dados.radio && Array.isArray(dados.radio.profissional)) {
+    const radioValores = dados.radio.profissional.map((_, i) => ({
+      profissional: dados.radio.profissional[i],
+      crm: dados.radio.crm[i],
+      local: dados.radio.local[i],
+      inicio: dados.radio.inicio[i],
+      fim: dados.radio.fim[i]
+    }));
+    preencherLista('radio-list', createRadioTemplate, radioValores, [
+      'radio_profissional', 'radio_crm', 'radio_local', 'radio_inicio', 'radio_fim'
+    ]);
+  }
+
+  // CIRURGIA
+  if (dados.cirurgia && Array.isArray(dados.cirurgia.profissional)) {
+    const cirurgiaValores = dados.cirurgia.profissional.map((_, i) => ({
+      profissional: dados.cirurgia.profissional[i],
+      crm: dados.cirurgia.crm[i],
+      inicio: dados.cirurgia.inicio[i],
+      fim: dados.cirurgia.fim[i],
+      tipo: dados.cirurgia.tipo[i],
+      local: dados.cirurgia.local[i]
+    }));
+    preencherLista('cirurgia-list', createCirurgiaTemplate, cirurgiaValores, [
+      'cirurgia_profissional', 'cirurgia_crm', 'cirurgia_inicio', 'cirurgia_fim', 'cirurgia_tipo', 'cirurgia_local'
+    ]);
+  }
+
+  // MEDICAMENTOS
+  if (dados.medicamentos && Array.isArray(dados.medicamentos.nome)) {
+    const medicamentosValores = dados.medicamentos.nome.map((_, i) => ({
+      nome: dados.medicamentos.nome[i],
+      dosagem: dados.medicamentos.dosagem[i],
+      frequencia: dados.medicamentos.frequencia[i],
+      observacao: dados.medicamentos.observacao[i]
+    }));
+    preencherLista('medicamentos-list', createMedicamentoTemplate, medicamentosValores, [
+      'medicamento_nome', 'medicamento_dosagem', 'medicamento_frequencia', 'medicamento_observacao'
+    ]);
+  }
+
+  // DIAGNÓSTICOS
+  if (dados.diagnosticos && Array.isArray(dados.diagnosticos.nome)) {
+    const diagnosticosValores = dados.diagnosticos.nome.map((_, i) => ({
+      nome: dados.diagnosticos.nome[i],
+      cid: dados.diagnosticos.cid[i],
+      descricao: dados.diagnosticos.descricao[i],
+      observacao: dados.diagnosticos.observacao[i]
+    }));
+    preencherLista('diagnosticos-list', createDiagnosticoTemplate, diagnosticosValores, [
+      'nome', 'cid', 'descricao', 'observacao'
+    ]);
+  }
+
+  // DIAGNÓSTICOS FAMILIARES
+  if (dados.diagnosticosFamiliares && Array.isArray(dados.diagnosticosFamiliares.nome)) {
+    const familiaValores = dados.diagnosticosFamiliares.nome.map((_, i) => ({
+      familia: dados.diagnosticosFamiliares.nome[i],
+      familia_cid: dados.diagnosticosFamiliares.cid[i],
+      familia_parentesco: dados.diagnosticosFamiliares.parentesco[i],
+      familia_descricao: dados.diagnosticosFamiliares.descricao[i],
+      familia_observacao: dados.diagnosticosFamiliares.observacao[i]
+    }));
+    preencherLista('diagnosticos-familia-list', createDiagnosticoFamiliaTemplate, familiaValores, [
+      'familia', 'familia_cid', 'familia_parentesco', 'familia_descricao', 'familia_observacao'
+    ]);
+  }
+
+  // Adicione outros campos conforme necessário...
+}
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
