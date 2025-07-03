@@ -120,6 +120,32 @@ app.delete('/paciente/:id', async (req, res) => {
   }
 });
 
+// Endpoint para buscar paciente por ID
+app.get('/paciente/:id', async (req, res) => {
+  try {
+    const paciente = await db.getPacientePorId(req.params.id);
+    if (!paciente) return res.status(404).json({ erro: 'Paciente não encontrado' });
+    res.json(paciente);
+  } catch (error) {
+    res.status(500).json({ erro: 'Erro ao buscar paciente' });
+  }
+});
+
+// Endpoint para atualizar paciente por ID
+app.put('/paciente/:id', async (req, res) => {
+  const id = req.params.id;
+  const novosDados = req.body;
+
+  try {
+    // Atualiza os dados do paciente no banco
+    await db.atualizarPaciente(id, novosDados);
+    res.sendStatus(204); // No Content
+  } catch (error) {
+    console.error('Erro ao atualizar paciente:', error);
+    res.status(500).json({ erro: 'Erro ao atualizar paciente' });
+  }
+});
+
 // Exemplo de rota para index.html na raiz:
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

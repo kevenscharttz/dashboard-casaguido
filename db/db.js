@@ -796,16 +796,24 @@ async function getPacientePorId(id) {
       paciente.id_esc = inst.id_esc || null;
     }
 
-    // UBS de referência
-    const ubsRes = await client.query('SELECT * FROM ubs_ref WHERE id_unidade = (SELECT id_ubs FROM locais_hist WHERE id_cras = (SELECT id_cras FROM cras_ref WHERE id_cras = (SELECT id_cras FROM responsavel WHERE id_pcte = $1 LIMIT 1)))', [id]);
+    // UBS de referência (corrigido para garantir apenas um resultado)
+    const ubsRes = await client.query(`
+      SELECT * FROM ubs_ref WHERE id_unidade = (
+        SELECT id_ubs FROM locais_hist WHERE id_cras = (
+          SELECT id_cras FROM responsavel WHERE id_pcte = $1 LIMIT 1
+        ) LIMIT 1
+      ) LIMIT 1`, [id]);
     if (ubsRes.rows.length) {
       paciente.ubs_municipio = ubsRes.rows[0].municipio_ubs_ref || '';
       paciente.ubs_bairro = ubsRes.rows[0].bairro_ubs_ref || '';
       paciente.ubs_observacao = ubsRes.rows[0].obs_ubs_ref || '';
     }
 
-    // CRAS de referência
-    const crasRes = await client.query('SELECT * FROM cras_ref WHERE id_cras = (SELECT id_cras FROM responsavel WHERE id_pcte = $1 LIMIT 1)', [id]);
+    // CRAS de referência (corrigido para garantir apenas um resultado)
+    const crasRes = await client.query(`
+      SELECT * FROM cras_ref WHERE id_cras = (
+        SELECT id_cras FROM responsavel WHERE id_pcte = $1 LIMIT 1
+      ) LIMIT 1`, [id]);
     if (crasRes.rows.length) {
       paciente.cras_municipio = crasRes.rows[0].municipio_cras_ref || '';
       paciente.cras_bairro = crasRes.rows[0].bairro_cras_ref || '';
@@ -875,10 +883,10 @@ async function atualizarPaciente(id, dados) {
         dados.paciente,
         dados.data_nascimento,
         dados.cpf,
-        dados.cartao_sus || null,
-        dados.rg || null,
-        dados.telefone1,
-        dados.telefone2 || dados.telefone1,
+        toNullIfEmpty(dados.cartao_sus),
+        toNullIfEmpty(dados.rg),
+        toNullIfEmpty(dados.telefone1),
+        toNullIfEmpty(dados.telefone2 || dados.telefone1),
         dados.contato_emergencia || null,
         id
       ]
@@ -892,7 +900,7 @@ async function atualizarPaciente(id, dados) {
         WHERE id_end = $9`,
         [
           dados.endereco,
-          dados.numero,
+          toNullIfEmpty(dados.numero),
           dados.complemento,
           dados.cidade,
           dados.bairro,
@@ -904,102 +912,179 @@ async function atualizarPaciente(id, dados) {
       );
     }
 
-    // Atualiza quimioterapias
-    if (dados.quimio && Array.isArray(dados.quimio.id_quimio)) {
-      const sql = `UPDATE pcte_quimio SET 
-        nome_prof_quimio = $1, crm_prof_quimio = $2, local_quimio = $3, data_ini = $4, data_ultima_sessao = $5
-        WHERE id_quimio = $6 AND id_pcte = $7`;
-      for (let i = 0; i < dados.quimio.id_quimio.length; i++) {
-        await client.query(sql, [
-          dados.quimio.profissional[i] || null,
-          dados.quimio.crm[i] || null,
-          dados.quimio.local[i] || null,
-          dados.quimio.inicio[i] || null,
-          dados.quimio.fim[i] || null,
-          dados.quimio.id_quimio[i],
-          id
-        ]);
+    // Atualiza ou insere quimioterapias
+    if (dados.quimio && Array.isArray(dados.quimio.nome_prof_quimio || dados.quimio.profissional)) {
+      const nomes = dados.quimio.profissional || dados.quimio.nome_prof_quimio;
+      for (let i = 0; i < nomes.length; i++) {
+        const idQuimio = toNullIfEmpty(dados.quimio.id_quimio ? dados.quimio.id_quimio[i] : null);
+        if (idQuimio) {
+          await client.query(
+            `UPDATE pcte_quimio SET nome_prof_quimio = $1, crm_prof_quimio = $2, local_quimio = $3, data_ini = $4, data_ultima_sessao = $5 WHERE id_quimio = $6 AND id_pcte = $7`,
+            [
+              toNullIfEmpty(nomes[i]),
+              toNullIfEmpty(dados.quimio.crm[i]),
+              toNullIfEmpty(dados.quimio.local[i]),
+              toNullIfEmpty(dados.quimio.inicio[i]),
+              toNullIfEmpty(dados.quimio.fim[i]),
+              idQuimio,
+              id
+            ]
+          );
+        } else {
+          await client.query(
+            `INSERT INTO pcte_quimio (nome_prof_quimio, crm_prof_quimio, local_quimio, data_ini, data_ultima_sessao, id_pcte) VALUES ($1, $2, $3, $4, $5, $6)`,
+            [
+              toNullIfEmpty(nomes[i]),
+              toNullIfEmpty(dados.quimio.crm[i]),
+              toNullIfEmpty(dados.quimio.local[i]),
+              toNullIfEmpty(dados.quimio.inicio[i]),
+              toNullIfEmpty(dados.quimio.fim[i]),
+              id
+            ]
+          );
+        }
       }
     }
 
-    // Atualiza radioterapias
-    if (dados.radio && Array.isArray(dados.radio.id_radio)) {
-      const sql = `UPDATE pcte_radio SET 
-        nome_prof_radio = $1, crm_prof_radio = $2, local_radio = $3, data_ini = $4, data_ultima_sessao = $5
-        WHERE id_radio = $6 AND id_pcte = $7`;
-      for (let i = 0; i < dados.radio.id_radio.length; i++) {
-        await client.query(sql, [
-          dados.radio.profissional[i] || null,
-          dados.radio.crm[i] || null,
-          dados.radio.local[i] || null,
-          dados.radio.inicio[i] || null,
-          dados.radio.fim[i] || null,
-          dados.radio.id_radio[i],
-          id
-        ]);
+    // Atualiza ou insere radioterapias
+    if (dados.radio && Array.isArray(dados.radio.profissional)) {
+      for (let i = 0; i < dados.radio.profissional.length; i++) {
+        const idRadio = toNullIfEmpty(dados.radio.id_radio ? dados.radio.id_radio[i] : null);
+        if (idRadio) {
+          await client.query(
+            `UPDATE pcte_radio SET nome_prof_radio = $1, crm_prof_radio = $2, local_radio = $3, data_ini = $4, data_ultima_sessao = $5 WHERE id_radio = $6 AND id_pcte = $7`,
+            [
+              toNullIfEmpty(dados.radio.profissional[i]),
+              toNullIfEmpty(dados.radio.crm[i]),
+              toNullIfEmpty(dados.radio.local[i]),
+              toNullIfEmpty(dados.radio.inicio[i]),
+              toNullIfEmpty(dados.radio.fim[i]),
+              idRadio,
+              id
+            ]
+          );
+        } else {
+          await client.query(
+            `INSERT INTO pcte_radio (nome_prof_radio, crm_prof_radio, local_radio, data_ini, data_ultima_sessao, id_pcte) VALUES ($1, $2, $3, $4, $5, $6)`,
+            [
+              toNullIfEmpty(dados.radio.profissional[i]),
+              toNullIfEmpty(dados.radio.crm[i]),
+              toNullIfEmpty(dados.radio.local[i]),
+              toNullIfEmpty(dados.radio.inicio[i]),
+              toNullIfEmpty(dados.radio.fim[i]),
+              id
+            ]
+          );
+        }
       }
     }
 
-    // Atualiza cirurgias
-    if (dados.cirurgia && Array.isArray(dados.cirurgia.id_cirurgia)) {
-      const sql = `UPDATE cirurgia SET 
-        tipo_cirurgia = $1, data_inic_cirurgia = $2, data_fim_cirurgia = $3, hosp_cirurgia = $4, nome_prof = $5, crm_prof = $6
-        WHERE id_cirurgia = $7 AND id_pcte = $8`;
-      for (let i = 0; i < dados.cirurgia.id_cirurgia.length; i++) {
-        await client.query(sql, [
-          dados.cirurgia.tipo[i] || null,
-          dados.cirurgia.inicio[i] || null,
-          dados.cirurgia.fim[i] || null,
-          dados.cirurgia.local[i] || null,
-          dados.cirurgia.profissional[i] || null,
-          dados.cirurgia.crm[i] || null,
-          dados.cirurgia.id_cirurgia[i],
-          id
-        ]);
+    // Atualiza ou insere cirurgias
+    if (dados.cirurgia && Array.isArray(dados.cirurgia.profissional)) {
+      for (let i = 0; i < dados.cirurgia.profissional.length; i++) {
+        const idCirurgia = toNullIfEmpty(dados.cirurgia.id_cirurgia ? dados.cirurgia.id_cirurgia[i] : null);
+        if (idCirurgia) {
+          await client.query(
+            `UPDATE cirurgia SET tipo_cirurgia = $1, data_inic_cirurgia = $2, data_fim_cirurgia = $3, hosp_cirurgia = $4, nome_prof = $5, crm_prof = $6 WHERE id_cirurgia = $7 AND id_pcte = $8`,
+            [
+              toNullIfEmpty(dados.cirurgia.tipo[i]),
+              toNullIfEmpty(dados.cirurgia.inicio[i]),
+              toNullIfEmpty(dados.cirurgia.fim[i]),
+              toNullIfEmpty(dados.cirurgia.local[i]),
+              toNullIfEmpty(dados.cirurgia.profissional[i]),
+              toNullIfEmpty(dados.cirurgia.crm[i]),
+              idCirurgia,
+              id
+            ]
+          );
+        } else {
+          await client.query(
+            `INSERT INTO cirurgia (tipo_cirurgia, data_inic_cirurgia, data_fim_cirurgia, hosp_cirurgia, nome_prof, crm_prof, id_pcte) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [
+              toNullIfEmpty(dados.cirurgia.tipo[i]),
+              toNullIfEmpty(dados.cirurgia.inicio[i]),
+              toNullIfEmpty(dados.cirurgia.fim[i]),
+              toNullIfEmpty(dados.cirurgia.local[i]),
+              toNullIfEmpty(dados.cirurgia.profissional[i]),
+              toNullIfEmpty(dados.cirurgia.crm[i]),
+              id
+            ]
+          );
+        }
       }
     }
 
-    // Atualiza diagnósticos e medicamentos
-    if (dados.diagnosticos && Array.isArray(dados.diagnosticos.id_pcte_diag)) {
-      const sql = `UPDATE pcte_diag SET 
-        desc_diag = $1, nome_diag = $2, cid_diag = $3, obs_diag = $4, medic_uso = $5, medic_dosagem = $6, medic_freq = $7, med_obs = $8
-        WHERE id_pcte_diag = $9 AND id_pcte = $10`;
-      for (let i = 0; i < dados.diagnosticos.id_pcte_diag.length; i++) {
-        await client.query(sql, [
-          dados.diagnosticos.descricao[i] || null,
-          dados.diagnosticos.nome[i] || null,
-          dados.diagnosticos.cid[i] || null,
-          dados.diagnosticos.observacao[i] || null,
-          (dados.medicamentos && dados.medicamentos.nome && dados.medicamentos.nome[i]) || null,
-          (dados.medicamentos && dados.medicamentos.dosagem && dados.medicamentos.dosagem[i]) || null,
-          (dados.medicamentos && dados.medicamentos.frequencia && dados.medicamentos.frequencia[i]) || null,
-          (dados.medicamentos && dados.medicamentos.observacao && dados.medicamentos.observacao[i]) || null,
-          dados.diagnosticos.id_pcte_diag[i],
-          id
-        ]);
+    // Atualiza ou insere diagnósticos e medicamentos
+    if (dados.diagnosticos && Array.isArray(dados.diagnosticos.nome)) {
+      for (let i = 0; i < dados.diagnosticos.nome.length; i++) {
+        const idDiag = toNullIfEmpty(dados.diagnosticos.id_pcte_diag ? dados.diagnosticos.id_pcte_diag[i] : null);
+        if (idDiag) {
+          await client.query(
+            `UPDATE pcte_diag SET desc_diag = $1, nome_diag = $2, cid_diag = $3, obs_diag = $4, medic_uso = $5, medic_dosagem = $6, medic_freq = $7, med_obs = $8 WHERE id_pcte_diag = $9 AND id_pcte = $10`,
+            [
+              toNullIfEmpty(dados.diagnosticos.descricao[i]),
+              toNullIfEmpty(dados.diagnosticos.nome[i]),
+              toNullIfEmpty(dados.diagnosticos.cid[i]),
+              toNullIfEmpty(dados.diagnosticos.observacao[i]),
+              (dados.medicamentos && toNullIfEmpty(dados.medicamentos.nome && dados.medicamentos.nome[i])) || null,
+              (dados.medicamentos && toNullIfEmpty(dados.medicamentos.dosagem && dados.medicamentos.dosagem[i])) || null,
+              (dados.medicamentos && toNullIfEmpty(dados.medicamentos.frequencia && dados.medicamentos.frequencia[i])) || null,
+              (dados.medicamentos && toNullIfEmpty(dados.medicamentos.observacao && dados.medicamentos.observacao[i])) || null,
+              idDiag,
+              id
+            ]
+          );
+        } else {
+          await client.query(
+            `INSERT INTO pcte_diag (desc_diag, nome_diag, cid_diag, obs_diag, id_pcte, medic_uso, medic_dosagem, medic_freq, med_obs) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+            [
+              toNullIfEmpty(dados.diagnosticos.descricao[i]),
+              toNullIfEmpty(dados.diagnosticos.nome[i]),
+              toNullIfEmpty(dados.diagnosticos.cid[i]),
+              toNullIfEmpty(dados.diagnosticos.observacao[i]),
+              id,
+              (dados.medicamentos && toNullIfEmpty(dados.medicamentos.nome && dados.medicamentos.nome[i])) || null,
+              (dados.medicamentos && toNullIfEmpty(dados.medicamentos.dosagem && dados.medicamentos.dosagem[i])) || null,
+              (dados.medicamentos && toNullIfEmpty(dados.medicamentos.frequencia && dados.medicamentos.frequencia[i])) || null,
+              (dados.medicamentos && toNullIfEmpty(dados.medicamentos.observacao && dados.medicamentos.observacao[i])) || null
+            ]
+          );
+        }
       }
     }
 
-    // Atualiza diagnósticos familiares
-    if (dados.diagnosticosFamiliares && Array.isArray(dados.diagnosticosFamiliares.id_resp_diag)) {
-      const sql = `UPDATE resp_diag SET 
-        desc_diag = $1, nome_diag = $2, cid_diag = $3, obs_diag = $4, parestesco_diag = $5
-        WHERE id_resp_diag = $6 AND id_pcte = $7`;
-      for (let i = 0; i < dados.diagnosticosFamiliares.id_resp_diag.length; i++) {
-        await client.query(sql, [
-          dados.diagnosticosFamiliares.descricao[i] || null,
-          dados.diagnosticosFamiliares.nome[i] || null,
-          dados.diagnosticosFamiliares.cid[i] || null,
-          dados.diagnosticosFamiliares.observacao[i] || null,
-          dados.diagnosticosFamiliares.parentesco[i] || null,
-          dados.diagnosticosFamiliares.id_resp_diag[i],
-          id
-        ]);
+    // Atualiza ou insere diagnósticos familiares
+    if (dados.diagnosticosFamiliares && Array.isArray(dados.diagnosticosFamiliares.nome)) {
+      for (let i = 0; i < dados.diagnosticosFamiliares.nome.length; i++) {
+        const idRespDiag = toNullIfEmpty(dados.diagnosticosFamiliares.id_resp_diag ? dados.diagnosticosFamiliares.id_resp_diag[i] : null);
+        if (idRespDiag) {
+          await client.query(
+            `UPDATE resp_diag SET desc_diag = $1, nome_diag = $2, cid_diag = $3, obs_diag = $4, parestesco_diag = $5 WHERE id_resp_diag = $6 AND id_pcte = $7`,
+            [
+              toNullIfEmpty(dados.diagnosticosFamiliares.descricao[i]),
+              toNullIfEmpty(dados.diagnosticosFamiliares.nome[i]),
+              toNullIfEmpty(dados.diagnosticosFamiliares.cid[i]),
+              toNullIfEmpty(dados.diagnosticosFamiliares.observacao[i]),
+              toNullIfEmpty(dados.diagnosticosFamiliares.parentesco[i]),
+              idRespDiag,
+              id
+            ]
+          );
+        } else {
+          await client.query(
+            `INSERT INTO resp_diag (desc_diag, nome_diag, cid_diag, obs_diag, parestesco_diag, id_pcte) VALUES ($1, $2, $3, $4, $5, $6)`,
+            [
+              toNullIfEmpty(dados.diagnosticosFamiliares.descricao[i]),
+              toNullIfEmpty(dados.diagnosticosFamiliares.nome[i]),
+              toNullIfEmpty(dados.diagnosticosFamiliares.cid[i]),
+              toNullIfEmpty(dados.diagnosticosFamiliares.observacao[i]),
+              toNullIfEmpty(dados.diagnosticosFamiliares.parentesco[i]),
+              id
+            ]
+          );
+        }
       }
     }
-
-    // Adicione outros updates de tabelas relacionadas conforme sua modelagem
-
     await client.query('COMMIT');
     return true;
   } catch (err) {
@@ -1010,36 +1095,19 @@ async function atualizarPaciente(id, dados) {
   }
 }
 
-// Atualiza estado civil
-async function atualizarEstadoCivil(id_est_civil, denom_estado_civil) {
-  const pool = await connect();
-  const client = await pool.connect();
-  try {
-    await client.query(
-      `UPDATE estado_civil SET denom_estado_civil = $1 WHERE id_est_civil = $2`,
-      [denom_estado_civil, id_est_civil]
-    );
-    return true;
-  } finally {
-    client.release();
-  }
+// Função utilitária para converter string vazia em null (usada em updates/inserts)
+function toNullIfEmpty(val) {
+  return val === '' || val === undefined ? null : val;
 }
 
-// Atualiza escolaridade
-async function atualizarEscolaridade(id_esc, desc_esc) {
-  const pool = await connect();
-  const client = await pool.connect();
-  try {
-    await client.query(
-      `UPDATE escolaridade SET desc_esc = $1 WHERE id_esc = $2`,
-      [desc_esc, id_esc]
-    );
-    return true;
-  } finally {
-    client.release();
-  }
+// Função utilitária para tratar campos numéricos/integer
+function toNullIfEmpty(val) {
+  if (val === undefined || val === null || val === '') return null;
+  if (typeof val === 'string' && val.trim() === '') return null;
+  return val;
 }
 
+<<<<<<< HEAD
 // Atualiza UBS de referência
 async function atualizarUbsReferencia(id_unidade, dados) {
   const pool = await connect();
@@ -1257,5 +1325,36 @@ module.exports = { insertEnderecoPaciente,
                    atualizarSituacaoSocioEconomica,
                    atualizarResponsavel
 >>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
+=======
+module.exports = {
+  connect,
+  insertEnderecoPaciente,
+  insertPaciente,
+  insertEscolaridade,
+  inst_ensino,
+  insertQuimioterapia,
+  insertRadioterapia,
+  insertCirurgia,
+  insertEstadoCivil,
+  insertResponsavel,
+  insertHistoricoSaude,
+  insertUbsReferencia,
+  insertCrasReferencia,
+  locaisHist,
+  insertHistoricoSaudeResponsavel,
+  insertSituacaoSocioEconomica,
+  insertAdquirirCasa,
+  insertCaracteristicasCasa,
+  insertSituacaoHabitacional,
+  getPacientes,
+  getTotalPacientes,
+  getCadastrosHoje,
+  getCadastrosSemana,
+  getUltimosPacientes,
+  buscarPacientes,
+  deletarPaciente,
+  getPacientePorId,
+  atualizarPaciente,
+  toNullIfEmpty
+>>>>>>> b383111 (ewqeqwe)
 };
-connect();
