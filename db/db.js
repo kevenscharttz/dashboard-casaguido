@@ -690,7 +690,6 @@ async function deletarPaciente(id) {
   }
 }
 
-<<<<<<< HEAD
 function buildUpdateQuery(table, idField, data, idValue) {
   const keys = Object.keys(data);
   const sets = keys.map((k, i) => `${k} = $${i + 1}`);
@@ -1050,9 +1049,6 @@ async function getRespDiag(id_resp_diag){const res=await pool.query(`SELECT * FR
 async function updateRespDiag(id_resp_diag,data){const{sql,values}=buildUpdateQuery('resp_diag','id_resp_diag',data,id_resp_diag);const res=await pool.query(sql,values);return res.rows[0];}
 async function deleteRespDiag(id_resp_diag){await pool.query(`DELETE FROM resp_diag WHERE id_resp_diag=$1`,[id_resp_diag]);}
 
-=======
-<<<<<<< HEAD
-=======
 async function getPacientePorId(id) {
   const pool = await connect();
   const client = await pool.connect();
@@ -1535,7 +1531,6 @@ function toNullIfEmpty(val) {
   return val;
 }
 
-<<<<<<< HEAD
 // Atualiza UBS de referência
 async function atualizarUbsReferencia(id_unidade, dados) {
   const pool = await connect();
@@ -1720,9 +1715,6 @@ async function atualizarResponsavel(id_responsavel, dados) {
     client.release();
   }
 }
-
->>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
->>>>>>> 5f72822aa33ccf0b8efa1dc775d67a2b0fa84832
 module.exports = { insertEnderecoPaciente,
                    insertPaciente, insertEscolaridade, inst_ensino,
                    insertQuimioterapia, insertRadioterapia, insertCirurgia,
@@ -1736,7 +1728,6 @@ module.exports = { insertEnderecoPaciente,
                    getCadastrosSemana,
                    getUltimosPacientes,
                    buscarPacientes,
-<<<<<<< HEAD
                    deletarPaciente,
                      createLogin, getLogin, updateLogin, deleteLogin,
   createEndereco, getEndereco, updateEndereco, deleteEndereco,
@@ -1757,57 +1748,9 @@ module.exports = { insertEnderecoPaciente,
   createSitSocioEcono, getSitSocioEcono, updateSitSocioEcono, deleteSitSocioEcono,
   createResponsavel, getResponsavel, updateResponsavel, deleteResponsavel,
   createRespDiag, getRespDiag, updateRespDiag, deleteRespDiag,
-  createUser, getUserById, updateUser, deleteUser, getAllUsers
-=======
-<<<<<<< HEAD
-                   deletarPaciente
-=======
-                   deletarPaciente,
-                   getPacientePorId,
-                   atualizarPaciente,
-                   atualizarEstadoCivil,
-                   atualizarEscolaridade,
-                   atualizarUbsReferencia,
-                   atualizarCrasReferencia,
-                   atualizarAdquirirCasa,
-                   atualizarCaracteristicasCasa,
-                   atualizarInstEnsino,
-                   atualizarLocaisHist,
-                   atualizarSituacaoHabitacional,
-                   atualizarSituacaoSocioEconomica,
-                   atualizarResponsavel
->>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
-=======
-module.exports = {
-  connect,
-  insertEnderecoPaciente,
-  insertPaciente,
-  insertEscolaridade,
-  inst_ensino,
-  insertQuimioterapia,
-  insertRadioterapia,
-  insertCirurgia,
-  insertEstadoCivil,
-  insertResponsavel,
-  insertHistoricoSaude,
-  insertUbsReferencia,
-  insertCrasReferencia,
-  locaisHist,
-  insertHistoricoSaudeResponsavel,
-  insertSituacaoSocioEconomica,
-  insertAdquirirCasa,
-  insertCaracteristicasCasa,
-  insertSituacaoHabitacional,
-  getPacientes,
-  getTotalPacientes,
-  getCadastrosHoje,
-  getCadastrosSemana,
-  getUltimosPacientes,
-  buscarPacientes,
-  deletarPaciente,
-  getPacientePorId,
+  createUser, getUserById, updateUser, deleteUser, getAllUsers,
   atualizarPaciente,
-  toNullIfEmpty
->>>>>>> b383111 (ewqeqwe)
->>>>>>> 5f72822aa33ccf0b8efa1dc775d67a2b0fa84832
+  atualizarUbsReferencia, atualizarCrasReferencia, atualizarAdquirirCasa,
+  atualizarCaracteristicasCasa, atualizarInstEnsino,
+  atualizarLocaisHist, atualizarSituacaoHabitacional, atualizarSituacaoSocioEconomica, atualizarResponsavel
 };
