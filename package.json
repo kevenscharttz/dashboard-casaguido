@@ -1,0 +1,21 @@
+{
+  "name": "casaguido-login",
+  "version": "1.0.0",
+  "description": "Sistema de login da Casa Guido com Node.js e Express",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "i": "^0.3.7",
+    "jsonwebtoken": "^9.0.0",
+    "mysql2": "^3.6.1",
+    "pg": "^8.16.3",
+    "pool": "^0.4.1"
+  }
+}

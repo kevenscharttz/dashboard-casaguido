@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacientes - Casa Guido</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="../css/pacientes.css">
+</head>
+<body>
+    <div class="grid-container">
+        <header class="header">
+            <button class="menu-icon" onclick="openSidebar()" aria-label="Abrir menu">
+                <span class="material-icons-outlined">menu</span>
+            </button>
+            <div class="header-left">
+                <a href="../index.html"><img src="../img/logo-nova.png" alt="Casa Guido"></a>
+            </div>
+            <nav class="header-right">
+                <a href="login.html" title="Sair">
+                    <span class="material-icons-outlined">logout</span>
+                </a>
+            </nav>
+        </header>
+        
+        <aside id="sidebar">
+            <header class="sidebar-title">
+                <button class="material-icons-outlined" onclick="closeSidebar()" aria-label="Fechar menu">close</button>
+            </header>
+            <nav class="sidebar-list">
+                <ul>
+                    <li class="sidebar-list-item">
+                        <a href="../index.html">
+                            <span class="material-icons-outlined">dashboard</span> Início
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item">
+                        <a href="registro.html">
+                            <span class="material-icons-outlined">person_add</span> Registro
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item active">
+                        <a href="pacientes.html">
+                            <span class="material-icons-outlined">people</span> Pacientes
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item">
+                        <a href="configuracoes.html">
+                            <span class="material-icons-outlined">settings</span> Configurações
+                        </a>
+                    </li>
+                    <li class="sidebar-list-item">
+                        <a href="login.html">
+                            <span class="material-icons-outlined">logout</span> Sair
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-container">
+            <header class="main-title">
+                <h1>PACIENTES</h1>
+                <p class="welcome-message">Gerencie os pacientes cadastrados no sistema</p>
+            </header>
+                    
+            <!-- Search and Actions -->
+            <section class="search-section">
+                <div class="search-container">
+                    <label for="searchInput" class="sr-only">Buscar pacientes</label>
+                    <input type="search" id="searchInput" placeholder="Buscar pacientes..." aria-describedby="search-help">
+                    <span class="material-icons-outlined search-icon" aria-hidden="true">search</span>
+                    <div id="search-help" class="sr-only">Digite o nome, prontuário ou diagnóstico do paciente</div>
+                </div>
+                <div class="action-buttons">
+                    <select class="btn-filter" id="filterBtn">
+                        <option value="quimioterapia">Filtros</option>
+                        <option value="quimioterapia">Quimioterapias</option>
+                        <option value="radioterapia">Radioterapias</option>
+                        <option value="cirurgia">Cirurgias</option>
+                    </select>
+                    <a href="registro.html" class="btn-primary">
+                        <span class="material-icons-outlined">add</span>
+                        Novo Paciente
+                    </a>
+                </div>
+            </section>
+
+            <!-- Filter Bar -->
+            <section class="filter-section" id="filterSection" style="display: none;">
+                <div class="filter-group">
+                    <label for="filterTratamento">Tratamento:</label>
+                    <select id="filterTratamento">
+                        <option value="">Todos</option>
+                        <option value="quimio">Quimioterapia</option>
+                        <option value="radio">Radioterapia</option>
+                        <option value="cirurgia">Cirurgia</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterStatus">Status:</label>
+                    <select id="filterStatus">
+                        <option value="">Todos</option>
+                        <option value="ativo">Em tratamento</option>
+                        <option value="acompanhamento">Em acompanhamento</option>
+                        <option value="urgente">Acompanhamento urgente</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterIdade">Idade:</label>
+                    <select id="filterIdade">
+                        <option value="">Todas</option>
+                        <option value="0-5">0-5 anos</option>
+                        <option value="6-10">6-10 anos</option>
+                        <option value="11-15">11-15 anos</option>
+                        <option value="16+">16+ anos</option>
+                    </select>
+                </div>
+                <button class="btn-clear-filters" id="clearFilters">
+                    <span class="material-icons-outlined">clear</span>
+                    Limpar Filtros
+                </button>
+            </section>
+
+            <!-- Patients Table -->
+            <section class="patients-table-section">
+                <article class="card">
+                    <header class="card-header">
+                        <h2 class="card-title">Lista de Pacientes</h2>
+                        <div class="card-options">
+                        </div>
+                    </header>
+                    
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="patients-table">
+                                <thead>
+                                    <tr>
+                                        <th>Prontuário</th>
+                                        <th>Nome</th>
+                                        <th>Idade</th>
+                                        <th>Diagnóstico</th>
+                                        <th>Último tratamento</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="patients-tbody">
+                                    <!-- Pacientes reais serão inseridos aqui via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <footer class="card-footer">
+                        <nav class="pagination">
+                            <button class="pagination-btn disabled" disabled>
+                                <span class="material-icons-outlined">keyboard_arrow_left</span>
+                            </button>
+                            <button class="pagination-btn active">1</button>
+                            <button class="pagination-btn">2</button>
+                            <button class="pagination-btn">3</button>
+                            <button class="pagination-btn">4</button>
+                            <button class="pagination-btn">5</button>
+                            <button class="pagination-btn">
+                                <span class="material-icons-outlined">keyboard_arrow_right</span>
+                            </button>
+                        </nav>
+                        <div class="items-per-page">
+                            <label for="itemsPerPage">Registros por página:</label>
+                            <select id="itemsPerPage">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                    </footer>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <script src="../js/pacientes.js"></script>
+</body>
+</html>
