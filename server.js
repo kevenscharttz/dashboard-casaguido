@@ -130,7 +130,11 @@ app.post('/paciente', async (req, res) => {
   await db.insertCirurgia(dados.cirurgia, id_pcte);             // tabela cirurgia
   await db.insertQuimioterapia(dados.quimio, id_pcte);           // tabela quimioterapia
   await db.insertRadioterapia(dados.radio, id_pcte);            // tabela radioterapia
+<<<<<<< HEAD
+  const id_responsavel = await db.insertResponsavel({...dados},  ids_esc, ids_est_civil, id_pcte, id_end);  // tabela responsavel  
+=======
   await db.insertResponsavel({...dados},  ids_esc, ids_est_civil, id_pcte, id_end);  // tabela responsavel  
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
   await db.insertHistoricoSaude(dados, id_pcte);
   await db.locaisHist(id_unidade, id_cras); // tabela locais historico
   await db.insertHistoricoSaudeResponsavel(dados.diagnosticosFamiliares, id_pcte); // tabela responsavel_diagnostico
@@ -211,6 +215,32 @@ app.delete('/paciente/:id', async (req, res) => {
   } catch (error) {
     console.error('Erro ao deletar paciente:', error);
     res.status(500).json({ erro: 'Erro ao deletar paciente' });
+  }
+});
+
+// Endpoint para buscar paciente por ID
+app.get('/paciente/:id', async (req, res) => {
+  try {
+    const paciente = await db.getPacientePorId(req.params.id);
+    if (!paciente) return res.status(404).json({ erro: 'Paciente não encontrado' });
+    res.json(paciente);
+  } catch (error) {
+    res.status(500).json({ erro: 'Erro ao buscar paciente' });
+  }
+});
+
+// Endpoint para atualizar paciente por ID
+app.put('/paciente/:id', async (req, res) => {
+  const id = req.params.id;
+  const novosDados = req.body;
+
+  try {
+    // Atualiza os dados do paciente no banco
+    await db.atualizarPaciente(id, novosDados);
+    res.sendStatus(204); // No Content
+  } catch (error) {
+    console.error('Erro ao atualizar paciente:', error);
+    res.status(500).json({ erro: 'Erro ao atualizar paciente' });
   }
 });
 

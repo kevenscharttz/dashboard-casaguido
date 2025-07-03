@@ -57,12 +57,16 @@ body {
   padding: 30px;
   position: relative;
 }
+<<<<<<< HEAD
 .logo-nova{
   float: right;
   width: 230px;
   height: auto;
   padding: 2px;
 }
+=======
+
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
 .prontuario-header::before {
   content: '';
   position: absolute;
@@ -146,7 +150,11 @@ body {
 }
 
 .prontuario-content h3 {
+<<<<<<< HEAD
   background: #c8e2f1;
+=======
+  background: linear-gradient(135deg, var(--background-light) 0%, #f0f4f8 100%);
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
   color: var(--text-dark);
   font-size: 16px;
   font-weight: 600;
@@ -171,6 +179,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
+<<<<<<< HEAD
   padding: 24px; 
 }
 
@@ -190,12 +199,37 @@ body {
   }
 
 .prontuario-grid-item dd a {
+=======
+  padding: 24px;
+}
+
+.prontuario-grid dt {
+  color: var(--text-medium);
+  font-weight: 500;
+  font-size: 13px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.prontuario-grid dd {
+  color: var(--text-dark);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.prontuario-grid dd a {
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
   color: var(--primary-blue);
   text-decoration: none;
   transition: var(--transition);
 }
 
+<<<<<<< HEAD
 .prontuario-grid-item dd a:hover {
+=======
+.prontuario-grid dd a:hover {
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
   color: var(--primary-blue-dark);
   text-decoration: underline;
 }
@@ -207,7 +241,11 @@ body {
 
 .diagnosis-badge {
   display: inline-block;
+<<<<<<< HEAD
   background: #f55543;
+=======
+  background: linear-gradient(135deg, var(--danger-red) 0%, #c0392b 100%);
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
   color: var(--white);
   padding: 8px 16px;
   border-radius: var(--border-radius-small);
@@ -524,18 +562,24 @@ body {
   
   .prontuario-header {
     padding: 20px;
+<<<<<<< HEAD
     text-align: center;
+=======
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
   }
   
   .prontuario-header h1 {
     font-size: 24px;
   }
+<<<<<<< HEAD
 
  .logo-nova{
     float: none;
     width: 230px;
     height: auto;
   }
+=======
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
   
   .patient-identification {
     flex-direction: column;
@@ -745,4 +789,8 @@ a:focus {
 .prontuario-content section:nth-child(4) { animation-delay: 0.4s; opacity: 0; }
 .prontuario-content section:nth-child(5) { animation-delay: 0.5s; opacity: 0; }
 .prontuario-content section:nth-child(6) { animation-delay: 0.6s; opacity: 0; }
+<<<<<<< HEAD
 .prontuario-content section:nth-child(7) { animation-delay: 0.7s; opacity: 0; }
+=======
+.prontuario-content section:nth-child(7) { animation-delay: 0.7s; opacity: 0; }
+>>>>>>> aeb6940 (feat: initialize project with Express server and authentication routes)
