@@ -175,8 +175,8 @@ function renderizarPacientes() {
                     <button class="action-btn" title="Editar dados" data-id="${paciente.prontuario}">
                         <span class="material-icons-outlined">edit</span>
                     </button>
-                    <button class="action-btn" title="Exportar PDF">
-                        <span class="material-icons-outlined">picture_as_pdf</span>
+                    <button class="action-btn btn-prontuario" title="Prontuário" data-id="${paciente.prontuario}">
+                        <span class="material-icons-outlined">assignment</span>
                     </button>
                     <button class="action-btn btn-delete-paciente" title="Excluir paciente" data-id="${paciente.prontuario}" data-nome="${paciente.nome}">
                         <span class="material-icons-outlined">delete</span>
@@ -203,6 +203,23 @@ function renderizarPacientes() {
             mostrarModalConfirmacao(id, nome);
         });
     });
+    // Evento botão visualizar prontuário (olho)
+    tbody.querySelectorAll('button[title="Ver prontuário"]').forEach((btn, idx) => {
+        btn.addEventListener('click', function() {
+            const paciente = pacientesData[(paginaAtual - 1) * pacientesPorPagina + idx];
+            abrirModalProntuario(paciente.prontuario);
+        });
+    });
+    // Evento botão prontuário (prancheta/documento)
+    setTimeout(() => {
+        tbody.querySelectorAll('.btn-prontuario').forEach((btn, idx) => {
+            btn.onclick = function() {
+                const paciente = pacientesData[(paginaAtual - 1) * pacientesPorPagina + idx];
+                // Redireciona para a página de prontuário com o ID do paciente
+                window.location.href = `prontuario.html?id=${paciente.prontuario}`;
+            };
+        });
+    }, 0);
     atualizarPaginacao(pacientesData.length);
 }
 
@@ -335,3 +352,230 @@ function calcularIdade(dataNasc) {
         return anos + (anos === 1 ? ' ano' : ' anos');
     }
 }
+
+// Função para abrir o modal do prontuário
+function abrirModalProntuario(idPaciente) {
+    // Cria o modal se não existir
+    let modal = document.getElementById('modal-prontuario');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modal-prontuario';
+        modal.className = 'modal-prontuario-bg';
+        modal.innerHTML = `<div class="modal-prontuario-content"><span class="modal-close" id="closeProntuario">&times;</span><div id="prontuario-dinamico">Carregando...</div></div>`;
+        document.body.appendChild(modal);
+    } else {
+        modal.style.display = 'flex';
+    }
+    document.getElementById('closeProntuario').onclick = () => { modal.style.display = 'none'; };
+    // Busca os dados do paciente e preenche o modal
+    fetch(`/paciente/${idPaciente}`)
+        .then(resp => resp.json())
+        .then(paciente => preencherProntuarioDinamico(paciente))
+        .catch(() => { document.getElementById('prontuario-dinamico').innerHTML = 'Erro ao carregar prontuário.'; });
+}
+
+// Função para preencher o HTML do prontuário dinamicamente
+function preencherProntuarioDinamico(p) {
+    const html = `
+        <h2>Prontuário de ${p.nome_pcte || ''}</h2>
+        <p><strong>CPF:</strong> ${p.cpf_pcte || ''}</p>
+        <p><strong>Data de Nascimento:</strong> ${p.data_nasc_pcte ? new Date(p.data_nasc_pcte).toLocaleDateString('pt-BR') : ''}</p>
+        <p><strong>Cartão SUS:</strong> ${p.cns_pcte || ''}</p>
+        <p><strong>Endereço:</strong> ${p.endereco || ''}</p>
+        <p><strong>Telefone:</strong> ${p.tel_pcte || ''}</p>
+        <p><strong>Contato Emergência:</strong> ${p.contato_emergencia || ''}</p>
+        <!-- Adicione mais campos conforme necessário -->
+    `;
+    document.getElementById('prontuario-dinamico').innerHTML = html;
+}
+
+// Função para abrir o modal do prontuário completo com layout do prontuario.html
+function abrirModalProntuarioCompleto(idPaciente) {
+    let modal = document.getElementById('modal-prontuario');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modal-prontuario';
+        modal.className = 'modal-prontuario-bg';
+        modal.innerHTML = `<div class="modal-prontuario-content" style="max-width:1200px;width:98vw;padding:0;overflow:auto;max-height:98vh;">
+            <span class="modal-close" id="closeProntuario">&times;</span>
+            <div id="prontuario-dinamico"></div>
+        </div>`;
+        document.body.appendChild(modal);
+    } else {
+        modal.style.display = 'flex';
+    }
+    document.getElementById('closeProntuario').onclick = () => { modal.style.display = 'none'; };
+    fetch(`/paciente/${idPaciente}`)
+        .then(resp => resp.json())
+        .then(paciente => preencherProntuarioCompletoComLayout(paciente))
+        .catch(() => { document.getElementById('prontuario-dinamico').innerHTML = 'Erro ao carregar prontuário.'; });
+}
+
+// Função para preencher o HTML do prontuário completo com layout do prontuario.html
+function preencherProntuarioCompletoComLayout(p) {
+    // Avatar com iniciais
+    const avatar = (p.nome_pcte || '').split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase() || 'NI';
+    // Exemplo de endereço
+    const endereco = p.endereco || '';
+    // Exemplo de familiares (ajuste conforme estrutura do seu backend)
+    const familiares = p.familiares || [];
+    // Diagnóstico e tratamentos (ajuste conforme estrutura do seu backend)
+    const diagnostico = p.diagnostico || '';
+    const cid = p.cid || '';
+    const status = p.status || '';
+    const ultimoAtendimento = p.ultimo_atendimento || '';
+    const tratamentos = p.tratamentos || [];
+    // Socioeconômico
+    const renda = p.renda_familiar || '';
+    const bpc = p.bpc || '';
+    const escola = p.escola || '';
+    const moradia = p.moradia || '';
+    // Histórico de saúde
+    const condicoes = p.condicoes || '';
+    const medicamentos = p.medicamentos || [];
+    const ubs = p.ubs || '';
+    const historicoFamiliar = p.historico_familiar || '';
+    // Monta o HTML
+    const html = `
+    <main class="prontuario-container" role="main" aria-labelledby="prontuario-title">
+        <header class="prontuario-header">
+            <img class="logo-nova" src="../img/logo-nova.png" alt="Logo Casa Guido" width="100" height="100">
+            <h1 id="prontuario-title">Prontuário Médico</h1>
+            <section class="patient-identification" aria-labelledby="patient-info-title">
+                <h2 id="patient-info-title" class="visually-hidden">Identificação do Paciente</h2>
+                <div class="patient-avatar" role="img">${avatar}</div>
+                <div class="patient-main-details">
+                    <h2 id="patient-name">${p.nome_pcte || ''}</h2>
+                    <dl class="patient-meta">
+                        <dt class="visually-hidden">Número do Prontuário:</dt>
+                        <dd id="patient-id">Prontuário: ${p.id_pcte || ''}</dd>
+                        <dt class="visually-hidden">Idade:</dt>
+                        <dd id="patient-age">Idade: ${p.data_nasc_pcte ? calcularIdade(p.data_nasc_pcte) : ''}</dd>
+                        <dt class="visually-hidden">CPF:</dt>
+                        <dd id="patient-cpf">CPF: ${p.cpf_pcte || ''}</dd>
+                    </dl>
+                </div>
+            </section>
+        </header>
+        <div class="prontuario-content">
+            <section class="dados-pessoais" aria-labelledby="dados-pessoais-title">
+                <h3 id="dados-pessoais-title">Dados Pessoais</h3>
+                <dl class="prontuario-grid">
+                    <div class="prontuario-grid-item">
+                        <dt>Data de Nascimento:</dt>
+                        <dd id="birth-date">
+                            <time>${p.data_nasc_pcte ? new Date(p.data_nasc_pcte).toLocaleDateString('pt-BR') : ''}</time>
+                        </dd>
+                    </div>
+                    <div class="prontuario-grid-item">
+                        <dt>Cartão SUS:</dt>
+                        <dd id="sus-card">${p.cns_pcte || ''}</dd>
+                    </div>
+                    <div class="prontuario-grid-item">
+                        <dt>Endereço:</dt>
+                        <dd id="address"><address>${endereco}</address></dd>
+                    </div>
+                    <div class="prontuario-grid-item">
+                        <dt>Telefone:</dt>
+                        <dd id="phone"><a href="tel:${p.tel_pcte || ''}">${p.tel_pcte || ''}</a></dd>
+                    </div>
+                </dl>
+            </section>
+            <section class="dados-familiares" aria-labelledby="familia-title">
+                <h3 id="familia-title">Familiares</h3>
+                <div class="family-grid">
+                    ${(familiares.length ? familiares.map(f => `
+                    <article class="family-member">
+                        <h4>${f.parentesco || ''}</h4>
+                        <dl>
+                            <dt>Nome:</dt><dd>${f.nome || ''}</dd>
+                            <dt>Telefone:</dt><dd><a href="tel:${f.telefone || ''}">${f.telefone || ''}</a></dd>
+                            <dt>Responsável principal:</dt><dd>${f.responsavel_principal ? 'Sim' : 'Não'}</dd>
+                        </dl>
+                    </article>
+                    `).join('') : '<p>Nenhum familiar cadastrado.</p>')}
+                </div>
+            </section>
+            <section class="diagnostico-principal" aria-labelledby="diagnostico-title">
+                <h3 id="diagnostico-title">Diagnósticos</h3>
+                <div class="diagnosis-info">
+                    <h4 class="diagnosis-badge">${diagnostico}</h4>
+                    <dl class="diagnosis-details">
+                        <div class="diagnosis-details-item"><dt>CID:</dt><dd>${cid}</dd></div>
+                        <div class="diagnosis-details-item"><dt>Status:</dt><dd><span class="status-active">${status}</span></dd></div>
+                        <div class="diagnosis-details-item"><dt>Último atendimento:</dt><dd><time>${ultimoAtendimento}</time></dd></div>
+                    </dl>
+                </div>
+            </section>
+            <section class="historico-tratamentos" aria-labelledby="tratamentos-title">
+                <h3 id="tratamentos-title">Histórico de Tratamentos</h3>
+                <div class="treatment-content" role="tabpanel" id="quimio-panel" aria-labelledby="quimio-tab">
+                    ${(tratamentos.length ? tratamentos.map(t => `
+                    <article class="treatment-item">
+                        <header class="treatment-header">
+                            <time class="treatment-date">Data de início: ${t.data_inicio || ''}</time>
+                            <h4>${t.tipo || ''}</h4>
+                        </header>
+                        <div class="treatment-details">
+                            <p><strong>Local:</strong> ${t.local || ''}</p>
+                            <p><strong>Observações:</strong> ${t.observacoes || ''}</p>
+                        </div>
+                    </article>
+                    `).join('') : '<p>Nenhum tratamento registrado.</p>')}
+                </div>
+            </section>
+            <dl class="health-history">
+                <dt>Condições de saúde:</dt>
+                <dd>${condicoes || 'Nenhuma condição adicional relatada'}</dd>
+                <dt>Medicamentos em uso:</dt>
+                <dd><ul>${medicamentos.length ? medicamentos.map(m => `<li>${m}</li>`).join('') : '<li>Nenhum</li>'}</ul></dd>
+                <dt>UBS de referência:</dt>
+                <dd>${ubs || ''}</dd>
+                <dt>Histórico familiar de saúde:</dt>
+                <dd>${historicoFamiliar || ''}</dd>
+            </dl>
+            <section class="situacao-socioeconomica" aria-labelledby="socioeconomico-title">
+                <h3 id="socioeconomico-title">Situação Socioeconômica</h3>
+                <dl class="socioeconomic-info">
+                    <dt>Renda familiar:</dt>
+                    <dd><data>${renda}</data></dd>
+                    <dt>Recebe BPC:</dt>
+                    <dd>${bpc}</dd>
+                    <dt>Escola:</dt>
+                    <dd>${escola}</dd>
+                    <dt>Moradia:</dt>
+                    <dd>${moradia}</dd>
+                </dl>
+            </section>
+        </div>
+        <footer class="prontuario-actions">
+            <button class="btn-close" type="button" aria-label="Fechar prontuário" onclick="document.getElementById('modal-prontuario').style.display='none'">
+                <span class="material-icons-outlined" aria-hidden="true">close</span>
+                Fechar
+            </button>
+        </footer>
+    </main>
+    `;
+    document.getElementById('prontuario-dinamico').innerHTML = html;
+}
+
+// CSS básico para o modal do prontuário
+(function() {
+    const style = document.createElement('style');
+    style.innerHTML = `
+    .modal-prontuario-bg {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999;
+    }
+    .modal-prontuario-content {
+        background: #fff; border-radius: 8px; max-width: 600px; width: 95vw; padding: 32px 24px; box-shadow: 0 2px 16px #0002; position: relative;
+    }
+    .modal-close {
+        position: absolute; top: 12px; right: 18px; font-size: 2rem; color: #888; cursor: pointer;
+    }
+    @media (max-width: 600px) {
+        .modal-prontuario-content { padding: 12px 4px; }
+    }
+    `;
+    document.head.appendChild(style);
+})();
