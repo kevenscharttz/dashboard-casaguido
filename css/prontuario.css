@@ -680,26 +680,40 @@ body {
 
 /* Print styles */
 @media print {
+  /* Remove browser header/footer (where possible) */
+  @page {
+    margin: 0;
+    size: auto;
+  }
   body {
-    background-color: white;
-    padding: 0;
+    padding: 0 !important;
+    background: #fff !important;
   }
-  
   .prontuario-container {
-    box-shadow: none;
-    border: none;
+    box-shadow: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
   }
-  
-  .prontuario-actions {
-    display: none;
+  /* Esconde botões de ação na impressão */
+  .prontuario-actions, .btn-print, .btn-pdf, .btn-close {
+    display: none !important;
   }
-  
-  .treatment-tab {
-    display: none;
+  /* Remove animações na impressão */
+  .prontuario-content section {
+    animation: none !important;
+    opacity: 1 !important;
   }
-  
-  .treatment-content {
-    display: block !important;
+  .prontuario-header, .prontuario-content section, .prontuario-actions {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .prontuario-content {
+    page-break-before: auto !important;
+    page-break-after: auto !important;
+    break-before: auto !important;
+    break-after: auto !important;
   }
 }
 

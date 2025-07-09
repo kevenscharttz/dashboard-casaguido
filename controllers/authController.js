@@ -21,19 +21,14 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
-
   try {
-    const [rows] = await db.pool.execute('SELECT * FROM usuarios WHERE email = ?', [username]);
-    const user = rows[0];
-
-    if (!user) return res.status(401).json({ erro: 'Usuário não encontrado.' });
-
-    const senhaValida = await bcrypt.compare(password, user.senha_hash);
-    if (!senhaValida) return res.status(401).json({ erro: 'Senha inválida.' });
-
-    const token = jwt.sign({ id: user.id, tipo: user.tipo }, process.env.JWT_SECRET, { expiresIn: '2h' });
-
-    res.json({ mensagem: 'Login bem-sucedido', token, nome: user.nome, tipo: user.tipo });
+    const pool = await db.connect();
+    const result = await pool.query('SELECT * FROM contas_login WHERE usuario_login = $1', [username]);
+    if (!result.rows.length) return res.status(401).json({ erro: 'Usuário não encontrado.' });
+    const user = result.rows[0];
+    if (password !== user.senha_login) return res.status(401).json({ erro: 'Senha inválida.' });
+    const token = jwt.sign({ id: user.id_login, tipo: 'usuario' }, process.env.JWT_SECRET, { expiresIn: '2h' });
+    res.json({ mensagem: 'Login bem-sucedido', token, nome: user.usuario_login, tipo: 'usuario' });
   } catch (error) {
     console.error('Erro no login:', error);
     res.status(500).json({ erro: 'Erro ao realizar login.' });

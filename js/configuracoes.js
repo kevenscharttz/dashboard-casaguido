@@ -89,7 +89,7 @@
                 usuarios.forEach(usuario => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${usuario.id}</td>
+                        <td>${usuario.id_login}</td>
                         <td>${usuario.usuario_login}</td>
                         <td>
                             <button class="btn-reset-password" data-usuario="${usuario.usuario_login}"><i class="bi bi-key"></i> Resetar Senha</button>

@@ -124,28 +124,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Login simulation
+    // Login real com backend
     function performLogin(email, password) {
-        // Show loading state
         loginButton.disabled = true;
         loginButton.querySelector('.button-text').style.display = 'none';
         loginButton.querySelector('.button-loading').style.display = 'flex';
 
-        // Simulate API call
-        setTimeout(() => {
-            // Demo credentials
-            if (email === 'admin@email.com' && password === '123456') {
-                // Success
+        fetch('/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: email, password })
+        })
+        .then(async res => {
+            if (res.ok) {
                 showLoginSuccess();
                 setTimeout(() => {
                     window.location.href = '../index.html';
                 }, 1500);
             } else {
-                // Error
-                showLoginError('Email ou senha incorretos');
+                const erro = await res.json();
+                showLoginError(erro.erro || 'Email ou senha incorretos');
                 resetLoginButton();
             }
-        }, 2000);
+        })
+        .catch(() => {
+            showLoginError('Erro de conexão com o servidor');
+            resetLoginButton();
+        });
     }
 
     function showLoginSuccess() {
