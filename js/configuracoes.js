@@ -1,4 +1,4 @@
-        // Funções básicas para os modais e interações
+// Funções básicas para os modais e interações
         function abrirModalResetSenha(nomeUsuario) {
             document.getElementById('reset-user-name').textContent = nomeUsuario;
             document.getElementById('modal-reset-password').style.display = 'block';
@@ -76,5 +76,71 @@
                 sidebar.addEventListener('click', function(event) {
                     event.stopPropagation();
                 });
+            }
+        });
+
+        // Função para buscar e preencher a tabela de usuários
+        async function carregarUsuarios() {
+            try {
+                const response = await fetch('/auth/usuarios');
+                const usuarios = await response.json();
+                const tbody = document.getElementById('usuarios-tbody');
+                tbody.innerHTML = '';
+                usuarios.forEach(usuario => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${usuario.id}</td>
+                        <td>${usuario.usuario_login}</td>
+                        <td>
+                            <button class="btn-reset-password" data-usuario="${usuario.usuario_login}"><i class="bi bi-key"></i> Resetar Senha</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                // Reatribui eventos aos botões de resetar senha
+                document.querySelectorAll('.btn-reset-password').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const row = this.closest('tr');
+                        const nomeUsuario = row.cells[1].textContent;
+                        abrirModalResetSenha(nomeUsuario);
+                    });
+                });
+            } catch (error) {
+                console.error('Erro ao carregar usuários:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarUsuarios();
+        });
+
+        // Função para cadastrar novo usuário
+        async function cadastrarNovoUsuario(event) {
+            event.preventDefault();
+            const usuario_login = document.getElementById('usuario_login').value;
+            const senha_login = document.getElementById('senha_login').value;
+            try {
+                const response = await fetch('/auth/contas_login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario_login, senha_login })
+                });
+                if (response.ok) {
+                    document.getElementById('novo-usuario-form').reset();
+                    await carregarUsuarios();
+                    alert('Usuário cadastrado com sucesso!');
+                } else {
+                    const erro = await response.json();
+                    alert(erro.erro || 'Erro ao cadastrar usuário.');
+                }
+            } catch (error) {
+                alert('Erro ao cadastrar usuário.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('novo-usuario-form');
+            if (form) {
+                form.addEventListener('submit', cadastrarNovoUsuario);
             }
         });

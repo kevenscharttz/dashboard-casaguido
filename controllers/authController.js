@@ -1,4 +1,3 @@
-const pool = require('../db/connection');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -9,7 +8,7 @@ exports.register = async (req, res) => {
 
   try {
     const senhaHash = await bcrypt.hash(senha, 10);
-    await pool.execute(
+    await db.pool.execute(
       'INSERT INTO usuarios (nome, email, senha_hash, tipo, status) VALUES (?, ?, ?, ?, ?)',
       [nome, email, senhaHash, tipo, 'ativo']
     );
@@ -24,7 +23,7 @@ exports.login = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const [rows] = await pool.execute('SELECT * FROM usuarios WHERE email = ?', [username]);
+    const [rows] = await db.pool.execute('SELECT * FROM usuarios WHERE email = ?', [username]);
     const user = rows[0];
 
     if (!user) return res.status(401).json({ erro: 'Usuário não encontrado.' });
@@ -102,5 +101,28 @@ exports.cadastrarPaciente = async (req, res) => {
   } catch (error) {
     console.error('Erro ao cadastrar paciente:', error);
     res.status(500).json({ error: 'Erro ao cadastrar paciente.' });
+  }
+};
+
+// Endpoint para listar todos os usuários cadastrados
+exports.listUsers = async (req, res) => {
+  try {
+    const users = await db.getAllUsers();
+    res.json(users);
+  } catch (error) {
+    console.error('Erro ao buscar usuários:', error);
+    res.status(500).json({ erro: 'Erro ao buscar usuários.' });
+  }
+};
+
+// Endpoint para cadastrar usuário na tabela contas_login
+exports.createLoginUser = async (req, res) => {
+  const { usuario_login, senha_login } = req.body;
+  try {
+    const novoUsuario = await db.createUser({ usuario_login, senha_login });
+    res.status(201).json(novoUsuario);
+  } catch (error) {
+    console.error('Erro ao cadastrar usuário:', error);
+    res.status(500).json({ erro: 'Erro ao cadastrar usuário.' });
   }
 };

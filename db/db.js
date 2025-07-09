@@ -119,18 +119,22 @@ async function insertQuimioterapia(quimios, id_pcte) {
   const pool = await connect();
   const client = await pool.connect();
   try {
+    const ids_quimio = quimios.id_quimio || [];
     const sql = `INSERT INTO pcte_quimio (nome_prof_quimio, crm_prof_quimio, local_quimio, 
       data_ini, data_ultima_sessao, id_pcte) VALUES ($1, $2, $3, $4, $5, $6);`;
     for (let i = 0; i < quimios.profissional.length; i++) {
-      const values = [
-        toNullIfEmpty(quimios.profissional[i]),
-        toNullIfEmpty(quimios.crm[i]),
-        toNullIfEmpty(quimios.local[i]),
-        toNullIfEmpty(quimios.inicio[i]),
-        toNullIfEmpty(quimios.fim[i]),
-        toNullIfEmpty(id_pcte)
-      ];
-      await client.query(sql, values);
+      // Só insere se não houver id_quimio (novo card)
+      if (!ids_quimio[i] || ids_quimio[i] === '') {
+        const values = [
+          toNullIfEmpty(quimios.profissional[i]),
+          toNullIfEmpty(quimios.crm[i]),
+          toNullIfEmpty(quimios.local[i]),
+          toNullIfEmpty(quimios.inicio[i]),
+          toNullIfEmpty(quimios.fim[i]),
+          toNullIfEmpty(id_pcte)
+        ];
+        await client.query(sql, values);
+      }
     }
   } finally {
     client.release();
@@ -144,18 +148,21 @@ async function insertRadioterapia(radios, id_pcte) {
   const pool = await connect();
   const client = await pool.connect();
   try {
+    const ids_radio = radios.id_radio || [];
     const sql = `INSERT INTO pcte_radio (nome_prof_radio, crm_prof_radio, local_radio, 
                  data_ini, data_ultima_sessao, id_pcte) VALUES ($1, $2, $3, $4, $5, $6);`;
     for (let i = 0; i < radios.profissional.length; i++) {
-      const values = [
-        toNullIfEmpty(radios.profissional[i]),
-        toNullIfEmpty(radios.crm[i]),
-        toNullIfEmpty(radios.local[i]),
-        toNullIfEmpty(radios.inicio[i]),
-        toNullIfEmpty(radios.fim[i]),
-        toNullIfEmpty(id_pcte)
-      ];
-      await client.query(sql, values);
+      if (!ids_radio[i]) { // Só insere se não houver id_radio (novo card)
+        const values = [
+          toNullIfEmpty(radios.profissional[i]),
+          toNullIfEmpty(radios.crm[i]),
+          toNullIfEmpty(radios.local[i]),
+          toNullIfEmpty(radios.inicio[i]),
+          toNullIfEmpty(radios.fim[i]),
+          toNullIfEmpty(id_pcte)
+        ];
+        await client.query(sql, values);
+      }
     }
   } finally {
     client.release();
@@ -169,18 +176,21 @@ async function insertCirurgia(cirurgias, id_pcte) {
   const pool = await connect();
   const client = await pool.connect();
   try {
+    const ids_cirurgia = cirurgias.id_cirurgia || [];
     const sql = `INSERT INTO cirurgia (tipo_cirurgia, data_inic_cirurgia, data_fim_cirurgia, hosp_cirurgia, nome_prof, crm_prof, id_pcte) VALUES ($1, $2, $3, $4, $5, $6, $7);`;
     for (let i = 0; i < cirurgias.profissional.length; i++) {
-      const values = [
-        toNullIfEmpty(cirurgias.tipo[i]),
-        toNullIfEmpty(cirurgias.inicio[i]),
-        toNullIfEmpty(cirurgias.fim[i]),
-        toNullIfEmpty(cirurgias.local[i]),
-        toNullIfEmpty(cirurgias.profissional[i]),
-        toNullIfEmpty(cirurgias.crm[i]),
-        toNullIfEmpty(id_pcte)
-      ];
-      await client.query(sql, values);
+      if (!ids_cirurgia[i]) { // Só insere se não houver id_cirurgia (novo card)
+        const values = [
+          toNullIfEmpty(cirurgias.tipo[i]),
+          toNullIfEmpty(cirurgias.inicio[i]),
+          toNullIfEmpty(cirurgias.fim[i]),
+          toNullIfEmpty(cirurgias.local[i]),
+          toNullIfEmpty(cirurgias.profissional[i]),
+          toNullIfEmpty(cirurgias.crm[i]),
+          toNullIfEmpty(id_pcte)
+        ];
+        await client.query(sql, values);
+      }
     }
   } finally {
     client.release();
@@ -299,17 +309,19 @@ async function insertHistoricoSaude(historico, id_pcte) {
     const cids = diagnosticos.cid || [];
     const descricoes = diagnosticos.descricao || [];
     const observacoes = diagnosticos.observacao || [];
+    const ids_diag = diagnosticos.id_pcte_diag || [];
 
     const medicamentos = historico.medicamentos || {};
     const medic_uso = medicamentos.nome || [];
     const medic_dosagem = medicamentos.dosagem || [];
     const medic_freq = medicamentos.frequencia || [];
     const med_obs = medicamentos.observacao || [];
+    const ids_medic = medicamentos.id_medicamento || [];
 
     // Descobre o maior tamanho dos arrays
     const max = Math.max(
-      nomes.length, cids.length, descricoes.length, observacoes.length,
-      medic_uso.length, medic_dosagem.length, medic_freq.length, med_obs.length
+      nomes.length, cids.length, descricoes.length, observacoes.length, ids_diag.length,
+      medic_uso.length, medic_dosagem.length, medic_freq.length, med_obs.length, ids_medic.length
     );
 
     const sql = `INSERT INTO pcte_diag (desc_diag, nome_diag, cid_diag, obs_diag, id_pcte, medic_uso, medic_dosagem, medic_freq, med_obs)
@@ -317,19 +329,22 @@ async function insertHistoricoSaude(historico, id_pcte) {
 
     let ids = [];
     for (let i = 0; i < max; i++) {
-      const values = [
-        descricoes[i] || null,
-        nomes[i] || null,
-        cids[i] || null,
-        observacoes[i] || null,
-        id_pcte || null,
-        medic_uso[i] || null,
-        medic_dosagem[i] || null,
-        medic_freq[i] || null,
-        med_obs[i] || null
-      ];
-      const result = await client.query(sql, values);
-      ids.push(result.rows[0].id_pcte_diag);
+      // Só insere se não houver id_pcte_diag (novo card)
+      if (!ids_diag[i]) {
+        const values = [
+          descricoes[i] || null,
+          nomes[i] || null,
+          cids[i] || null,
+          observacoes[i] || null,
+          id_pcte || null,
+          medic_uso[i] || null,
+          medic_dosagem[i] || null,
+          medic_freq[i] || null,
+          med_obs[i] || null
+        ];
+        const result = await client.query(sql, values);
+        ids.push(result.rows[0].id_pcte_diag);
+      }
     }
     return ids;
   } finally {
@@ -889,7 +904,14 @@ async function atualizarPaciente(id, dados) {
     if (dados.id_end) {
       await client.query(
         `UPDATE end_pcte SET 
-          rua_end = $1, num_end = $2, complemento_end = $3, cidade_end = $4, bairro_end = $5, cep_end = $6, uf_end = $7, ponto_ref_end = $8
+          rua_end = $1, 
+          num_end = $2, 
+          complemento_end = $3, 
+          cidade_end = $4, 
+          bairro_end = $5, 
+          cep_end = $6, 
+          uf_end = $7, 
+          ponto_ref_end = $8
         WHERE id_end = $9`,
         [
           toNullIfEmpty(dados.endereco),
@@ -905,99 +927,194 @@ async function atualizarPaciente(id, dados) {
       );
     }
 
-    // Atualiza quimioterapias
+    // Atualiza ou insere quimioterapias
     if (dados.quimio && Array.isArray(dados.quimio.id_quimio)) {
-      const sql = `UPDATE pcte_quimio SET 
-        nome_prof_quimio = $1, crm_prof_quimio = $2, local_quimio = $3, data_ini = $4, data_ultima_sessao = $5
-        WHERE id_quimio = $6 AND id_pcte = $7`;
+      const sqlUpdate = `UPDATE pcte_quimio SET 
+        nome_prof_quimio = $1, 
+        crm_prof_quimio = $2, 
+        local_quimio = $3, 
+        data_ini = $4, 
+        data_ultima_sessao = $5
+        WHERE id_quimio = $6 
+        AND id_pcte = $7`;
+      const sqlInsert = `INSERT INTO pcte_quimio (nome_prof_quimio, crm_prof_quimio, local_quimio, data_ini, data_ultima_sessao, id_pcte) VALUES ($1, $2, $3, $4, $5, $6)`;
       for (let i = 0; i < dados.quimio.id_quimio.length; i++) {
-        await client.query(sql, [
-          toNullIfEmpty(dados.quimio.profissional[i]),
-          toNullIfEmpty(dados.quimio.crm[i]),
-          toNullIfEmpty(dados.quimio.local[i]),
-          toNullIfEmpty(dados.quimio.inicio[i]),
-          toNullIfEmpty(dados.quimio.fim[i]),
-          toNullIfEmpty(dados.quimio.id_quimio[i]),
-          parseInt(id, 10)
-        ]);
+        const idQuimioRaw = dados.quimio.id_quimio[i];
+        if (idQuimioRaw && idQuimioRaw !== '') {
+          // UPDATE
+          let idQuimio = parseInt(idQuimioRaw, 10);
+          try {
+            const result = await client.query(sqlUpdate, [
+              toNullIfEmpty(dados.quimio.profissional[i]),
+              toNullIfEmpty(dados.quimio.crm[i]),
+              toNullIfEmpty(dados.quimio.local[i]),
+              toNullIfEmpty(dados.quimio.inicio[i]),
+              toNullIfEmpty(dados.quimio.fim[i]),
+              idQuimio,
+              parseInt(id, 10)
+            ]);
+            console.log(`Quimio ID ${idQuimio} atualizado, linhas afetadas:`, result.rowCount);
+          } catch (error) {
+            console.error('Erro ao atualizar quimio ID:', idQuimio, error);
+          }
+        } else {
+          // INSERT
+          try {
+            const result = await client.query(sqlInsert, [
+              toNullIfEmpty(dados.quimio.profissional[i]),
+              toNullIfEmpty(dados.quimio.crm[i]),
+              toNullIfEmpty(dados.quimio.local[i]),
+              toNullIfEmpty(dados.quimio.inicio[i]),
+              toNullIfEmpty(dados.quimio.fim[i]),
+              parseInt(id, 10)
+            ]);
+            console.log(`Quimio inserido para paciente ${id}`);
+          } catch (error) {
+            console.error('Erro ao inserir quimio para paciente', id, error);
+          }
+        }
       }
     }
 
-    // Atualiza radioterapias
+    // Atualiza ou insere radioterapias
     if (dados.radio && Array.isArray(dados.radio.id_radio)) {
-      const sql = `UPDATE pcte_radio SET 
+      const sqlUpdate = `UPDATE pcte_radio SET 
         nome_prof_radio = $1, crm_prof_radio = $2, local_radio = $3, data_ini = $4, data_ultima_sessao = $5
         WHERE id_radio = $6 AND id_pcte = $7`;
+      const sqlInsert = `INSERT INTO pcte_radio (nome_prof_radio, crm_prof_radio, local_radio, data_ini, data_ultima_sessao, id_pcte) VALUES ($1, $2, $3, $4, $5, $6)`;
       for (let i = 0; i < dados.radio.id_radio.length; i++) {
-        await client.query(sql, [
-          toNullIfEmpty(dados.radio.profissional[i]),
-          toNullIfEmpty(dados.radio.crm[i]),
-          toNullIfEmpty(dados.radio.local[i]),
-          toNullIfEmpty(dados.radio.inicio[i]),
-          toNullIfEmpty(dados.radio.fim[i]),
-          toNullIfEmpty(dados.radio.id_radio[i]),
-          parseInt(id, 10)
-        ]);
+        const idRadioRaw = dados.radio.id_radio[i];
+        if (idRadioRaw && idRadioRaw !== '') {
+          // UPDATE
+          let idRadio = parseInt(idRadioRaw, 10);
+          try {
+            const result = await client.query(sqlUpdate, [
+              toNullIfEmpty(dados.radio.profissional[i]),
+              toNullIfEmpty(dados.radio.crm[i]),
+              toNullIfEmpty(dados.radio.local[i]),
+              toNullIfEmpty(dados.radio.inicio[i]),
+              toNullIfEmpty(dados.radio.fim[i]),
+              idRadio,
+              parseInt(id, 10)
+            ]);
+            console.log(`Radio ID ${idRadio} atualizado, linhas afetadas:`, result.rowCount);
+          } catch (error) {
+            console.error('Erro ao atualizar radio ID:', idRadio, error);
+          }
+        } else {
+          // INSERT
+          try {
+            const result = await client.query(sqlInsert, [
+              toNullIfEmpty(dados.radio.profissional[i]),
+              toNullIfEmpty(dados.radio.crm[i]),
+              toNullIfEmpty(dados.radio.local[i]),
+              toNullIfEmpty(dados.radio.inicio[i]),
+              toNullIfEmpty(dados.radio.fim[i]),
+              parseInt(id, 10)
+            ]);
+            console.log(`Radio inserido para paciente ${id}`);
+          } catch (error) {
+            console.error('Erro ao inserir radio para paciente', id, error);
+          }
+        }
       }
     }
 
-    // Atualiza cirurgias
+    // Atualiza ou insere cirurgias
     if (dados.cirurgia && Array.isArray(dados.cirurgia.id_cirurgia)) {
-      const sql = `UPDATE cirurgia SET 
+      const sqlUpdate = `UPDATE cirurgia SET 
         tipo_cirurgia = $1, data_inic_cirurgia = $2, data_fim_cirurgia = $3, hosp_cirurgia = $4, nome_prof = $5, crm_prof = $6
         WHERE id_cirurgia = $7 AND id_pcte = $8`;
+      const sqlInsert = `INSERT INTO cirurgia (tipo_cirurgia, data_inic_cirurgia, data_fim_cirurgia, hosp_cirurgia, nome_prof, crm_prof, id_pcte) VALUES ($1, $2, $3, $4, $5, $6, $7)`;
       for (let i = 0; i < dados.cirurgia.id_cirurgia.length; i++) {
-        await client.query(sql, [
-          toNullIfEmpty(dados.cirurgia.tipo[i]),
-          toNullIfEmpty(dados.cirurgia.inicio[i]),
-          toNullIfEmpty(dados.cirurgia.fim[i]),
-          toNullIfEmpty(dados.cirurgia.local[i]),
-          toNullIfEmpty(dados.cirurgia.profissional[i]),
-          toNullIfEmpty(dados.cirurgia.crm[i]),
-          toNullIfEmpty(dados.cirurgia.id_cirurgia[i]),
-          parseInt(id, 10)
-        ]);
+        const idCirurgiaRaw = dados.cirurgia.id_cirurgia[i];
+        if (idCirurgiaRaw && idCirurgiaRaw !== '') {
+          // UPDATE
+          let idCirurgia = parseInt(idCirurgiaRaw, 10);
+          try {
+            const result = await client.query(sqlUpdate, [
+              toNullIfEmpty(dados.cirurgia.tipo[i]),
+              toNullIfEmpty(dados.cirurgia.inicio[i]),
+              toNullIfEmpty(dados.cirurgia.fim[i]),
+              toNullIfEmpty(dados.cirurgia.local[i]),
+              toNullIfEmpty(dados.cirurgia.profissional[i]),
+              toNullIfEmpty(dados.cirurgia.crm[i]),
+              idCirurgia,
+              parseInt(id, 10)
+            ]);
+            console.log(`Cirurgia ID ${idCirurgia} atualizado, linhas afetadas:`, result.rowCount);
+          } catch (error) {
+            console.error('Erro ao atualizar cirurgia ID:', idCirurgia, error);
+          }
+        } else {
+          // INSERT
+          try {
+            const result = await client.query(sqlInsert, [
+              toNullIfEmpty(dados.cirurgia.tipo[i]),
+              toNullIfEmpty(dados.cirurgia.inicio[i]),
+              toNullIfEmpty(dados.cirurgia.fim[i]),
+              toNullIfEmpty(dados.cirurgia.local[i]),
+              toNullIfEmpty(dados.cirurgia.profissional[i]),
+              toNullIfEmpty(dados.cirurgia.crm[i]),
+              parseInt(id, 10)
+            ]);
+            console.log(`Cirurgia inserida para paciente ${id}`);
+          } catch (error) {
+            console.error('Erro ao inserir cirurgia para paciente', id, error);
+          }
+        }
       }
     }
 
-    // Atualiza diagnósticos e medicamentos
+    // Atualiza ou insere diagnósticos e medicamentos
     if (dados.diagnosticos && Array.isArray(dados.diagnosticos.id_pcte_diag)) {
-    const sqlUpdate = `UPDATE pcte_diag SET 
-    desc_diag = $1, nome_diag = $2, cid_diag = $3, obs_diag = $4, medic_uso = $5, medic_dosagem = $6, medic_freq = $7, med_obs = $8
-    WHERE id_pcte_diag = $9 AND id_pcte = $10`;
-
-    console.log('ID Paciente:', id);
-
-    for (let i = 0; i < dados.diagnosticos.id_pcte_diag.length; i++) {
-      const idDiagRaw = dados.diagnosticos.id_pcte_diag[i];
-      let idDiag;
-      if (idDiagRaw && idDiagRaw !== '') {
-        idDiag = parseInt(idDiagRaw, 10);
-      } else {
-        idDiag = parseInt(id, 10); 
-        console.warn(`id_pcte_diag vazio, usando id do paciente (${idDiag}) como idDiag no índice ${i}`);
-      }
-
-      try {
-        const result = await client.query(sqlUpdate, [
-          toNullIfEmpty(dados.diagnosticos.descricao[i]),
-          toNullIfEmpty(dados.diagnosticos.nome[i]),
-          toNullIfEmpty(dados.diagnosticos.cid[i]),
-          toNullIfEmpty(dados.diagnosticos.observacao[i]),
-          (dados.medicamentos && Array.isArray(dados.medicamentos.nome) ? toNullIfEmpty(dados.medicamentos.nome[i]) : null),
-          (dados.medicamentos && Array.isArray(dados.medicamentos.dosagem) ? toNullIfEmpty(dados.medicamentos.dosagem[i]) : null),
-          (dados.medicamentos && Array.isArray(dados.medicamentos.frequencia) ? toNullIfEmpty(dados.medicamentos.frequencia[i]) : null),
-          (dados.medicamentos && Array.isArray(dados.medicamentos.observacao) ? toNullIfEmpty(dados.medicamentos.observacao[i]) : null),
-          idDiag,
-          parseInt(id, 10)
-        ]);
-
-        console.log(`Diagnóstico ID ${idDiag} atualizado, linhas afetadas:`, result.rowCount);
-      } catch (error) {
-        console.error('Erro ao atualizar diagnóstico ID:', idDiag, error);
+      const sqlUpdate = `UPDATE pcte_diag SET 
+        desc_diag = $1, nome_diag = $2, cid_diag = $3, obs_diag = $4, medic_uso = $5, medic_dosagem = $6, medic_freq = $7, med_obs = $8
+        WHERE id_pcte_diag = $9 AND id_pcte = $10`;
+      const sqlInsert = `INSERT INTO pcte_diag (desc_diag, nome_diag, cid_diag, obs_diag, id_pcte, medic_uso, medic_dosagem, medic_freq, med_obs) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
+      for (let i = 0; i < dados.diagnosticos.id_pcte_diag.length; i++) {
+        const idDiagRaw = dados.diagnosticos.id_pcte_diag[i];
+        if (idDiagRaw && idDiagRaw !== '') {
+          // UPDATE
+          let idDiag = parseInt(idDiagRaw, 10);
+          try {
+            const result = await client.query(sqlUpdate, [
+              toNullIfEmpty(dados.diagnosticos.descricao[i]),
+              toNullIfEmpty(dados.diagnosticos.nome[i]),
+              toNullIfEmpty(dados.diagnosticos.cid[i]),
+              toNullIfEmpty(dados.diagnosticos.observacao[i]),
+              (dados.medicamentos && Array.isArray(dados.medicamentos.nome) ? toNullIfEmpty(dados.medicamentos.nome[i]) : null),
+              (dados.medicamentos && Array.isArray(dados.medicamentos.dosagem) ? toNullIfEmpty(dados.medicamentos.dosagem[i]) : null),
+              (dados.medicamentos && Array.isArray(dados.medicamentos.frequencia) ? toNullIfEmpty(dados.medicamentos.frequencia[i]) : null),
+              (dados.medicamentos && Array.isArray(dados.medicamentos.observacao) ? toNullIfEmpty(dados.medicamentos.observacao[i]) : null),
+              idDiag,
+              parseInt(id, 10)
+            ]); // Corrige fechamento do array e parêntese
+            console.log(`Diagnóstico ID ${idDiag} atualizado, linhas afetadas:`, result.rowCount);
+          } catch (error) {
+            console.error('Erro ao atualizar diagnóstico ID:', idDiag, error);
+          }
+        } else {
+          // INSERT
+          try {
+            const result = await client.query(sqlInsert, [
+              toNullIfEmpty(dados.diagnosticos.descricao[i]),
+              toNullIfEmpty(dados.diagnosticos.nome[i]),
+              toNullIfEmpty(dados.diagnosticos.cid[i]),
+              toNullIfEmpty(dados.diagnosticos.observacao[i]),
+              parseInt(id, 10),
+              (dados.medicamentos && Array.isArray(dados.medicamentos.nome) ? toNullIfEmpty(dados.medicamentos.nome[i]) : null),
+              (dados.medicamentos && Array.isArray(dados.medicamentos.dosagem) ? toNullIfEmpty(dados.medicamentos.dosagem[i]) : null),
+              (dados.medicamentos && Array.isArray(dados.medicamentos.frequencia) ? toNullIfEmpty(dados.medicamentos.frequencia[i]) : null),
+              (dados.medicamentos && Array.isArray(dados.medicamentos.observacao) ? toNullIfEmpty(dados.medicamentos.observacao[i]) : null)
+            ]);
+            console.log(`Diagnóstico inserido para paciente ${id}`);
+          } catch (error) {
+            console.error('Erro ao inserir diagnóstico para paciente', id, error);
+          }
+        }
       }
     }
-}
 
     // Atualiza diagnósticos familiares
     if (dados.diagnosticosFamiliares && Array.isArray(dados.diagnosticosFamiliares.id_resp_diag)) {
@@ -1576,32 +1693,62 @@ async function deleteHabitSanCaract(id_caract) {
   }
 }
 
-module.exports = { insertEnderecoPaciente,
-                   insertPaciente, insertEscolaridade, inst_ensino,
-                   insertQuimioterapia, insertRadioterapia, insertCirurgia,
-                   insertEstadoCivil, insertResponsavel, insertHistoricoSaude,
-                   insertUbsReferencia, insertCrasReferencia, locaisHist,
-                   insertHistoricoSaudeResponsavel, insertSituacaoSocioEconomica,
-                   insertAdquirirCasa, insertCaracteristicasCasa, insertSituacaoHabitacional,
-                   getPacientes,
-                   getTotalPacientes,
-                   getCadastrosHoje,
-                   getCadastrosSemana,
-                   getUltimosPacientes,
-                   buscarPacientes,
-                   deletarPaciente,
-                   getPacientePorId,
-                   atualizarPaciente,
-                   atualizarEstadoCivil,
-                   atualizarEscolaridade,
-                   atualizarUbsReferencia,
-                   atualizarCrasReferencia,
-                   atualizarAdquirirCasa,
-                   atualizarCaracteristicasCasa,
-                   atualizarInstEnsino,
-                   atualizarLocaisHist,
-                   atualizarSituacaoHabitacional,
-                   atualizarSituacaoSocioEconomica,
-                   atualizarResponsavel
+async function createUser({ usuario_login, senha_login }) {
+    const pool = await connect();
+    const client = await pool.connect();
+    try {
+        const query = 'INSERT INTO contas_login (usuario_login, senha_login) VALUES ($1, $2) RETURNING *';
+        const values = [usuario_login, senha_login];
+        const result = await client.query(query, values);
+        return result.rows[0];
+    } finally {
+        client.release();
+    }
+}
+
+// Função para buscar todos os usuários cadastrados na tabela contas_login
+async function getAllUsers() {
+    const pool = await connect();
+    const client = await pool.connect();
+    try {
+        const result = await client.query('SELECT id_login, usuario_login FROM contas_login ORDER BY id_login ASC');
+        return result.rows;
+    } finally {
+        client.release();
+    }
+}
+
+module.exports = { 
+  insertEnderecoPaciente,
+  insertPaciente, insertEscolaridade, inst_ensino,
+  insertQuimioterapia, insertRadioterapia, insertCirurgia,
+  insertEstadoCivil, insertResponsavel, insertHistoricoSaude,
+  insertUbsReferencia, insertCrasReferencia, locaisHist,
+  insertHistoricoSaudeResponsavel, insertSituacaoSocioEconomica,
+  insertAdquirirCasa, insertCaracteristicasCasa, insertSituacaoHabitacional,
+  getPacientes,
+  getTotalPacientes,
+  getCadastrosHoje,
+  getCadastrosSemana,
+  getUltimosPacientes,
+  buscarPacientes,
+  deletarPaciente,
+  getPacientePorId,
+  atualizarPaciente,
+  atualizarEstadoCivil,
+  atualizarEscolaridade,
+  atualizarUbsReferencia,
+  atualizarCrasReferencia,
+  atualizarAdquirirCasa,
+  atualizarCaracteristicasCasa,
+  atualizarInstEnsino,
+  atualizarLocaisHist,
+  atualizarSituacaoHabitacional,
+  atualizarSituacaoSocioEconomica,
+  atualizarResponsavel,
+  createUser,
+  getAllUsers,
+  connect // <-- exporta a função connect
 };
 connect();
+// Todas as funções e blocos fechados corretamente

@@ -519,10 +519,6 @@ function initializeValidation() {
 
 function initializeFormLogic() {
     const conditionalFields = [
-        { name: 'fez_quimio', target: 'quimio-fields' },
-        { name: 'fez_radio', target: 'radio-fields' },
-        { name: 'fez_cirurgia', target: 'cirurgia-fields' },
-        { name: 'usa_medicamentos', target: 'medicamentos-fields' },
         { name: 'tem_bpc', target: 'bpc-fields' },
         { name: 'estuda', target: 'escola-fields' }
     ];
@@ -548,6 +544,16 @@ function initializeFormLogic() {
             }
         });
     }
+
+    // Sempre mostrar os campos de quimio, radio, cirurgia e medicamentos
+    const quimioFields = document.getElementById('quimio-fields');
+    if (quimioFields) quimioFields.style.display = 'block';
+    const radioFields = document.getElementById('radio-fields');
+    if (radioFields) radioFields.style.display = 'block';
+    const cirurgiaFields = document.getElementById('cirurgia-fields');
+    if (cirurgiaFields) cirurgiaFields.style.display = 'block';
+    const medicamentosFields = document.getElementById('medicamentos-fields');
+    if (medicamentosFields) medicamentosFields.style.display = 'block';
 
     // Inicializar botões de adicionar
     initializeAddButtons();
@@ -660,13 +666,24 @@ function initializeAddButtons() {
             button.addEventListener('click', function() {
                 const list = document.getElementById(buttonConfig.listId);
                 if (!list) return;
-                
+                // Corrige o índice para quimio, radio, cirurgia
+                if (buttonConfig.id === 'add-quimio') {
+                    window.quimioIndex = (typeof window.quimioIndex === 'number' ? window.quimioIndex : 0) + 1;
+                }
+                if (buttonConfig.id === 'add-radio') {
+                    window.radioIndex = (typeof window.radioIndex === 'number' ? window.radioIndex : 0) + 1;
+                }
+                if (buttonConfig.id === 'add-cirurgia') {
+                    window.cirurgiaIndex = (typeof window.cirurgiaIndex === 'number' ? window.cirurgiaIndex : 0) + 1;
+                }
                 const wrapper = document.createElement('div');
                 wrapper.style.position = 'relative';
-                wrapper.innerHTML = buttonConfig.template();
-                // Sempre mostrar botão de exclusão para novos cards
+                wrapper.innerHTML = buttonConfig.template({});
+                // Sempre mostra o botão de exclusão para todos os cards
                 const removeBtn = wrapper.querySelector('button[class*="remove"]');
-                if (removeBtn) removeBtn.style.display = '';
+                if (removeBtn) {
+                    removeBtn.style.display = '';
+                }
                 list.appendChild(wrapper);
             });
         }
@@ -699,165 +716,212 @@ function initializeAddButtons() {
     document.head.appendChild(style);
 })();
 
-// Templates para os itens dinâmicos
+// --- Corrige sobreposição dos botões de remover nos cards dinâmicos ---
+(function injectCardSpacingStyle() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .quimio-item,
+        .radio-item-form,
+        .cirurgia-item,
+        .diagnostico-item,
+        .medicamento-item {
+            margin-bottom: 32px !important;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            position: relative;
+            min-height: 60px;
+        }
+        .radio-item-form > .btn-radio-remove,
+        .cirurgia-item > .btn-cirurgia-remove,
+        .quimio-item > .btn-quimio-remove,
+        .diagnostico-item > .btn-diagnostico-remove,
+        .medicamento-item > .btn-medicamentos-remove {
+            position: absolute;
+            top: 5px;
+            right: 20px;
+            z-index: 2;
+        }
+        /* Garante que o botão não saia do card e não sobreponha outros cards */
+        .radio-item-form,
+        .cirurgia-item {
+            overflow: visible;
+        }
+    `;
+    document.head.appendChild(style);
+})();
 
-function createQuimioTemplate() {
+// --- Controle de índices dinâmicos para cards ---
+let quimioIndex = 0;
+let radioIndex = 0;
+let cirurgiaIndex = 0;
+
+function createQuimioTemplate(values = {}) {
+    quimioIndex++;
     return `
-        <input type=\"hidden\" name=\"quimio_id[]\" value=\"\" />
-        <button type="button" class="btn-quimio-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
-            <img src="../img/cancelar.png" alt="Remover">
-        </button>
-        <div class="quimio-item">
+        <div class="quimio-item" style="position:relative;">
+            <input type="hidden" name="quimio_id[]" value="${values.id_quimio || ''}" />
+            <button type="button" class="btn-quimio-remove" data-quimio-index="${quimioIndex}" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;z-index:2;">
+                <img src="../img/cancelar.png" alt="Remover">
+            </button>
             <div class="form-row">
                 <div class="form-group">
                     <label>Nome do profissional</label>
-                    <input type="text" name="quimio_profissional[]" />
+                    <input type="text" name="quimio_profissional[]" value="${values.profissional || ''}" />
                 </div>
                 <div class="form-group">
                     <label>CRM</label>
-                    <input type="text" name="quimio_crm[]" />
+                    <input type="text" name="quimio_crm[]" value="${values.crm || ''}" />
                 </div>
                 <div class="form-group">
                     <label>Local</label>
-                    <input type="text" name="quimio_local[]" />
+                    <input type="text" name="quimio_local[]" value="${values.local || ''}" />
                 </div>
                 <div class="form-group">
                     <label>Data de Início</label>
-                    <input type="date" name="quimio_inicio[]" />
+                    <input type="date" name="quimio_inicio[]" value="${values.inicio || ''}" />
                 </div>
                 <div class="form-group">
                     <label>Data de Finalização</label>
-                    <input type="date" name="quimio_fim[]" />
+                    <input type="date" name="quimio_fim[]" value="${values.fim || ''}" />
                 </div>
             </div>
         </div>
     `;
 }
 
-function createRadioTemplate() {
+
+// NOVOS TEMPLATES UNIFICADOS COM MARGIN ENTRE CARDS
+function createRadioTemplate(values = {}) {
+    // Só incrementa o índice ao adicionar novo, não ao preencher existente
+    if (!values || Object.keys(values).length === 0) radioIndex++;
     return `
-        <input type=\"hidden\" name=\"radio_id[]\" value=\"\" />
-        <button type="button" class="btn-radio-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
-            <img src="../img/cancelar.png" alt="Remover">
-        </button>
-        <div class="radio-item-form">
+        <div class="radio-item-form" style="position:relative; margin-bottom: 24px;">
+            <input type="hidden" name="radio_id[]" value="${values.id_radio || ''}" />
+            <button type="button" class="btn-radio-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;z-index:2;">
+                <img src="../img/cancelar.png" alt="Remover">
+            </button>
             <div class="form-row">
                 <div class="form-group">
                     <label>Nome do profissional</label>
-                    <input type="text" name="radio_profissional[]" />
+                    <input type="text" name="radio_profissional[]" value="${values.profissional || ''}" />
                 </div>
                 <div class="form-group">
                     <label>CRM</label>
-                    <input type="text" name="radio_crm[]" />
+                    <input type="text" name="radio_crm[]" value="${values.crm || ''}" />
                 </div>
                 <div class="form-group">
                     <label>Local</label>
-                    <input type="text" name="radio_local[]" />
+                    <input type="text" name="radio_local[]" value="${values.local || ''}" />
                 </div>
                 <div class="form-group">
                     <label>Data de Início</label>
-                    <input type="date" name="radio_inicio[]" />
+                    <input type="date" name="radio_inicio[]" value="${values.inicio || ''}" />
                 </div>
                 <div class="form-group">
                     <label>Data de Finalização</label>
-                    <input type="date" name="radio_fim[]" />
+                    <input type="date" name="radio_fim[]" value="${values.fim || ''}" />
                 </div>
             </div>
         </div>
     `;
 }
 
-function createCirurgiaTemplate() {
+function createCirurgiaTemplate(values = {}) {
+    // Só incrementa o índice ao adicionar novo, não ao preencher existente
+    if (!values || Object.keys(values).length === 0) cirurgiaIndex++;
     return `
-        <input type=\"hidden\" name=\"cirurgia_id[]\" value=\"\" />
-        <button type="button" class="btn-cirurgia-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
-            <img src="../img/cancelar.png" alt="Remover">
-        </button>
-        <div class="cirurgia-item">
+        <div class="cirurgia-item" style="position:relative; margin-bottom: 24px;">
+            <input type="hidden" name="cirurgia_id[]" value="${values.id_cirurgia || ''}" />
+            <button type="button" class="btn-cirurgia-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;z-index:2;">
+                <img src="../img/cancelar.png" alt="Remover">
+            </button>
             <div class="form-row">
                 <div class="form-group">
                     <label>Nome do profissional</label>
-                    <input type="text" name="cirurgia_profissional[]" />
+                    <input type="text" name="cirurgia_profissional[]" value="${values.profissional || ''}" />
                 </div>
                 <div class="form-group">
                     <label>CRM</label>
-                    <input type="text" name="cirurgia_crm[]" />
+                    <input type="text" name="cirurgia_crm[]" value="${values.crm || ''}" />
                 </div>
                 <div class="form-group">
                     <label>Data de início</label>
-                    <input type="date" name="cirurgia_inicio[]" />
+                    <input type="date" name="cirurgia_inicio[]" value="${values.inicio || ''}" />
                 </div>
                 <div class="form-group">
                     <label>Data de finalização</label>
-                    <input type="date" name="cirurgia_fim[]" />
+                    <input type="date" name="cirurgia_fim[]" value="${values.fim || ''}" />
                 </div>
                 <div class="form-group">
                     <label>Tipo</label>
-                    <input type="text" name="cirurgia_tipo[]" />
+                    <input type="text" name="cirurgia_tipo[]" value="${values.tipo || ''}" />
                 </div>
                 <div class="form-group">
                     <label>Local</label>
-                    <input type="text" name="cirurgia_local[]" />
+                    <input type="text" name="cirurgia_local[]" value="${values.local || ''}" />
                 </div>
             </div>
         </div>
     `;
 }
 
-function createMedicamentoTemplate() {
+function createMedicamentoTemplate(values = {}) {
     return `
-        <input type=\"hidden\" name=\"medicamento_id[]\" value=\"\" />
-        <button type="button" class="btn-medicamentos-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
-            <img src="../img/cancelar.png" alt="Remover">
-        </button>
-        <div class="medicamento-item">
+        <div class="medicamento-item" style="position:relative;">
+            <input type="hidden" name="medicamento_id[]" value="${values.id_medicamento || ''}" />
+            <button type="button" class="btn-medicamentos-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;z-index:2;">
+                <img src="../img/cancelar.png" alt="Remover">
+            </button>
             <div class="form-row">
                 <div class="form-group">
                     <label>Nome do Medicamento</label>
-                    <input type="text" name="medicamento_nome[]" />
+                    <input type="text" name="medicamento_nome[]" value="${values.nome || ''}" />
                 </div>
                 <div class="form-group">
                     <label>Dosagem</label>
-                    <input type="text" name="medicamento_dosagem[]" />
+                    <input type="text" name="medicamento_dosagem[]" value="${values.dosagem || ''}" />
                 </div>
                 <div class="form-group">
                     <label>Frequência</label>
-                    <input type="text" name="medicamento_frequencia[]" />
+                    <input type="text" name="medicamento_frequencia[]" value="${values.frequencia || ''}" />
                 </div>
                 <div class="form-group full-width">
                     <label>Observação</label>
-                    <textarea name="medicamento_observacao[]"></textarea>
+                    <textarea name="medicamento_observacao[]">${values.observacao || ''}</textarea>
                 </div>
             </div>
         </div>
     `;
 }
 
-function createDiagnosticoTemplate() {
+function createDiagnosticoTemplate(values = {}) {
     return `
-        <input type=\"hidden\" name=\"pcte_diag_id[]\" value=\"\" />
-        <button type="button" class="btn-diagnostico-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;" onclick="this.parentElement.remove()">
-            <img src="../img/cancelar.png" alt="Remover">
-        </button>
-        <div class="diagnostico-item">
+        <div class="diagnostico-item" style="position:relative;">
+            <input type="hidden" name="pcte_diag_id[]" value="${values.id_pcte_diag || ''}" />
+            <button type="button" class="btn-diagnostico-remove" style="position:absolute;top:5px;right:20px;background:transparent;border:none;cursor:pointer;padding:0;border-radius:50%;z-index:2;">
+                <img src="../img/cancelar.png" alt="Remover">
+            </button>
             <div class="form-row">
                 <div class="form-group">
                     <label>Nome</label>
-                    <input type="text" name="nome[]" />
+                    <input type="text" name="nome[]" value="${values.nome || ''}" />
                 </div>
                 <div class="form-group">
                     <label>CID</label>
-                    <input type="text" name="cid[]" />
+                    <input type="text" name="cid[]" value="${values.cid || ''}" />
                 </div>
                 <div class="form-group full-width">
                     <label>Descrição</label>
-                    <input type="text" name="descricao[]" />
+                    <input type="text" name="descricao[]" value="${values.descricao || ''}" />
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group full-width">
                     <label>Observação</label>
-                    <textarea name="observacao[]"></textarea>
+                    <textarea name="observacao[]">${values.observacao || ''}</textarea>
                 </div>
             </div>
         </div>
@@ -1188,116 +1252,159 @@ function preencherFormularioPaciente(dados) {
     if (list) list.innerHTML = '';
   }
 
-  // Helper para adicionar e preencher cards dinâmicos
+// Helper para adicionar e preencher cards dinâmicos com índice e valores
   function preencherLista(id, templateFunc, valores, nomesCampos) {
     limparLista(id);
     const list = document.getElementById(id);
     if (!list || !valores || !Array.isArray(valores) || valores.length === 0) return;
     valores.forEach((item, idx) => {
+      // Cria um wrapper para facilitar a manipulação do DOM
       const wrapper = document.createElement('div');
-      wrapper.innerHTML = templateFunc();
-      list.appendChild(wrapper);
-
-      nomesCampos.forEach(campo => {
-        const input = wrapper.querySelector(`[name="${campo}[]"]`);
-        if (input) input.value = item[campo.replace(/.*_/, '')] || '';
-      });
-
-      // Esconde botão de exclusão se o campo hidden de ID estiver preenchido
-      const idInput = wrapper.querySelector('input[type="hidden"]');
+      wrapper.innerHTML = templateFunc(item);
+      // Adiciona evento de exclusão para o botão deste card
       const removeBtn = wrapper.querySelector('button[class*="remove"]');
-      if (idInput && removeBtn) {
-        if (idInput.value && idInput.value !== '') {
-          removeBtn.style.display = 'none';
-        } else {
-          removeBtn.style.display = '';
-        }
+      if (removeBtn) {
+        removeBtn.dataset.cardIndex = idx;
+        removeBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          // Descobre o tipo do card e o id salvo (se houver)
+          let idField = null;
+          let apiRoute = null;
+          if (wrapper.querySelector('input[name="quimio_id[]"]')) {
+            idField = wrapper.querySelector('input[name="quimio_id[]"]').value;
+            apiRoute = '/api/quimio/';
+          } else if (wrapper.querySelector('input[name="radio_id[]"]')) {
+            idField = wrapper.querySelector('input[name="radio_id[]"]').value;
+            apiRoute = '/api/radio/';
+          } else if (wrapper.querySelector('input[name="cirurgia_id[]"]')) {
+            idField = wrapper.querySelector('input[name="cirurgia_id[]"]').value;
+            apiRoute = '/api/cirurgia/';
+          } else if (wrapper.querySelector('input[name="pcte_diag_id[]"]')) {
+            idField = wrapper.querySelector('input[name="pcte_diag_id[]"]').value;
+            apiRoute = '/api/diagnostico/';
+          } else if (wrapper.querySelector('input[name="id_resp_diag[]"]')) {
+            idField = wrapper.querySelector('input[name="id_resp_diag[]"]').value;
+            apiRoute = '/api/diagnostico-familia/';
+          } else if (wrapper.querySelector('input[name="medicamento_id[]"]')) {
+            idField = wrapper.querySelector('input[name="medicamento_id[]"]').value;
+            apiRoute = '/api/medicamento/';
+          }
+          if (idField && apiRoute) {
+            fetch(apiRoute + idField, { method: 'DELETE' })
+              .then(() => wrapper.remove())
+              .catch(() => wrapper.remove());
+          } else {
+            wrapper.remove();
+          }
+        });
       }
+      list.appendChild(wrapper);
     });
   }
 
   // QUIMIOTERAPIA
   if (dados.quimio && Array.isArray(dados.quimio.profissional)) {
-    const quimioValores = dados.quimio.profissional.map((_, i) => ({
-      profissional: dados.quimio.profissional[i],
-      crm: dados.quimio.crm[i],
-      local: dados.quimio.local[i],
-      inicio: dados.quimio.inicio[i],
-      fim: dados.quimio.fim[i]
-    }));
-    preencherLista('quimio-list', createQuimioTemplate, quimioValores, [
-      'quimio_profissional', 'quimio_crm', 'quimio_local', 'quimio_inicio', 'quimio_fim'
-    ]);
-  }
+  quimioIndex = 0;
+  const quimioValores = dados.quimio.profissional.map((_, i) => ({
+    profissional: dados.quimio.profissional[i],
+    crm: dados.quimio.crm[i],
+    local: dados.quimio.local[i],
+    inicio: dados.quimio.inicio[i],
+    fim: dados.quimio.fim[i],
+    id_quimio: dados.quimio.id_quimio ? dados.quimio.id_quimio[i] : ''
+  })).filter(item => item.profissional || item.crm || item.local || item.inicio || item.fim || item.id_quimio);
+  preencherLista('quimio-list', createQuimioTemplate, quimioValores, [
+    'quimio_profissional', 'quimio_crm', 'quimio_local', 'quimio_inicio', 'quimio_fim', 'id_quimio'
+  ]);
+}
 
   // RADIOTERAPIA
   if (dados.radio && Array.isArray(dados.radio.profissional)) {
-    const radioValores = dados.radio.profissional.map((_, i) => ({
-      profissional: dados.radio.profissional[i],
-      crm: dados.radio.crm[i],
-      local: dados.radio.local[i],
-      inicio: dados.radio.inicio[i],
-      fim: dados.radio.fim[i]
-    }));
-    preencherLista('radio-list', createRadioTemplate, radioValores, [
-      'radio_profissional', 'radio_crm', 'radio_local', 'radio_inicio', 'radio_fim'
-    ]);
-  }
+  radioIndex = 0;
+  const radioValores = dados.radio.profissional.map((_, i) => ({
+    id_radio: dados.radio.id_radio ? dados.radio.id_radio[i] : '',
+    profissional: dados.radio.profissional[i],
+    crm: dados.radio.crm[i],
+    local: dados.radio.local[i],
+    inicio: dados.radio.inicio[i],
+    fim: dados.radio.fim[i]
+  })).filter(item => item.profissional || item.crm || item.local || item.inicio || item.fim || item.id_radio);
+  preencherLista('radio-list', createRadioTemplate, radioValores, [
+    'id_radio', 'radio_profissional', 'radio_crm', 'radio_local', 'radio_inicio', 'radio_fim'
+  ]);
+}
 
   // CIRURGIA
   if (dados.cirurgia && Array.isArray(dados.cirurgia.profissional)) {
-    const cirurgiaValores = dados.cirurgia.profissional.map((_, i) => ({
-      profissional: dados.cirurgia.profissional[i],
-      crm: dados.cirurgia.crm[i],
-      inicio: dados.cirurgia.inicio[i],
-      fim: dados.cirurgia.fim[i],
-      tipo: dados.cirurgia.tipo[i],
-      local: dados.cirurgia.local[i]
-    }));
-    preencherLista('cirurgia-list', createCirurgiaTemplate, cirurgiaValores, [
-      'cirurgia_profissional', 'cirurgia_crm', 'cirurgia_inicio', 'cirurgia_fim', 'cirurgia_tipo', 'cirurgia_local'
-    ]);
-  }
+  cirurgiaIndex = 0;
+  const cirurgiaValores = dados.cirurgia.profissional.map((_, i) => ({
+    id_cirurgia: dados.cirurgia.id_cirurgia ? dados.cirurgia.id_cirurgia[i] : '',
+    profissional: dados.cirurgia.profissional[i],
+    crm: dados.cirurgia.crm[i],
+    inicio: dados.cirurgia.inicio[i],
+    fim: dados.cirurgia.fim[i],
+    tipo: dados.cirurgia.tipo[i],
+    local: dados.cirurgia.local[i]
+  })).filter(item => item.profissional || item.crm || item.inicio || item.fim || item.tipo || item.local || item.id_cirurgia);
+  preencherLista('cirurgia-list', createCirurgiaTemplate, cirurgiaValores, [
+    'id_cirurgia', 'cirurgia_profissional', 'cirurgia_crm', 'cirurgia_inicio', 'cirurgia_fim', 'cirurgia_tipo', 'cirurgia_local'
+  ]);
+}
 
   // MEDICAMENTOS
   if (dados.medicamentos && Array.isArray(dados.medicamentos.nome)) {
-    const medicamentosValores = dados.medicamentos.nome.map((_, i) => ({
-      nome: dados.medicamentos.nome[i],
-      dosagem: dados.medicamentos.dosagem[i],
-      frequencia: dados.medicamentos.frequencia[i],
-      observacao: dados.medicamentos.observacao[i]
-    }));
-    preencherLista('medicamentos-list', createMedicamentoTemplate, medicamentosValores, [
-      'medicamento_nome', 'medicamento_dosagem', 'medicamento_frequencia', 'medicamento_observacao'
-    ]);
-  }
+  const medicamentosValores = dados.medicamentos.nome.map((_, i) => ({
+    id_medicamento: dados.medicamentos.id_medicamento ? dados.medicamentos.id_medicamento[i] : '',
+    nome: dados.medicamentos.nome[i],
+    dosagem: dados.medicamentos.dosagem[i],
+    frequencia: dados.medicamentos.frequencia[i],
+    observacao: dados.medicamentos.observacao[i]
+  })).filter(item => item.nome || item.dosagem || item.frequencia || item.observacao || item.id_medicamento);
+  preencherLista('medicamentos-list', createMedicamentoTemplate, medicamentosValores, [
+    'id_medicamento', 'medicamento_nome', 'medicamento_dosagem', 'medicamento_frequencia', 'medicamento_observacao'
+  ]);
+}
 
   // DIAGNÓSTICOS
   if (dados.diagnosticos && Array.isArray(dados.diagnosticos.nome)) {
-    const diagnosticosValores = dados.diagnosticos.nome.map((_, i) => ({
-      nome: dados.diagnosticos.nome[i],
-      cid: dados.diagnosticos.cid[i],
-      descricao: dados.diagnosticos.descricao[i],
-      observacao: dados.diagnosticos.observacao[i]
-    }));
-    preencherLista('diagnosticos-list', createDiagnosticoTemplate, diagnosticosValores, [
-      'nome', 'cid', 'descricao', 'observacao'
-    ]);
-  }
+  const diagnosticosValores = dados.diagnosticos.nome.map((_, i) => ({
+    id_pcte_diag: dados.diagnosticos.id_pcte_diag ? dados.diagnosticos.id_pcte_diag[i] : '',
+    nome: dados.diagnosticos.nome[i],
+    cid: dados.diagnosticos.cid[i],
+    descricao: dados.diagnosticos.descricao[i],
+    observacao: dados.diagnosticos.observacao[i]
+  })).filter(item => item.nome || item.cid || item.descricao || item.observacao || item.id_pcte_diag);
+  preencherLista('diagnosticos-list', createDiagnosticoTemplate, diagnosticosValores, [
+    'id_pcte_diag', 'nome', 'cid', 'descricao', 'observacao'
+  ]);
+}
 
   // DIAGNÓSTICOS FAMILIARES
   if (dados.diagnosticosFamiliares && Array.isArray(dados.diagnosticosFamiliares.nome)) {
-    const familiaValores = dados.diagnosticosFamiliares.nome.map((_, i) => ({
-      familia: dados.diagnosticosFamiliares.nome[i],
-      familia_cid: dados.diagnosticosFamiliares.cid[i],
-      familia_parentesco: dados.diagnosticosFamiliares.parentesco[i],
-      familia_descricao: dados.diagnosticosFamiliares.descricao[i],
-      familia_observacao: dados.diagnosticosFamiliares.observacao[i]
-    }));
-    preencherLista('diagnosticos-familia-list', createDiagnosticoFamiliaTemplate, familiaValores, [
-      'familia', 'familia_cid', 'familia_parentesco', 'familia_descricao', 'familia_observacao'
-    ]);
-  }
-
-  // Adicione outros campos conforme necessário...
+  const familiaValores = dados.diagnosticosFamiliares.nome.map((_, i) => ({
+    id_resp_diag: dados.diagnosticosFamiliares.id_resp_diag ? dados.diagnosticosFamiliares.id_resp_diag[i] : '',
+    familia: dados.diagnosticosFamiliares.nome[i],
+    familia_cid: dados.diagnosticosFamiliares.cid[i],
+    familia_parentesco: dados.diagnosticosFamiliares.parentesco[i],
+    familia_descricao: dados.diagnosticosFamiliares.descricao[i],
+    familia_observacao: dados.diagnosticosFamiliares.observacao[i]
+  })).filter(item => item.familia || item.familia_cid || item.familia_parentesco || item.familia_descricao || item.familia_observacao || item.id_resp_diag);
+  preencherLista('diagnosticos-familia-list', createDiagnosticoFamiliaTemplate, familiaValores, [
+    'id_resp_diag', 'familia', 'familia_cid', 'familia_parentesco', 'familia_descricao', 'familia_observacao'
+  ]);
 }
+}
+
+// Buscar paciente por ID (completo para edição)
+router.get('/paciente/:id', async (req, res) => {
+  try {
+    const paciente = await db.getPacientePorId(req.params.id);
+    if (!paciente) {
+      return res.status(404).json({ error: 'Paciente não encontrado' });
+    }
+    res.json(paciente); // Retorna o objeto direto, sem aninhar
+  } catch (err) {
+    console.error('Erro ao buscar paciente:', err);
+    res.status(500).json({ error: 'Erro ao buscar paciente', details: err.message });
+  }
+});

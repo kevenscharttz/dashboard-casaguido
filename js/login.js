@@ -134,11 +134,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Simulate API call
         setTimeout(() => {
             // Demo credentials
-            if (email === 'admin@casaguido.com' && password === '123456') {
+            if (email === 'admin@email.com' && password === '123456') {
                 // Success
                 showLoginSuccess();
                 setTimeout(() => {
-                    window.location.href = '../dashboard.html';
+                    window.location.href = '../index.html';
                 }, 1500);
             } else {
                 // Error

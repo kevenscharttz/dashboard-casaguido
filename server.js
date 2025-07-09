@@ -6,7 +6,8 @@ const path = require('path');
 require('dotenv').config();
 const db = require('./db/db'); // Importa a conexão com o banco de dados
 
-// const authRoutes = require('./routes/auth');
+const registroRoutes = require('./routes/registro');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 app.use(cors());
@@ -16,7 +17,8 @@ app.use(express.static(path.join(__dirname, 'html')));
 app.use(express.static(path.join(__dirname, 'css')));
 app.use(express.static(path.join(__dirname, 'js')));
 app.use(express.static(__dirname)); // Para servir index.html na raiz
-// app.use('/api', authRoutes);
+app.use('/api', registroRoutes);
+app.use('/auth', authRoutes);
 
 app.post('/paciente', async (req, res) => {
   const dados = req.body;
@@ -33,7 +35,7 @@ app.post('/paciente', async (req, res) => {
   await db.insertQuimioterapia(dados.quimio, id_pcte);           // tabela quimioterapia
   await db.insertRadioterapia(dados.radio, id_pcte);            // tabela radioterapia
   await db.insertResponsavel({...dados},  ids_esc, ids_est_civil, id_pcte, id_end);  // tabela responsavel  
-  await db.insertHistoricoSaude(dados, id_pcte);
+  await db.insertHistoricoSaude(dados, id_pcte); // insere diagnósticos e medicamentos
   await db.locaisHist(id_unidade, id_cras); // tabela locais historico
   await db.insertHistoricoSaudeResponsavel(dados.diagnosticosFamiliares, id_pcte); // tabela responsavel_diagnostico
   await db.insertSituacaoSocioEconomica({...dados}, id_inst_ensino, id_pcte);  // tabela socio_economica
